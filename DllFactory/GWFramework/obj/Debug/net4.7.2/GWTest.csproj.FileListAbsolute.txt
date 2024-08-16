@@ -1,0 +1,16 @@
+/home/yakhmet/Downloads/Test/GWTest/bin/Debug/net4.7.2/GWTest.dll
+/home/yakhmet/Downloads/Test/GWTest/bin/Debug/net4.7.2/GWTest.pdb
+/home/yakhmet/Downloads/Test/GWTest/obj/Debug/net4.7.2/GWTest.GeneratedMSBuildEditorConfig.editorconfig
+/home/yakhmet/Downloads/Test/GWTest/obj/Debug/net4.7.2/GWTest.AssemblyInfoInputs.cache
+/home/yakhmet/Downloads/Test/GWTest/obj/Debug/net4.7.2/GWTest.AssemblyInfo.cs
+/home/yakhmet/Downloads/Test/GWTest/obj/Debug/net4.7.2/GWTest.csproj.CoreCompileInputs.cache
+/home/yakhmet/Downloads/Test/GWTest/obj/Debug/net4.7.2/GWTest.dll
+/home/yakhmet/Downloads/Test/GWTest/obj/Debug/net4.7.2/GWTest.pdb
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/net4.7.2/GWTest.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/net4.7.2/GWTest.pdb
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/net4.7.2/GWTest.GeneratedMSBuildEditorConfig.editorconfig
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/net4.7.2/GWTest.AssemblyInfoInputs.cache
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/net4.7.2/GWTest.AssemblyInfo.cs
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/net4.7.2/GWTest.csproj.CoreCompileInputs.cache
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/net4.7.2/GWTest.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/net4.7.2/GWTest.pdb

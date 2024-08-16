@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThingDef ParentName="BaseWeapon" Name="Gun">
+        <description>Weapon.</description>
+        <textureName>GW_VolkSerpenta</textureName>
+        <textureSize>0.3</textureSize>
+        <stats>
+            <stat Name="Range">100</stat>
+            <stat Name="AttackPerSecond">2</stat>
+            <stat Name="Action">FireProjectile</stat>
+        </stats>
+    </ThingDef>
+</Defs>

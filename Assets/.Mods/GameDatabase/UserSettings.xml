@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <PlayerSettings>
+        <playerCharacter>SpaceMarine</playerCharacter>
+        <statMultipliers>
+            <damage>1.5</damage>
+            <travelSpeed>2</travelSpeed>
+        </statMultipliers>
+    </PlayerSettings>
+</Defs>

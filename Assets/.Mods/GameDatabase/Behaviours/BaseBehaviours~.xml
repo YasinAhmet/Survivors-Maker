@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <behaviour Name="ChasePlayer" From="GWFramework">
+        <reachDistance>1.5</reachDistance>
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+            <parameterRequest Type="GetPlayerController"></parameterRequest>
+        </parameters>
+    </behaviour>
+    <behaviour Name="FireAttack" From="GWFramework">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
+</Defs>

@@ -1,0 +1,15 @@
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/GWTest.deps.json
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/GWTest.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/GWTest.pdb
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.GeneratedMSBuildEditorConfig.editorconfig
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.AssemblyInfoInputs.cache
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.AssemblyInfo.cs
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.csproj.CoreCompileInputs.cache
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.pdb
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.csproj.AssemblyReference.cache
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/obj/Debug/netstandard2.1/GWTest.csproj.CopyComplete
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/UnityEngine.CoreModule.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/UnityEngine.Physics2DModule.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/UnityEngine.dll
+/media/yakhmet/2.SSD/Projects/Age of Darkness/DllFactory/GWTest/bin/Debug/netstandard2.1/UnityEngine.ImageConversionModule.dll

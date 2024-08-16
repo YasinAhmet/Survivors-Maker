@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThingDef ParentName="BaseCreature" Name="SpaceMarine">
+        <description>Description.</description>
+        <textureName>Cursed armor</textureName>
+        <textureSize>0.6</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <spawnable>
+            <li>creature</li>
+            <faction>player</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">150</stat>
+            <stat Name="MovementSpeed">700</stat>
+        </stats>
+        <equipments>
+            <equipment>Gun</equipment>
+        </equipments>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseCreature" Name="Orc">
+        <description>Description.</description>
+        <textureName>Monster</textureName>
+        <textureSize>0.5</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour>ChasePlayer</behaviour>
+        </behaviours>
+        <spawnable>
+            <type>creature</type>
+            <faction>enemy</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">100</stat>
+            <stat Name="MovementSpeed">400</stat>
+            <stat Name="AttackSpeed">0.5</stat>
+            <stat Name="ReachDistance">2</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.4</stat>
+        </stats>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseCreature" Name="Ghost">
+        <description>Description.</description>
+        <textureName>Ghost</textureName>
+        <textureSize>0.45</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paind.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathd.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour>ChasePlayer</behaviour>
+        </behaviours>
+        <spawnable>
+            <type>creature</type>
+            <faction>enemy</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">50</stat>
+            <stat Name="MovementSpeed">800</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">2</stat>
+            <stat Name="Damage">5</stat>
+            <stat Name="AttackCooldown">0.3</stat>
+        </stats>
+    </ThingDef>
+</Defs>
