@@ -31,6 +31,6 @@ public class GroupDef
 
         [XmlArray("behaviours")]
         [XmlArrayItem("behaviour")]
-        public List<string> extraBehaviours;
+        public List<BehaviourInfo> extraBehaviours;
     }
 }

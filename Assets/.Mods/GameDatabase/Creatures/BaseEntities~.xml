@@ -18,6 +18,7 @@
         </spawnable>
         <stats>
             <stat Name="Health">150</stat>
+            <stat Name="Damage">20</stat>
             <stat Name="MovementSpeed">700</stat>
         </stats>
         <equipments>
@@ -38,7 +39,7 @@
             </Death>
         </SoundConfig>
         <behaviours>
-            <behaviour>ChasePlayer</behaviour>
+            <behaviour Name="ChasePlayer"></behaviour>
         </behaviours>
         <spawnable Type="creature">
             <faction>Hostile</faction>
@@ -67,7 +68,7 @@
             </Death>
         </SoundConfig>
         <behaviours>
-            <behaviour>ChasePlayer</behaviour>
+            <behaviour Name="ChasePlayer"></behaviour>
         </behaviours>
         <spawnable Type="creature">
             <faction>Hostile</faction>

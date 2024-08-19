@@ -14,7 +14,6 @@ public class GameObj_Creature : GameObj, IDamageable
     [SerializeField] private Vector2 lastMovementVector;
 
     private BehaviourHandler<GameObj_Creature> behaviourHandler = null;
-    [SerializeField] private float health = 100;
     [SerializeField] private float maxhealth = 100;
     [SerializeField] private float hitColorSpeed = 0.1f;
     [SerializeField] private float xp = 40;
@@ -55,15 +54,12 @@ public class GameObj_Creature : GameObj, IDamageable
     {
         onXpGain?.RemoveAllListeners();
         base.Possess<GameObj_Creature>(entity, faction);
-        movementSpeed = float.Parse(possessedThing.FindStatByName("MovementSpeed").Value, CultureInfo.InvariantCulture);
-        health = float.Parse(possessedThing.FindStatByName("Health").Value, CultureInfo.InvariantCulture);
-        maxhealth = health;
         PossessEquipments(entity, faction);
         killCount = 0;
 
         onHealthChange.Invoke(new HealthInfo()
         {
-            currentHealth = health,
+            currentHealth = possessedThing.GetStatValueByName("Health"),
             damageTaken = 0,
             changeMax = true
         });
@@ -85,6 +81,7 @@ public class GameObj_Creature : GameObj, IDamageable
             spawnedObj.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction);
             GameObj_Shooter shooter = (GameObj_Shooter)spawnedObj;
             shooter.onProjectileHit += OnHitToEnemy;
+            shooter.stats = possessedThing.stats;
         }
     }
 
@@ -99,23 +96,23 @@ public class GameObj_Creature : GameObj, IDamageable
     }
 
     public void Heal(float amount, bool bypassMax){
-        health += amount;
+        possessedThing.AddToStat("Health", amount);
 
-        if(health > maxhealth && !bypassMax) {
-            health = maxhealth;
+        if(possessedThing.GetStatValueByName("Health") > maxhealth && !bypassMax) {
+            possessedThing.ReplaceStat("Health", maxhealth);
         }
 
 
         onHealthChange?.Invoke(new HealthInfo()
         {
-            currentHealth = health,
+            currentHealth = possessedThing.GetStatValueByName("Health"),
             damageTaken = -amount
         });
     }
 
     public bool TryDamage(float amount, out bool endedUpKilling)
     {
-        health -= amount;
+        possessedThing.RemoveFromStat("Health", amount);
 
         var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
         AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
@@ -124,7 +121,7 @@ public class GameObj_Creature : GameObj, IDamageable
         if (!IsHealthDepleted()) StartCoroutine(HitColorChange());
         onHealthChange?.Invoke(new HealthInfo()
         {
-            currentHealth = health,
+            currentHealth = possessedThing.GetStatValueByName("Health"),
             damageTaken = amount
         });
 
@@ -161,12 +158,12 @@ public class GameObj_Creature : GameObj, IDamageable
 
     public float GetHealth()
     {
-        return health;
+        return possessedThing.GetStatValueByName("Health");
     }
 
     public bool IsHealthDepleted()
     {
-        return health <= 0;
+        return possessedThing.GetStatValueByName("Health") <= 0;
     }
 
     public float GetXP()

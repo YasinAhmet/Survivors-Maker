@@ -21,8 +21,7 @@ public class GameObj_Shooter : GameObj
     [SerializeField] private float range = 1f;
     [SerializeField] private float cooldownCounter = 0;
     [SerializeField] private float AngleOffset = 0;
-
-    private BehaviourHandler<GameObj_Creature> behaviourHandler = null;
+    public Stat[] stats = {};
 
     public override void Possess<GameObj_Shooter>(ThingDef entity, string faction)
     {
@@ -63,6 +62,7 @@ public class GameObj_Shooter : GameObj
 
     public IEnumerator LaunchNewProjectile(ThingDef type) {
         GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.projectilesPool.ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction);
+        slot.stats = stats;
         yield return StartCoroutine(slot.WaitProjectileResult());
         HitResult result = slot.foundResult;
         if(result.hitTarget != null) onProjectileHit?.Invoke(result); 

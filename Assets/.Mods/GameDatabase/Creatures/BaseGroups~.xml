@@ -7,15 +7,30 @@
             <level>1</level>
         </spawnable>
         <members>
-            <member Leader="Yes" Name="SpaceMarine"></member>
-            <member Name="SpaceMarine">
+            <member Leader="Yes" Name="SpaceMarine">
                 <behaviours>
-                    <behaviour>FollowLeader</behaviour>
+                    <behaviour Name="IncreaseStat">
+                        <customParameters>
+                            <parameter Name="StatName"><value>Damage</value></parameter>
+                            <parameter Name="BonusRate"><value>2.25</value></parameter>
+                        </customParameters>
+                    </behaviour>
+                    <behaviour Name="IncreaseStat">
+                        <customParameters>
+                            <parameter Name="StatName"><value>MovementSpeed</value></parameter>
+                            <parameter Name="BonusRate"><value>1.85</value></parameter>
+                        </customParameters>
+                    </behaviour>
                 </behaviours>
             </member>
             <member Name="SpaceMarine">
                 <behaviours>
-                    <behaviour>FollowLeader</behaviour>
+                    <behaviour Name="FollowLeader"></behaviour>
+                </behaviours>
+            </member>
+            <member Name="SpaceMarine">
+                <behaviours>
+                    <behaviour Name="FollowLeader"></behaviour>
                 </behaviours>
             </member>
         </members>

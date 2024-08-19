@@ -41,7 +41,6 @@ public class ChasePlayer : IObjBehaviour
     }
     
     public float ConvertStat(GameObj_Creature creature, string statname) {
-        Debug.Log($"[STAT CONVERTION] {statname} conversion..");
         string statValue = creature.GetPossessed().FindStatByName(statname).Value;
         float.TryParse(statValue, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float statValueInFloat);
         return statValueInFloat;
@@ -103,4 +102,9 @@ public class ChasePlayer : IObjBehaviour
         public void Suspend(object[] parameters){}
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
+
+    public void Start(XElement possess, object[] parameters, ThingDef.CustomParameter[] customParameters)
+    {
+        Start(possess, parameters);
     }
+}

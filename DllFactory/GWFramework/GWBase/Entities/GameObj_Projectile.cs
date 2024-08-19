@@ -11,6 +11,7 @@ public class GameObj_Projectile : GameObj
 {
     public TriggerContactEvent onHit;
     public HitResult foundResult;
+    public Stat[] stats;
 
     private BehaviourHandler<GameObj_Projectile> behaviourHandler = null;
 

@@ -18,4 +18,9 @@
             <parameterRequest Type="GetOwnedObject"></parameterRequest>
         </parameters>
     </behaviour>
+    <behaviour Name="IncreaseStat" From="GWFramework" IsOneTime="Yes">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
 </Defs>

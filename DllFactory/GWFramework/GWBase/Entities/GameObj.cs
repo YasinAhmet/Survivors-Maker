@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using static ThingDef;
 
 public class GameObj : MonoBehaviour
 {    
@@ -24,7 +26,6 @@ public class GameObj : MonoBehaviour
     [SerializeField] protected bool stopIfObstacle = true;
     [SerializeField] protected float antiPushRadius = 0.4f;
     private BehaviourHandler<GameObj> behaviourHandler = null;
-    public float movementSpeed = 0;
     public string faction = "null";
 
     public virtual void Spawned() {
@@ -58,7 +59,7 @@ public class GameObj : MonoBehaviour
         Debug.Log("An object possessed thing: " + entity.Name + " Faction is : " + faction);
         this.faction = faction;
         gameObject.layer = LayerMask.NameToLayer(faction);
-        possessedThing = entity;
+        possessedThing = YKUtility.DeepClone<ThingDef>(entity);
         PossessTexture(entity);
         PossessBehaviours(entity.behaviours, true);
     }
@@ -69,27 +70,33 @@ public class GameObj : MonoBehaviour
         gameObject.transform.localScale = new Vector3(possessedThing.TextureSize, possessedThing.TextureSize, possessedThing.TextureSize);
     }
 
-    public virtual void PossessBehaviours(string[] behaviourNames, bool clean)
+    public virtual void PossessUpgrades(UpgradeDef[] upgrades) {
+        foreach (var upgrade in upgrades)
+        {
+            PossessBehaviours(upgrade.behaviours.ToArray(), false);
+        }
+    }
+
+    public virtual void PossessBehaviours(BehaviourInfo[] behaviourInfo, bool clean)
     {
         if(installedBehaviours != null && clean)installedBehaviours.Clear();
-        if(behaviourNames == null || behaviourNames == Array.Empty<string>()) return;
+        if(behaviourInfo == null || behaviourInfo == Array.Empty<BehaviourInfo>()) return;
 
-        foreach (var behaviourName in behaviourNames)
+        foreach (var behaviour in behaviourInfo)
         {
-            var keyPair = AssetManager.assetLibrary.behaviourDictionary.FirstOrDefault(x => x.Key == behaviourName);
+            var keyPair = AssetManager.assetLibrary.behaviourDictionary.FirstOrDefault(x => x.Key == behaviour.behaviourName);
             ObjBehaviourRef foundBehaviour = keyPair.Value;
             var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
             Type targetType = targetDll.GetType(foundBehaviour.Name, true);
             IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
-
-            installedBehaviours.Add(newBehaviour);
 
             behaviourHandler = new BehaviourHandler<GameObj>()
             {
                 ownedThing = this
             };
 
-            newBehaviour.Start(foundBehaviour.linkedXmlSource, behaviourHandler.GetObjectsByRequests(foundBehaviour.parameterRequests));
+            newBehaviour.Start(foundBehaviour.linkedXmlSource, behaviourHandler.GetObjectsByRequests(foundBehaviour.parameterRequests), behaviour.customParameters.ToArray());
+            if(foundBehaviour.isOneTime == "No")installedBehaviours.Add(newBehaviour);
         }
     }
 
@@ -97,7 +104,7 @@ public class GameObj : MonoBehaviour
     public virtual void MoveObject(Vector2 axis, float delta)
     {
 
-        var movementResult = axis * movementSpeed;
+        var movementResult = axis * possessedThing.GetStatValueByName("MovementSpeed");
 
         RaycastHit2D collision = Physics2D.CircleCast(
                         (Vector2)transform.position + movementResult,

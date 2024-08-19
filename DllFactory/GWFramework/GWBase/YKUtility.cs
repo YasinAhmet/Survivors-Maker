@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -53,15 +54,30 @@ public static class YKUtility
         return (T)xmlSerializer.Deserialize(xElement.CreateReader());
     }
 
-    public static UnityEngine.Vector2 GetDirection(UnityEngine.Vector2 pointA, UnityEngine.Vector2 pointB) {
+    public static UnityEngine.Vector2 GetDirection(UnityEngine.Vector2 pointA, UnityEngine.Vector2 pointB)
+    {
         return (UnityEngine.Vector2)(pointB - pointA).normalized;
     }
 
-    public static float GetRotationToTargetPoint(Transform ownedTransform, UnityEngine.Vector2 targetPoint) {
+    public static float GetRotationToTargetPoint(Transform ownedTransform, UnityEngine.Vector2 targetPoint)
+    {
         UnityEngine.Vector2 diff = (UnityEngine.Vector2)ownedTransform.position - targetPoint;
-        diff.Normalize();  
+        diff.Normalize();
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         return rot_z;
+    }
+
+
+    public static T DeepClone<T>(this T obj)
+    {
+        using (var ms = new MemoryStream())
+        {
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(ms, obj);
+            ms.Position = 0;
+
+            return (T)formatter.Deserialize(ms);
+        }
     }
 
 }

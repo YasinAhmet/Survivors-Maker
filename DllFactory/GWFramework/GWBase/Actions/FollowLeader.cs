@@ -75,4 +75,9 @@ public class FollowLeader : IObjBehaviour
         public void Suspend(object[] parameters){}
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
+
+    public void Start(XElement possess, object[] parameters, ThingDef.CustomParameter[] customParameters)
+    {
+        Start(possess, parameters);
     }
+}

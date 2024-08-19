@@ -17,6 +17,7 @@ public class AssetManager : Manager
     public static AssetManager assetLibrary;
     [SerializeField] public Dictionary<string, ThingDef> initializedThingDefsDictionary = new();
     [SerializeField] public Dictionary<string, XElement> thingDefsDictionary = new();
+    [SerializeField] public Dictionary<string, UpgradeDef> upgradeDefsDictionary = new();
     [SerializeField] public Dictionary<string, ObjBehaviourRef> behaviourDictionary = new();
     [SerializeField] public Dictionary<string, AudioClip> audioDictionary = new();
     [SerializeField] public Dictionary<string, ThingDef> actionsDictionary = new();
@@ -100,6 +101,24 @@ public class AssetManager : Manager
         foreach (var file in files)
         {
             LoadActions(projectPath+"/.Mods/GameDatabase/Actions", Path.GetFileName(file));
+        }
+
+        files = Directory.GetFiles(projectPath+"/.Mods/GameDatabase/Upgrades");
+        foreach (var file in files)
+        {
+            LoadUpgrades(projectPath+"/.Mods/GameDatabase/Upgrades", Path.GetFileName(file));
+        }
+    }
+
+    void LoadUpgrades(string path, string fileName) {
+        var defFile = XElement.Load(path + "/" + fileName);
+        var upgradeDefXMLs = defFile.Elements("UpgradeDef").Where(x => x.Attribute("abstract") == null);
+
+        foreach (var def in upgradeDefXMLs)
+        {
+            UpgradeDef upgradeDef = YKUtility.FromXElement<UpgradeDef>(def);
+            upgradeDefsDictionary.Add(upgradeDef.upgradeName, upgradeDef);
+            NameOfLoadedThings.Add(upgradeDef.upgradeName);
         }
     }
 

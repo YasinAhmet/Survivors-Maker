@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -17,7 +19,7 @@ public class ThingDef
 
     [XmlArray("behaviours")]
     [XmlArrayItem("behaviour")]
-    public string[] behaviours;
+    public BehaviourInfo[] behaviours;
 
     [XmlAttribute("Name")]
     public string Name;
@@ -42,10 +44,63 @@ public class ThingDef
 
     public Stat FindStatByName(string name)
     {
-        UnityEngine.Debug.Log($"Trying to find {name} stat...");
         return stats.FirstOrDefault(x => x.Name.Equals(name));
     }
 
+    public float GetStatValueByName(string name) {
+        return float.Parse(stats.FirstOrDefault(x => x.Name.Equals(name)).Value, CultureInfo.InvariantCulture);
+    }
+
+    public void AddNewStat(string statName, float statValue) {
+        var list = stats.ToList();
+        list.Add(new Stat() {
+            Name = statName,
+            Value = statValue.ToString()
+        });
+        stats = list.ToArray();
+    }
+
+    public void AddToStat(string statName, float newBonus) {
+        for (int i = 0; i < stats.Count(); i++)
+        {
+            if(stats[i].Name == statName) {
+                stats[i].Value = (float.Parse(stats[i].Value) + newBonus).ToString();
+                return;
+            }
+        }
+    }
+    public void RemoveFromStat(string statName, float newMinus) {
+        for (int i = 0; i < stats.Count(); i++)
+        {
+            if(stats[i].Name == statName) {
+                stats[i].Value = (float.Parse(stats[i].Value) - newMinus).ToString();
+                return;
+            }
+        }
+    }
+
+    public void ReplaceStat(string statName, float newValue) {
+        for (int i = 0; i < stats.Count(); i++)
+        {
+            if(stats[i].Name == statName) {
+                stats[i].Value = newValue.ToString();
+                return;
+            }
+        }
+
+        AddNewStat(statName, newValue);
+    }
+
+    [Serializable]
+    [XmlRoot("parameter")]
+    public struct CustomParameter {
+        [XmlAttribute("Name")]
+        public string parameterName;     
+        [XmlElement("value")]
+        public string parameterValue;         
+    }
+
+    [Serializable]
     [XmlRoot("spawnable")]
     public struct SpawnableInfo {
         [XmlAttribute("Type")]
@@ -72,7 +127,7 @@ public class ThingDef
 }
 
 
-
+[Serializable]
 [XmlRoot("parameterRequest")]
 public class ParameterRequest
 {

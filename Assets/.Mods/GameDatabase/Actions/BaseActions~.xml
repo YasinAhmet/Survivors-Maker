@@ -6,7 +6,7 @@
         <textureSize>0.3</textureSize>
         <hitSpriteSheet>hit2</hitSpriteSheet>
         <behaviours>
-            <behaviour>FireAttack</behaviour>
+            <behaviour Name="FireAttack"></behaviour>
         </behaviours>
         <stats>
             <stat Name="Damage">40</stat>
