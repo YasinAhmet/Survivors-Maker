@@ -12,9 +12,8 @@
                 <sound>deathe.mp3</sound>
             </Death>
         </SoundConfig>
-        <spawnable>
-            <li>creature</li>
-            <faction>player</faction>
+        <spawnable Type="creature">
+            <faction>Player</faction>
             <level>1</level>
         </spawnable>
         <stats>
@@ -41,9 +40,8 @@
         <behaviours>
             <behaviour>ChasePlayer</behaviour>
         </behaviours>
-        <spawnable>
-            <type>creature</type>
-            <faction>enemy</faction>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
             <level>1</level>
         </spawnable>
         <stats>
@@ -71,9 +69,8 @@
         <behaviours>
             <behaviour>ChasePlayer</behaviour>
         </behaviours>
-        <spawnable>
-            <type>creature</type>
-            <faction>enemy</faction>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
             <level>1</level>
         </spawnable>
         <stats>

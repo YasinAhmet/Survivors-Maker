@@ -101,8 +101,6 @@ public class AssetManager : Manager
         {
             LoadActions(projectPath+"/.Mods/GameDatabase/Actions", Path.GetFileName(file));
         }
-
-        LoadUserSettings(projectPath+"/.Mods/GameDatabase", "UserSettings.xml");
     }
 
     void LoadActions(string path, string fileName)
@@ -128,12 +126,6 @@ public class AssetManager : Manager
             NameOfLoadedBehaviours.Add(newBehaviour.Name);
             Debug.Log($"[LOAD] Behaviour Added From [{fileName}]: {newBehaviour.Name}. The behaviour's target dll is {newBehaviour.DllName}");
         }
-    }
-
-    void LoadUserSettings(string path, string fileName)
-    {
-        var defFile = XElement.Load(path + "/" + fileName);
-        var userSettings = defFile.Element("PlayerSettings");
     }
 
     void LoadDef(string path, string fileName)

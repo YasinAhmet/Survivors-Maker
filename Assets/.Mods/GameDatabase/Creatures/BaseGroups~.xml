@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThingDef ParentName="BaseGroup" Name="SpaceMarineGroup">
+        <description>Group of space marines.</description>
+        <spawnable Type="group">
+            <faction>Player</faction>
+            <level>1</level>
+        </spawnable>
+        <members>
+            <member Leader="Yes" Name="SpaceMarine"></member>
+            <member Name="SpaceMarine">
+                <behaviours>
+                    <behaviour>FollowLeader</behaviour>
+                </behaviours>
+            </member>
+            <member Name="SpaceMarine">
+                <behaviours>
+                    <behaviour>FollowLeader</behaviour>
+                </behaviours>
+            </member>
+        </members>
+    </ThingDef>
+</Defs>

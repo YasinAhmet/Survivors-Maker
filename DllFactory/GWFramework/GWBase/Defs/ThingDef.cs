@@ -32,6 +32,9 @@ public class ThingDef
     [XmlElement("textureSize")]
     public float TextureSize = 1f;
 
+    [XmlElement("spawnable")]
+    public SpawnableInfo spawnable;
+
 
     [XmlArray("equipments")]
     [XmlArrayItem("equipment")]
@@ -41,6 +44,16 @@ public class ThingDef
     {
         UnityEngine.Debug.Log($"Trying to find {name} stat...");
         return stats.FirstOrDefault(x => x.Name.Equals(name));
+    }
+
+    [XmlRoot("spawnable")]
+    public struct SpawnableInfo {
+        [XmlAttribute("Type")]
+        public string type;
+        [XmlElement("faction")]
+        public string faction;
+        [XmlElement("level")]
+        public int level;
     }
 
     [Serializable]

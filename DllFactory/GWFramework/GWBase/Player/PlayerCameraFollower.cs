@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PlayerCameraFollower : MonoBehaviour, IBootable
@@ -9,6 +10,8 @@ public class PlayerCameraFollower : MonoBehaviour, IBootable
 
     public IEnumerator Boot()
     {
+        while (PlayerController.playerController.ownedCreature == null) yield return new WaitForSeconds(0.25f);
+       
         targetTransform = PlayerController.playerController.ownedCreature.transform;
         yield return this;
     }

@@ -55,12 +55,12 @@ public class GameObj : MonoBehaviour
 
     public virtual void Possess<T>(ThingDef entity, string faction)
     {
-        Debug.Log("An object possessed thing: " + entity.Name);
+        Debug.Log("An object possessed thing: " + entity.Name + " Faction is : " + faction);
         this.faction = faction;
         gameObject.layer = LayerMask.NameToLayer(faction);
         possessedThing = entity;
         PossessTexture(entity);
-        PossessBehaviours(entity.behaviours);
+        PossessBehaviours(entity.behaviours, true);
     }
 
     public virtual void PossessTexture(ThingDef entity)
@@ -69,9 +69,9 @@ public class GameObj : MonoBehaviour
         gameObject.transform.localScale = new Vector3(possessedThing.TextureSize, possessedThing.TextureSize, possessedThing.TextureSize);
     }
 
-    public virtual void PossessBehaviours(string[] behaviourNames)
+    public virtual void PossessBehaviours(string[] behaviourNames, bool clean)
     {
-        if(installedBehaviours != null)installedBehaviours.Clear();
+        if(installedBehaviours != null && clean)installedBehaviours.Clear();
         if(behaviourNames == null || behaviourNames == Array.Empty<string>()) return;
 
         foreach (var behaviourName in behaviourNames)

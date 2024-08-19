@@ -15,9 +15,12 @@ public class InputController : MonoBehaviour
     void Awake() {
         controls = new MainControls();
         inputController = this;
+        ownedCreature = PlayerController.playerController.ownedCreature;
     }
 
     void Start() {
+        inputController = this;
+        ownedCreature = PlayerController.playerController.ownedCreature;
         controls.PlayerControls.Movement.started += MovementTick;
         controls.PlayerControls.Movement.performed += MovementTick;
         controls.PlayerControls.Movement.canceled += MovementTick;

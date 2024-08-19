@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6245685015804203595}
   - component: {fileID: 8798405862068147187}
   - component: {fileID: 4706467244553328238}
-  - component: {fileID: 4537193975341804947}
   - component: {fileID: 4237529476727276486}
   - component: {fileID: 3274028523609382099}
   m_Layer: 7
@@ -87,7 +86,7 @@ SpriteRenderer:
   m_Size: {x: 0.25, y: 0.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4706467244553328238
@@ -112,7 +111,9 @@ MonoBehaviour:
   ownedRigidbody: {fileID: 3274028523609382099}
   ownedCollider: {fileID: 4237529476727276486}
   possessedThing:
-    onDamageTakenSounds: []
+    soundConfig:
+      onDamageTakenSounds: []
+      onDeathSounds: []
     behaviours: []
     Name: 
     stats: []
@@ -124,25 +125,17 @@ MonoBehaviour:
   antiPushRadius: 0.4
   movementSpeed: 0
   faction: null
+  onXpGain:
+    m_PersistentCalls:
+      m_Calls: []
   lastMovementVector: {x: 0, y: 0}
   health: 100
+  maxhealth: 100
   hitColorSpeed: 0.1
   xp: 40
   healthBar: {fileID: 0}
+  killCount: 0
   currentState: 0
---- !u!114 &4537193975341804947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401052812281107487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 374300985cbcefc6ebc54a762cf9be1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownedCreature: {fileID: 4706467244553328238}
 --- !u!58 &4237529476727276486
 CircleCollider2D:
   m_ObjectHideFlags: 0

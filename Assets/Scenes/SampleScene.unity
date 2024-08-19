@@ -435,8 +435,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedManagers:
   - {fileID: 194952580}
-  - {fileID: 194952583}
   - {fileID: 194952587}
+  - {fileID: 194952583}
   - {fileID: 194952586}
   - {fileID: 194952584}
   - {fileID: 194952585}
@@ -454,6 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 1108135773, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputSpeaker: {fileID: 6187621314025665081, guid: ae88b5fb196d916569d20a1ef3a85a1c, type: 3}
   playerController:
     onXP:
       m_PersistentCalls:
@@ -511,7 +512,6 @@ MonoBehaviour:
   SPW_DelayBetweenSpawns: 0.7
   SPW_FirstDelay: 2
   EnemyTeamName: Hostile
-  PlayerTeamName: Player
 --- !u!114 &194952586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1224,12 +1224,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 1
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 1
 --- !u!114 &1442221355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1283,7 +1283,7 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 0.9998908
+    width: 0.99978
     height: 1
   near clip plane: 0.3
   far clip plane: 1000

@@ -7,6 +7,12 @@
             <parameterRequest Type="GetPlayerController"></parameterRequest>
         </parameters>
     </behaviour>
+     <behaviour Name="FollowLeader" From="GWFramework">
+        <reachDistance>1.5</reachDistance>
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
     <behaviour Name="FireAttack" From="GWFramework">
         <parameters>
             <parameterRequest Type="GetOwnedObject"></parameterRequest>

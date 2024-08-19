@@ -21,6 +21,7 @@ public class GameObj_Creature : GameObj, IDamageable
     [SerializeField] private GameObject healthBar;
     public int killCount = 0;
     public CreatureState currentState;
+    public GameObj_Creature leader;
 
     public override void Spawned()
     {

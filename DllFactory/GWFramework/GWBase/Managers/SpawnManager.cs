@@ -13,7 +13,9 @@ using UnityEngine;
 public class SpawnManager : Manager
 {
     public static SpawnManager spawnManager;
+    [SerializeField] public Dictionary<string, ThingDef> spawnableThingsDictionary = new();
     [SerializeField] public Dictionary<string, ThingDef> spawnableEnemiesDictionary = new();
+    [SerializeField] public Dictionary<string, GroupDef> spawnableGroupsDictionary = new();
 
     public float RNP_PointDistance = 5f;
     public float RNP_Max = 1.25f;
@@ -21,35 +23,55 @@ public class SpawnManager : Manager
     public bool SPW_Activated = true;
     public float SPW_DelayBetweenSpawns = 0.7f;
     public float SPW_FirstDelay = 2f;
-    
-    [SerializeField] private string EnemyTeamName = "enemies";
-    [SerializeField] private string PlayerTeamName = "players";
+
+    [SerializeField] private string EnemyTeamName = "Hostile";
 
     public override IEnumerator Kickstart()
     {
         spawnManager = this;
         InitializeSpawnables(AssetManager.assetLibrary.thingDefsDictionary);
-        SpawnPlayer(AssetManager.assetLibrary.thingDefsDictionary);
+        SpawnPlayerGroup();
         StartCoroutine(EnemySpawnTick());
         yield return this;
     }
 
-    public void SpawnPlayer(Dictionary<string, XElement> definitionsList)
+    public void SpawnPlayerGroup()
     {
-        foreach (var definition in definitionsList)
+        string playerGroupName = SettingsManager.playerSettings.playerGroup;
+        GroupDef playerGroup = spawnableGroupsDictionary.FirstOrDefault(x => x.Key.Equals(playerGroupName)).Value;
+        GameObj_Creature leaderObj = null;
+
+        foreach (var member in playerGroup.members)
         {
-            XElement definitionType = null;
-            definitionType = definition.Value.Element("spawnable")?.Element("faction");
-            if (definitionType != null && definitionType.Value.Equals("player"))
-            {
-                Debug.Log("FHX: " + definition.Value);
-                var player = (GameObj_Creature)PoolManager.poolManager.creaturesPool.HardSet(PrefabManager.prefabManager.GetPrefabOf("player"), InitializeDef(definition.Value), Vector2.zero, 0, PlayerTeamName);
-                PlayerController.playerController.ownedCreature = player;
-                StartCoroutine(PlayerController.playerController.TryFetchCreature());
-                break;
+            ThingDef characterDefToAdd = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(member.defName)).Value;
+            Vector2 randomSpawnPos = new Vector2(UnityEngine.Random.Range(1,5), UnityEngine.Random.Range(1,5));
+            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.creaturesPool.ObtainSlotForType(characterDefToAdd, randomSpawnPos, 0, playerGroup.spawnableInfo.faction);
+
+            if(member.isLeaderSTR != null && member.isLeaderSTR.Equals("Yes")) {
+                GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, creature.transform);
+                PlayerController.playerController.ownedCreature = creature;
+                leaderObj = creature;
+            } else {
+                if(leaderObj) creature.leader = leaderObj;
             }
+            
+            if(member.extraBehaviours != null && member.extraBehaviours.Count > 0) creature.PossessBehaviours(member.extraBehaviours.ToArray(), false);
         }
     }
+
+    /*public void BreakdownNameToThingDef(string defName, out ThingDef thingDef)
+    {
+        thingDef = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(defName)).Value;
+        Debug.Log("BREAKDOWN: " + defName);
+    }
+
+    /*public void SpawnPlayer(string byChar)
+    {
+        BreakdownNameToThingDef(byChar, out ThingDef playerCharDef);
+        var player = (GameObj_Creature)PoolManager.poolManager.creaturesPool.HardSet(PrefabManager.prefabManager.GetPrefabOf("player"), playerCharDef, Vector2.zero, 0, PlayerTeamName);
+        PlayerController.playerController.ownedCreature = player;
+        StartCoroutine(PlayerController.playerController.TryFetchCreature());
+    }*/
 
     public IEnumerator EnemySpawnTick()
     {
@@ -62,24 +84,39 @@ public class SpawnManager : Manager
         }
     }
 
-    public ThingDef InitializeDef(XElement definition)
-    {
-        Debug.Log("[SPAWN MANAGER] Loading creatures to cache.. " + definition);
-        var entity = YKUtility.FromXElement<ThingDef>(definition);
-
-        return entity;
-    }
-
     public void InitializeSpawnables(Dictionary<string, XElement> definitionsList)
     {
         foreach (var definition in definitionsList)
         {
             var definitionType = definition.Value.Element("spawnable")?.Element("faction");
-            if (definitionType != null && definitionType.Value.Equals("enemy"))
+            if (definitionType == null) return;
+            switch (definition.Value.Element("spawnable")?.Attribute("Type").Value)
             {
-                spawnableEnemiesDictionary.Add(definition.Key, InitializeDef(definition.Value));
+                case "group":
+                    InitializeGroupDef(definition);
+                    break;
+                case "creature":
+                    InitializeCreatureDef(definition);
+                    break;
             }
         }
+    }
+
+    public void InitializeCreatureDef(KeyValuePair<string, XElement> definition)
+    {
+        var initializedDef = YKUtility.FromXElement<ThingDef>(definition.Value);
+
+        if (initializedDef.spawnable.faction.Equals(EnemyTeamName))
+        {
+            spawnableEnemiesDictionary.Add(definition.Key, initializedDef);
+        }
+        spawnableThingsDictionary.Add(definition.Key, initializedDef);
+    }
+
+    public void InitializeGroupDef(KeyValuePair<string, XElement> definition)
+    {
+        var initializedDef = YKUtility.FromXElement<GroupDef>(definition.Value);
+        spawnableGroupsDictionary.Add(definition.Key, initializedDef);
     }
 
     public ThingDef GetRandomEnemy()

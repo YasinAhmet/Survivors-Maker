@@ -39,6 +39,7 @@ public class GameObj_Shooter : GameObj
         if(rangeArea == null) return;
 
         range = float.Parse(entity.FindStatByName("Range").Value);
+        rangeArea.faction = faction;
         rangeArea.gameObject.layer = gameObject.layer;
         rangeArea.transform.localScale = new Vector3(range, range, 1);
         rangeArea.gameObject.SetActive(true);
