@@ -78,15 +78,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 6515602111186535438, guid: fa3530e95bc3ed99fb94c2c160eb7a5d, type: 3}
+  m_Sprite: {fileID: 7839472567634266479, guid: 3be29731cab10d7539c600de77e76bab, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.25, y: 0.24}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4706467244553328238
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2401052812281107487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 927971584, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: -1801443511, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onActivationChange:
@@ -119,23 +119,26 @@ MonoBehaviour:
     stats: []
     TexturePath: 
     TextureSize: 1
+    spawnable:
+      type: 
+      faction: 
+      level: 0
     equipmentNames: []
   rareUpdateTickTime: 0.5
   stopIfObstacle: 1
   antiPushRadius: 0.4
-  movementSpeed: 0
   faction: null
   onXpGain:
     m_PersistentCalls:
       m_Calls: []
   lastMovementVector: {x: 0, y: 0}
-  health: 100
   maxhealth: 100
   hitColorSpeed: 0.1
   xp: 40
   healthBar: {fileID: 0}
   killCount: 0
   currentState: 0
+  leader: {fileID: 0}
 --- !u!58 &4237529476727276486
 CircleCollider2D:
   m_ObjectHideFlags: 0

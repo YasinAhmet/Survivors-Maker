@@ -79,12 +79,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 9164209262776688120, guid: d8c3ca25c09cfbb0091f3a72f62009b8, type: 3}
+  m_Sprite: {fileID: -5976307804602949683, guid: dc50b33462211b9e9b798eea130c09d7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.25, y: 0.24}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2401052812281107487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -943984359, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 642365573, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onActivationChange:
@@ -175,31 +175,43 @@ MonoBehaviour:
   ownedRigidbody: {fileID: 3274028523609382099}
   ownedCollider: {fileID: 4237529476727276486}
   possessedThing:
-    onDamageTakenSounds: []
+    soundConfig:
+      onDamageTakenSounds: []
+      onDeathSounds: []
     behaviours: []
     Name: 
     stats: []
     TexturePath: 
     TextureSize: 1
+    spawnable:
+      type: 
+      faction: 
+      level: 0
     equipmentNames: []
   rareUpdateTickTime: 0.5
   stopIfObstacle: 1
   antiPushRadius: 0.4
-  movementSpeed: 0
   faction: null
   rangeArea: {fileID: 842263774409209493}
   currentProjectileDef:
-    onDamageTakenSounds: []
+    soundConfig:
+      onDamageTakenSounds: []
+      onDeathSounds: []
     behaviours: []
     Name: 
     stats: []
     TexturePath: 
     TextureSize: 1
+    spawnable:
+      type: 
+      faction: 
+      level: 0
     equipmentNames: []
   attackPerSecond: 1.1
   range: 1
   cooldownCounter: 0
   AngleOffset: 180
+  stats: []
 --- !u!1 &4939428410325355661
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,9 +547,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 9221611226474244135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1044316562, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 612715979, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ownedRigidbody2D: {fileID: 3101927819988113630}
   ownedCollider2D: {fileID: 7311245161432805638}
   collidersInside: []
+  faction: 

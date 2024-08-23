@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static PlayerController;
+using GWBase;
+using static GWBase.PlayerController;
 
 public class LevelBar : MonoBehaviour, IBootable
 {

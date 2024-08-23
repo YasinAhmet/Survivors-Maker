@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <behaviour Name="ShakeScreenPlugin" From="GWMisc" Namespace="GWMisc">
+    </behaviour>
+
+</Defs>

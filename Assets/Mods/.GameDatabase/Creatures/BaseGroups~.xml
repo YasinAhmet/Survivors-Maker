@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThingDef Name="LoneWolf">
+        <description>Doom guy.</description>
+        <spawnable Type="group">
+            <faction>Player</faction>
+            <level>1</level>
+        </spawnable>
+        <positions>
+            <position>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </position>
+            <position>
+                <x>-1</x>
+                <y>1</y>
+                <z>0</z>
+            </position>
+            <position>
+                <x>1</x>
+                <y>-1</y>
+                <z>0</z>
+            </position>
+        </positions>
+        <members>
+            <member Leader="Yes" Name="SpaceMarine">
+                <behaviours>
+                    <behaviour Name="IncreaseStat">
+                        <customParameters>
+                            <parameter Name="StatName">
+                                <value>MovementSpeed</value>
+                            </parameter>
+                            <parameter Name="BonusRate">
+                                <value>1.85</value>
+                            </parameter>
+                        </customParameters>
+                    </behaviour>
+                </behaviours>
+            </member>
+        </members>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseGroup" Name="SpaceMarineGroup">
+        <description>Group of space marines.</description>
+        <spawnable Type="group">
+            <faction>Player</faction>
+            <level>1</level>
+        </spawnable>
+        <positions>
+            <position>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </position>
+            <position>
+                <x>-1</x>
+                <y>1</y>
+                <z>0</z>
+            </position>
+            <position>
+                <x>1</x>
+                <y>-1</y>
+                <z>0</z>
+            </position>
+        </positions>
+        <members>
+            <member Leader="Yes" Name="SpaceMarine">
+                <behaviours>
+                    <behaviour Name="IncreaseStat">
+                        <customParameters>
+                            <parameter Name="StatName">
+                                <value>MovementSpeed</value>
+                            </parameter>
+                            <parameter Name="BonusRate">
+                                <value>1.85</value>
+                            </parameter>
+                        </customParameters>
+                    </behaviour>
+                </behaviours>
+            </member>
+            <member Name="SpaceMarine">
+            </member>
+            <member Name="SpaceMarine">
+            </member>
+        </members>
+    </ThingDef>
+</Defs>

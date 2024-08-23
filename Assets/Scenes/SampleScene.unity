@@ -397,7 +397,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 115673686, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 1012804424, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefabDefs:
@@ -421,6 +421,8 @@ MonoBehaviour:
     prefabObj: {fileID: 7881934846869762854, guid: 12d3ed79768c5181f9fc22955e556f76, type: 3}
   - name: player
     prefabObj: {fileID: 2401052812281107487, guid: 293180d269c362bae94578b905e1306a, type: 3}
+  - name: levelUpScreen
+    prefabObj: {fileID: 7333716597796151682, guid: 7e9a29366a5fd2110931efabd2a7107f, type: 3}
 --- !u!114 &194952581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,7 +432,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1760467703, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: -1162867561, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   linkedManagers:
@@ -451,7 +453,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1108135773, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 1618750376, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inputSpeaker: {fileID: 6187621314025665081, guid: ae88b5fb196d916569d20a1ef3a85a1c, type: 3}
@@ -470,7 +472,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 165357253, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 922296707, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   creaturesPool:
@@ -502,10 +504,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1168700850, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: -728896306, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RNP_PointDistance: 5
+  RNP_PointDistance: 8.5
   RNP_Max: 1.25
   RNP_Min: 1
   SPW_Activated: 1
@@ -521,7 +523,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -264756242, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: -1840850090, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
@@ -536,17 +538,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 194952577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -580432151, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 835724900, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfLoadedAssemblies: []
   NameOfLoadedBehaviours: []
   NameOfLoadedTextures: []
   NameOfLoadedThings: []
-  pathToDlls: .Mods/Assembly
-  pathToTextures: .Mods/GameDatabase/Textures
-  pathToSound: .Mods/GameDatabase/Audio
-  extensionForDlls: .dll
+  dllFolder: Assembly/
+  texturesFolder: Resources/Textures/
+  soundFolder: Resources/Audio/
+  pathToGameDatabase: /Mods/.GameDatabase/
   projectPath: 
   uriStart: file://
 --- !u!114 &194952588
@@ -1246,7 +1248,7 @@ MonoBehaviour:
   m_AssetsPPU: 30
   m_RefResolutionX: 1920
   m_RefResolutionY: 1080
-  m_CropFrame: 4
+  m_CropFrame: 3
   m_GridSnapping: 2
   m_FilterMode: 1
   m_UpscaleRT: 0
@@ -1281,10 +1283,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0.99978
-    height: 1
+    x: -0.41642788
+    y: -0.41595927
+    width: 1.8338109
+    height: 1.8336164
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -1329,7 +1331,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1442221353}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 2124913109, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 674943916, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ViewWidth: -10

@@ -285,9 +285,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8319729562482350426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1432129127, guid: 81c22f8e6a54f7b7788ee8a981f0848d, type: 3}
+  m_Script: {fileID: 838921193, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 9104140525322299466}
   maxHealth: 0
-  spawnOffset: {x: 0, y: 1, z: 0}
+  spawnOffset: {x: 0, y: 1.5, z: 0}

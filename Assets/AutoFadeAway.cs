@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static LightObjectPool;
+using GWBase;
 
 public class AutoFadeAway : MonoBehaviour, IBootable, ITextMeshProContact
 {
