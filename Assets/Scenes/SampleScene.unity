@@ -423,6 +423,8 @@ MonoBehaviour:
     prefabObj: {fileID: 2401052812281107487, guid: 293180d269c362bae94578b905e1306a, type: 3}
   - name: levelUpScreen
     prefabObj: {fileID: 7333716597796151682, guid: 7e9a29366a5fd2110931efabd2a7107f, type: 3}
+  - name: gameOverScreen
+    prefabObj: {fileID: 3129420359718472406, guid: c7e5bbedad6e6eba8aede3e01c9d40ce, type: 3}
 --- !u!114 &194952581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,6 +465,7 @@ MonoBehaviour:
         m_Calls: []
     ownedCreature: {fileID: 0}
     XPRequirementMultiplier: 2
+  loaded: 0
 --- !u!114 &194952584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1283,10 +1286,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.41642788
-    y: -0.41595927
-    width: 1.8338109
-    height: 1.8336164
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

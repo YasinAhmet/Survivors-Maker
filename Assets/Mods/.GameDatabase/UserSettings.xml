@@ -22,5 +22,11 @@
                 </behaviour>
             </behaviours>
         </plugin>
+        <plugin Name="GameOverScreen">
+            <description>A Plugin that pops up game over screen on death</description>
+            <behaviours>
+                <behaviour Name="GameOverScreenPlugin"></behaviour>
+            </behaviours>
+        </plugin>
     </GamePlugins>
 </Defs>

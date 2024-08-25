@@ -11,6 +11,7 @@ namespace GWBase {
 
 public class GameObj_Creature : GameObj, IDamageable
 {
+    public ActionHappened onActionHappen;
     public XpGained onXpGain;
     [SerializeField] private Vector2 lastMovementVector;
 
@@ -88,6 +89,7 @@ public class GameObj_Creature : GameObj, IDamageable
 
     public void OnHitToEnemy(HitResult result)
     {
+        onActionHappen?.Invoke("hitGiven", result);
         if (result.killed)
         {
             Debug.Log("[XP] Target killed.. Got XP.");
@@ -113,6 +115,7 @@ public class GameObj_Creature : GameObj, IDamageable
 
     public bool TryDamage(float amount, out bool endedUpKilling)
     {
+        onActionHappen?.Invoke("hitTaken", amount);
         possessedThing.RemoveFromStat("Health", amount);
 
         var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
@@ -182,6 +185,11 @@ public class GameObj_Creature : GameObj, IDamageable
 
     [System.Serializable]
     public class XpGained : UnityEvent<float>
+    {
+    }
+
+    [System.Serializable]
+    public class ActionHappened : UnityEvent<string, object>
     {
     }
 }

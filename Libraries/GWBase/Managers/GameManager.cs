@@ -6,6 +6,7 @@ namespace GWBase {
 
 public class GameManager : MonoBehaviour
 {
+    public static SessionInformation sessionInformation = new SessionInformation();
     public Manager[] linkedManagers = {};
     public GameObject[] objectsToBoot = {};
     // Start is called before the first frame update
@@ -29,8 +30,12 @@ public class GameManager : MonoBehaviour
     }
 
     public struct SessionInformation {
-        int KillAmount;
-        int XP;
+        public int killCount;
+        public int totalXP;
+        public int totalDamageGiven;
+        public int totalDamageTaken;
+        public int totalHitsGiven;
+        public int totalHitsTaken;
         
     }
 }

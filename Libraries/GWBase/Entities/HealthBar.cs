@@ -13,7 +13,6 @@ public class HealthBar : MonoBehaviour, IBootable
 
     public void UpdateHealthBar(HealthInfo healthInfo) {
         if(healthInfo.changeMax) maxHealth = healthInfo.currentHealth;
-        Debug.Log($"[LEVEL] Updating health bar...");
         var newSliderValue = healthInfo.currentHealth/maxHealth;
         slider.value = newSliderValue;
     }

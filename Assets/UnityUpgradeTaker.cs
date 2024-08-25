@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using GWBase;
+using System.Threading.Tasks;
 
 
 public class UnityUpgradeTaker : MonoBehaviour, IUpgradeTaker
@@ -27,10 +28,15 @@ public class UnityUpgradeTaker : MonoBehaviour, IUpgradeTaker
         headerField.text = upgradeDef.upgradeName;
     }
 
-    public IEnumerator WaitForPickComplete()
+    public async Task WaitForPickComplete()
     {
         while (!selected) {
-            yield return new WaitForSeconds(0.25f);
+            await Task.Delay(250);
         }
+    }
+
+    public bool IsSelected()
+    {
+        return selected;
     }
 }

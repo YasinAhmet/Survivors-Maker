@@ -24,7 +24,32 @@ public class PlayerController
         }
 
         ownedCreature.onXpGain.AddListener(GainXP);
+        ownedCreature.onActionHappen.AddListener(ActionInfoProcessor);
         Debug.Log($"[PLAYER] XP Listener Fetched..");
+    }
+
+    public void ActionInfoProcessor(string key, object value) {
+        Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
+        var sessionInformation = GameManager.sessionInformation;
+        switch (key) {
+            case "hitGiven":
+                Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
+                HitResult hitResult = (HitResult)value;
+                sessionInformation.totalDamageGiven += (int)hitResult.damage;
+                sessionInformation.totalHitsGiven += 1;
+                if(hitResult.killed) sessionInformation.killCount++;
+                break;
+            case "hitTaken":
+                Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
+                sessionInformation.totalHitsTaken += 1;
+                sessionInformation.totalDamageTaken += (int)(float)value;
+                break;
+            default:
+                Debug.Log($"[PC] Unknown action: {key}");
+                break;
+        }
+
+        GameManager.sessionInformation = sessionInformation;
     }
 
     public IEnumerator Start()
@@ -41,19 +66,23 @@ public class PlayerController
         yield return this;
     }
 
-    public void TryLevelUp()
+    public async void TryLevelUp()
     {
         if (currentLevel.currentXP >= currentLevel.targetXP)
         {
             currentLevel.targetXP *= XPRequirementMultiplier;
             LevelUpEvent levelUpEvent = new LevelUpEvent();
-            levelUpEvent.EventStart();
+            await levelUpEvent.StartPopup();
+            Time.timeScale = 0.0001f;
+            await levelUpEvent.WaitForDone();
+            Time.timeScale = 1;
         }
     }
 
     public void GainXP(float amount)
     {
         currentLevel.currentXP += amount;
+        GameManager.sessionInformation.totalXP += (int)amount;
         TryLevelUp();
 
         onXP?.Invoke(currentLevel);

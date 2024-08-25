@@ -23,6 +23,6 @@ public class UpgradeDef
 public interface IUpgradeTaker{
     public void PossessUpgrade(UpgradeDef def);
     public UpgradeDef GetPossessed();
-    public IEnumerator WaitForPickComplete();
+    public bool IsSelected();
 }
 }
