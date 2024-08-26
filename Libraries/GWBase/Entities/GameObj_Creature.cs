@@ -59,7 +59,7 @@ public class GameObj_Creature : GameObj, IDamageable
         PossessEquipments(entity, faction);
         killCount = 0;
 
-        onHealthChange.Invoke(new HealthInfo()
+        onHealthChange?.Invoke(new HealthInfo()
         {
             currentHealth = possessedThing.GetStatValueByName("Health"),
             damageTaken = 0,

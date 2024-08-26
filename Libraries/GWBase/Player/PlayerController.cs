@@ -73,9 +73,7 @@ public class PlayerController
             currentLevel.targetXP *= XPRequirementMultiplier;
             LevelUpEvent levelUpEvent = new LevelUpEvent();
             await levelUpEvent.StartPopup();
-            Time.timeScale = 0.0001f;
             await levelUpEvent.WaitForDone();
-            Time.timeScale = 1;
         }
     }
 

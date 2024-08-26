@@ -14,9 +14,9 @@ namespace GWBase
         public List<IUpgradeTaker> upgradeTakers;
         public Task StartPopup()
         {
+            GameManager.gameManager.SetGameState(false);
             GameObject levelUpScreenPrefab = PrefabManager.prefabManager.GetPrefabOf("levelUpScreen");
             spawned = UIManager.uiManager.SpawnComponentAtUI(levelUpScreenPrefab);
-            MonoBehaviour reference = spawned.GetComponent<MonoBehaviour>();
             upgradeTakers = spawned.transform.GetComponentsInChildren<IUpgradeTaker>().ToList();
 
             foreach (var upgradeTaker in upgradeTakers)
@@ -35,6 +35,7 @@ namespace GWBase
                 foreach (var taker in upgradeTakers)
                 {
                     if(taker.IsSelected()) {
+                        GameManager.gameManager.SetGameState(true);
                         eventOver = true;
                         pickedUpgrade = taker;
                         PlayerController.playerController.ownedGroup.groupLeader.PossessUpgrades(new UpgradeDef[] { taker.GetPossessed() });

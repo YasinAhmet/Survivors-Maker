@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class IncreaseStat : IObjBehaviour
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public virtual void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public virtual async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         ownedObject = (GameObj_Creature)parameters[0];
         Debug.Log($"[STAT INCREASE] Stat Increase setup..");

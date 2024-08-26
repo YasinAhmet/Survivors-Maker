@@ -23,6 +23,12 @@ public class UIManager : Manager
         return spawned;
     }
 
+    public GameObject SpawnCanvas(GameObject gameObjectCanvas) {
+        var canvasPrefab = gameObjectCanvas;
+        canvas = Instantiate(canvasPrefab).GetComponent<Canvas>();
+        return canvas.gameObject;
+    }
+
     public void SpawnCanvas() {
         var canvasPrefab = PrefabManager.prefabManager.GetPrefabOf("canvas");
         canvas = Instantiate(canvasPrefab).GetComponent<Canvas>();

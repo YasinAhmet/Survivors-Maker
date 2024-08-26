@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -14,63 +15,47 @@ namespace GWMisc
     {
 
         public Camera targettedCamera;
-        public GameObj_Creature attachedObj;
+        private InteractionStash interactionStash;
 
-        public string GetName()
-        {
-            return "GameOverScreen";
-        }
+        public string GetName(){return "GameOverScreen";}
 
-        public void RareTick(object[] parameters, float deltaTime)
-        {
-            return;
-        }
+        public void RareTick(object[] parameters, float deltaTime){return;}
 
-        public async void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             targettedCamera = Camera.main;
-            await SetupGameOverScreen();
-        }
-
-        public void Start(XElement possess, object[] parameters)
-        {
-            return;
-        }
-
-        public async Task SetupGameOverScreen()
-        {
             while (!SettingsManager.settingsManager.loaded || !SettingsManager.settingsManager.playerController.ownedCreature)
             {
                 await Task.Delay(500);
             }
+            Debug.Log("[GAMEOVERSCREEN] loaded up the creature..");
 
-            attachedObj = SettingsManager.settingsManager.playerController.ownedCreature;
-            attachedObj.onHealthChange.AddListener(CheckGameOver);
-        }
+            var targetcreature = SettingsManager.settingsManager.playerController.ownedCreature;
+            while (!targetcreature.IsHealthDepleted()) {
+                await Task.Delay(250);
+            }
+            Debug.Log("[GAMEOVERSCREEN] creature doesn't have health anymore..");
 
-        public async void CheckGameOver(HealthInfo healthInfo) {
-            if(healthInfo.currentHealth > 0) return;
+            
+            GameManager.gameManager.SetGameState(false);
             var gameOverScreenPrefab = PrefabManager.prefabManager.GetPrefabOf("gameOverScreen");
-            Time.timeScale = 0.001f;
-            var spawnedObj = UIManager.uiManager.SpawnComponentAtUI(gameOverScreenPrefab);
-            await spawnedObj.GetComponent<IPopup>().WaitForDone();
-            await SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-            Time.timeScale = 1;
+            var spawnedObj = UIManager.uiManager.SpawnCanvas(gameOverScreenPrefab);
+
+            while(spawnedObj.gameObject.activeSelf) {
+                await Task.Delay(500);
+            }
+
+            GameManager.gameManager.SetGameState(true);
+            SceneManager.LoadScene("MainMenu");
         }
 
-        public void Suspend(object[] parameters)
-        {
-            return;
-        }
+        public void Start(XElement possess, object[] parameters){return;}
 
-        public void Tick(object[] parameters, float deltaTime)
-        {
-            return;
-        }
 
-        ParameterRequest[] IObjBehaviour.GetParameters()
-        {
-            return null;
-        }
+        public void Suspend(object[] parameters){return;}
+
+        public void Tick(object[] parameters, float deltaTime){return;}
+
+        ParameterRequest[] IObjBehaviour.GetParameters(){return null;}
     }
 }

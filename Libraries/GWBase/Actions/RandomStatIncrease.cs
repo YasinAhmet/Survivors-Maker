@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace GWBase {
 public class RandomStatIncrease : IncreaseStat
 {
     string[] randomStatPool = {"Damage", "MovementSpeed", "Health", "MaxHealth"};
-    public override void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public override async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         CustomParameter parameter = new CustomParameter() {
             parameterName = GetRandomStat()

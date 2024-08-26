@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
     <UpgradeDef Name="RandomStatIncrease">
-        <description>Random stat increase for leader. %25 bonus to a random that you don't know until you pick the upgrade...</description>
+        <description>Random stat increase for leader. %25 bonus to a random stat that you don't know until you pick the upgrade...</description>
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>

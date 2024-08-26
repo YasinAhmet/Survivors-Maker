@@ -1,35 +1,37 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace GWBase {
 
-public class GameManager : MonoBehaviour
+public class GameManager : Manager
 {
+    public static GameManager gameManager;
+    public bool gameState = false;
+    public float gameSpeed = 1;
     public static SessionInformation sessionInformation = new SessionInformation();
-    public Manager[] linkedManagers = {};
-    public GameObject[] objectsToBoot = {};
-    // Start is called before the first frame update
-    void Start()
-    {
-        Debug.Log("Kickstarting Game Manager");
-        StartCoroutine(LoadManagers());
-    }
-
-    public IEnumerator LoadManagers() {
-        foreach (var manager in linkedManagers)
-        {
-            Debug.Log($"Kickstarting {manager.name}");
-            yield return StartCoroutine(manager.Kickstart());
-        }
-
-        foreach (var objectBootable in objectsToBoot)
-        {
-            yield return StartCoroutine(objectBootable.GetComponent<IBootable>().Boot());
+    public async void SetGameState(bool active) {
+        if (active) {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Time.timeScale = 1f;
+            gameState = true;
+        } else {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            Time.timeScale = 0.0001f;
+            gameState = false;
         }
     }
 
-    public struct SessionInformation {
+        public override IEnumerator Kickstart()
+        {
+            gameManager = this;
+            yield return this;
+        }
+
+        public struct SessionInformation {
         public int killCount;
         public int totalXP;
         public int totalDamageGiven;

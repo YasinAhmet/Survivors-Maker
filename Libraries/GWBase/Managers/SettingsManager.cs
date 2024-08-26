@@ -31,7 +31,7 @@ namespace GWBase
             yield return this;
         }
 
-        public void LoadSettings()
+        public async void LoadSettings()
         {
             var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "UserSettings.xml");
             playerSettings = YKUtility.FromXElement<PlayerSettings>(defFile.Element("PlayerSettings"));
@@ -43,7 +43,7 @@ namespace GWBase
             }
         }
 
-        public void SerializePlugin(Plugin plugin) {
+        public async void SerializePlugin(Plugin plugin) {
             foreach (var behaviourDef in plugin.behaviours)
             {
                 SerializeBehaviour(behaviourDef);
@@ -52,13 +52,13 @@ namespace GWBase
             loadedUpPlugins.Add(plugin);
         }
 
-        public void SerializeBehaviour(BehaviourInfo behaviourDef) {
+        public async void SerializeBehaviour(BehaviourInfo behaviourDef) {
             var keyPair = AssetManager.assetLibrary.behaviourDictionary.FirstOrDefault(x => x.Key == behaviourDef.behaviourName);
             ObjBehaviourRef foundBehaviour = keyPair.Value;
             var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
             Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
             IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
-            newBehaviour.Start(null, null, behaviourDef.customParameters.ToArray());
+            await newBehaviour.Start(null, null, behaviourDef.customParameters.ToArray());
             loadedUpBehaviours.Add(newBehaviour);
         }
 

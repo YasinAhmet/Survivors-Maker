@@ -29,7 +29,7 @@ namespace GWMisc
             return;
         }
 
-        public async void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             shakePower = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Power")).parameterValue, CultureInfo.InvariantCulture);
             duration = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Duration")).parameterValue, CultureInfo.InvariantCulture);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -77,7 +78,7 @@ public class FollowLeader : IObjBehaviour
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         Start(possess, parameters);
     }
