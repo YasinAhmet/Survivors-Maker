@@ -514,6 +514,7 @@ GameObject:
   - component: {fileID: 1736317611}
   - component: {fileID: 1736317614}
   - component: {fileID: 1736317615}
+  - component: {fileID: 1736317616}
   m_Layer: 0
   m_Name: Boot
   m_TagString: Untagged
@@ -552,8 +553,11 @@ MonoBehaviour:
   NameOfLoadedBehaviours: []
   NameOfLoadedTextures: []
   NameOfLoadedThings: []
+  SheetOfLoadedAnims: []
+  SheetOfLoadedRawAnims: []
   dllFolder: Assembly/
   texturesFolder: Resources/Textures/
+  animationsFolder: Resources/Animations
   soundFolder: Resources/Audio/
   pathToGameDatabase: /Mods/.GameDatabase/
   projectPath: 
@@ -643,6 +647,18 @@ MonoBehaviour:
     prefabObj: {fileID: 7333716597796151682, guid: 7e9a29366a5fd2110931efabd2a7107f, type: 3}
   - name: gameOverScreen
     prefabObj: {fileID: 6399744749443573402, guid: 7aed74459ab5c301880ea84807c3ac62, type: 3}
+--- !u!114 &1736317616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736317609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9433a484e90e7ecc8d54521a3c651e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2112626856
 GameObject:
   m_ObjectHideFlags: 0

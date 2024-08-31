@@ -1,3 +1,4 @@
+using System.Xml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,10 +40,13 @@ namespace GWBase
         [XmlElement("spawnable")]
         public SpawnableInfo spawnable;
 
+        [XmlArray("animations")]
+        [XmlArrayItem("animation")]
+        public AnimationInfo[] animations;
 
         [XmlArray("equipments")]
         [XmlArrayItem("equipment")]
-        public string[] equipmentNames;
+        public EquipmentInfo[] equipmentNames;
 
         public Stat FindStatByName(string name)
         {
@@ -101,6 +105,39 @@ namespace GWBase
 
             AddNewStat(statName, newValue);
         }
+    }
+
+    [Serializable]
+    [XmlRoot("equipment")]
+    public struct EquipmentInfo {
+        [XmlAttribute("Name")]
+        public string name;
+        
+        [XmlElement("offset")]
+        public OffsetInfo offset;
+    }
+
+    [Serializable]
+    [XmlRoot("offset")]
+    public struct OffsetInfo {
+        [XmlElement("x")]
+        public float x;
+        [XmlElement("y")]
+        public float y;
+        [XmlElement("z")]
+        public float z;
+        [XmlElement("flipOffset")]
+        public string flipOffset;
+    }
+
+    [Serializable]
+    [XmlRoot("animation")]
+    public struct AnimationInfo {
+        [XmlAttribute("Name")]
+        public string typeName;
+
+        [XmlAttribute("SheetName")]
+        public string sheetName;
     }
 
     [Serializable]

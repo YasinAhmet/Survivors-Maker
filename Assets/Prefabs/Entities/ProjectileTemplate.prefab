@@ -164,6 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: -432422262, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onFacingDirectionChange:
+    m_PersistentCalls:
+      m_Calls: []
   onActivationChange:
     m_PersistentCalls:
       m_Calls: []
@@ -186,11 +189,19 @@ MonoBehaviour:
       type: 
       faction: 
       level: 0
+    animations: []
     equipmentNames: []
-  rareUpdateTickTime: 0.5
   stopIfObstacle: 0
   antiPushRadius: 0.4
+  velocityDropSpeed: 0
+  lastMovementVector: {x: 0, y: 0}
   faction: null
+  doesMirrorPosOnFacing: 0
+  lookingAtRight: 1
+  dontPassMaxSpeed: 0
+  hitEvent:
+    m_PersistentCalls:
+      m_Calls: []
   onHit:
     m_PersistentCalls:
       m_Calls: []

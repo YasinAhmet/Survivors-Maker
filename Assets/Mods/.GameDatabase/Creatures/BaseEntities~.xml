@@ -3,7 +3,10 @@
     <ThingDef ParentName="BaseCreature" Name="SpaceMarine">
         <description>Description.</description>
         <textureName>Cursed armor</textureName>
-        <textureSize>0.6</textureSize>
+        <textureSize>0.35</textureSize>
+        <animations>
+            <animation Name="Movement" SheetName="Marine1_Walking"></animation>
+        </animations>
         <SoundConfig>
             <DamageTaken>
                 <sound>paine.mp3</sound>
@@ -19,10 +22,18 @@
         <stats>
             <stat Name="Health">150</stat>
             <stat Name="Damage">20</stat>
-            <stat Name="MovementSpeed">700</stat>
+            <stat Name="MovementSpeed">1500</stat>
+            <stat Name="MaxSpeed">5</stat>
         </stats>
         <equipments>
-            <equipment>Gun</equipment>
+            <equipment Name="Gun">
+                <offset>
+                    <x>0.1</x>
+                    <y>-0.35</y>
+                    <z>0</z>
+                    <flipOffset>Yes</flipOffset>
+                </offset>
+            </equipment>
         </equipments>
     </ThingDef>
 
@@ -47,11 +58,12 @@
         </spawnable>
         <stats>
             <stat Name="Health">100</stat>
-            <stat Name="MovementSpeed">400</stat>
-            <stat Name="AttackSpeed">0.5</stat>
+            <stat Name="MovementSpeed">800</stat>
+            <stat Name="AttackSpeed">1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
-            <stat Name="AttackCooldown">0.4</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">5</stat>
         </stats>
     </ThingDef>
 
@@ -76,11 +88,12 @@
         </spawnable>
         <stats>
             <stat Name="Health">50</stat>
-            <stat Name="MovementSpeed">800</stat>
-            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="MovementSpeed">1200</stat>
+            <stat Name="AttackSpeed">0.5</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">5</stat>
-            <stat Name="AttackCooldown">0.3</stat>
+            <stat Name="AttackCooldown">0.8</stat>
+            <stat Name="MaxSpeed">7</stat>
         </stats>
     </ThingDef>
 </Defs>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <AnimationDef Name="Movement" SheetName="Marine1_Walking">
+        <frameCount>4</frameCount>
+        <framePerSecond>4</framePerSecond>
+        <doesLoop>Yes</doesLoop>
+    </AnimationDef>
+</Defs>

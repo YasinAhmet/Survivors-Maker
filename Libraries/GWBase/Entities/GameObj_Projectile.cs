@@ -10,6 +10,7 @@ namespace GWBase {
 
 public class GameObj_Projectile : GameObj
 {
+    public HitEvent hitEvent;
     public TriggerContactEvent onHit;
     public HitResult foundResult;
     public Stat[] stats;
@@ -31,23 +32,22 @@ public class GameObj_Projectile : GameObj
 
     void OnTriggerEnter2D(Collider2D other){
         if(other.gameObject.layer != LayerMask.NameToLayer(faction)) {
+            Debug.Log($"[HIT] Hit... {other.gameObject.name}");
             onHit?.Invoke(other);
         }
     }
 
     public void ProcessHit(HitResult hit) {
         foundResult = hit;
-    }
-
-    public bool ResultFound() {return foundResult.hitTarget == null || !gameObject.activeSelf;}
-
-    public IEnumerator WaitProjectileResult() {
-        yield return new WaitUntil(ResultFound);
+        hitEvent?.Invoke(this, hit);
     }
 }
 
 [System.Serializable]
 public class TriggerContactEvent : UnityEvent<Collider2D>{}
+
+[System.Serializable]
+public class HitEvent : UnityEvent<GameObj_Projectile, HitResult>{}
 
 public struct HitResult {
    public float damage;

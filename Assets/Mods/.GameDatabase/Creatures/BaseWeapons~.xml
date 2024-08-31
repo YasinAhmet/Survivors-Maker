@@ -3,7 +3,7 @@
     <ThingDef ParentName="BaseWeapon" Name="Gun">
         <description>Weapon.</description>
         <textureName>GW_VolkSerpenta</textureName>
-        <textureSize>0.3</textureSize>
+        <textureSize>1</textureSize>
         <stats>
             <stat Name="Range">55</stat>
             <stat Name="AttackPerSecond">1.5</stat>

@@ -38,7 +38,7 @@ public class FireAttack : IObjBehaviour
     }
 
     public void Tick(object[] parameters, float deltaTime){
-        ownedProjectile.MoveObject(ownedProjectile.transform.right, lifetime);
+        ownedProjectile.MoveObject(ownedProjectile.transform.right, deltaTime);
         lifetimeCounter += deltaTime;
 
         if(lifetimeCounter > lifetime) {

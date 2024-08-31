@@ -13,6 +13,7 @@ namespace GWBase
 
     public class GameObj : MonoBehaviour
     {
+        public FacingDirectionChanged onFacingDirectionChange;
         public ActivationChange onActivationChange;
 
         public HealthChangeEvent onHealthChange;
@@ -21,14 +22,18 @@ namespace GWBase
         [SerializeField] protected CircleCollider2D ownedCollider;
         [SerializeField] protected ThingDef possessedThing;
 
-        [SerializeField] protected List<IObjBehaviour> installedBehaviours = new();
+        [SerializeField] public List<IObjBehaviour> installedBehaviours = new();
 
-        protected float rareUpdateTimeCounter = 0;
-        [SerializeField] protected float rareUpdateTickTime = 0.5f;
         [SerializeField] protected bool stopIfObstacle = true;
         [SerializeField] protected float antiPushRadius = 0.4f;
+        [SerializeField] protected float velocityDropSpeed = 0.5f;
+        [SerializeField] public Vector2 lastMovementVector;
         private BehaviourHandler<GameObj> behaviourHandler = null;
         public string faction = "null";
+        public bool doesMirrorPosOnFacing = false;
+        public bool lookingAtRight = true;
+        public bool dontPassMaxSpeed = true;
+
 
         public virtual void Spawned()
         {
@@ -37,24 +42,11 @@ namespace GWBase
 
         public virtual void Update()
         {
-            rareUpdateTimeCounter += Time.deltaTime;
-            if (rareUpdateTimeCounter > rareUpdateTickTime)
-            {
-                rareUpdateTimeCounter = 0;
-                RareTick();
-            }
-            foreach (var behaviour in installedBehaviours)
-            {
-                behaviour?.Tick(null, Time.deltaTime);
-            }
         }
 
-        public virtual void RareTick()
+
+        public virtual void RareTick(float timePassed)
         {
-            foreach (var behaviour in installedBehaviours)
-            {
-                behaviour?.RareTick(null, rareUpdateTickTime);
-            }
         }
 
         public virtual void Possess<T>(ThingDef entity, string faction)
@@ -107,31 +99,40 @@ namespace GWBase
 
         public virtual void MoveObject(Vector2 axis, float delta)
         {
-
-            var movementResult = axis * possessedThing.GetStatValueByName("MovementSpeed");
-
-            RaycastHit2D collision = Physics2D.CircleCast(
-                            (Vector2)transform.position + movementResult,
-                            antiPushRadius,
-                            movementResult);
-
-            if (stopIfObstacle && collision.collider != null)
-            {
-                ownedRigidbody.velocity = ownedRigidbody.velocity / 4;
+            Vector2 movementResult = Vector2.zero;
+            bool doesPass = DoesPassMaxSpeed(out float maxSpeed, out float currentSpeed);
+            if (doesPass && dontPassMaxSpeed) {
+                return;
+            } else {
+                movementResult = axis * possessedThing.GetStatValueByName("MovementSpeed");
             }
-            else
+
+            if (stopIfObstacle)
             {
-                if (ownedRigidbody.isKinematic)
+                RaycastHit2D collision = Physics2D.CircleCast(
+                                (Vector2)transform.position + movementResult,
+                                antiPushRadius,
+                                movementResult);
+
+
+                if (stopIfObstacle && collision.collider != null)
                 {
-                    ownedRigidbody.MovePosition(movementResult * delta);
+                    var newVelocity = (ownedRigidbody.velocity / 4) - new Vector2(velocityDropSpeed, velocityDropSpeed);
+                    ownedRigidbody.velocity = new Vector2(Math.Max(newVelocity.x, 0), Math.Max(newVelocity.y, 0));
                 }
-                else
-                {
-                    ownedRigidbody.AddForce(movementResult * delta);
+                else {
+                     if (ownedRigidbody.isKinematic) { ownedRigidbody.MovePosition(movementResult * delta); } else { ownedRigidbody.AddForce(movementResult * delta); } 
                 }
             }
+            else { if (ownedRigidbody.isKinematic) { ownedRigidbody.MovePosition(movementResult * delta); } else { ownedRigidbody.AddForce(movementResult * delta); } }
         }
 
+        public bool DoesPassMaxSpeed(out float maxSpeed, out float currentSpeed) {
+            maxSpeed = possessedThing.GetStatValueByName("MaxSpeed");
+            currentSpeed = ownedRigidbody.velocity.magnitude;
+            return currentSpeed > maxSpeed;
+        }
+ 
         public ThingDef GetPossessed()
         {
             return possessedThing;
@@ -145,14 +146,52 @@ namespace GWBase
             return audioClip;
         }
 
-        public void SetRigidbodyMode(string type) {
-            if (type == "Kinematic") {
+        public void SetRigidbodyMode(string type)
+        {
+            if (type == "Kinematic")
+            {
                 ownedRigidbody.bodyType = RigidbodyType2D.Kinematic;
-            } else if (type == "Dynamic") {
+            }
+            else if (type == "Dynamic")
+            {
                 ownedRigidbody.bodyType = RigidbodyType2D.Dynamic;
             }
         }
 
+        public void FlipFace(bool flipRight)
+        {
+            bool wasLookingAtRight = lookingAtRight;
+            if (flipRight)
+            {
+                lookingAtRight = false;
+                ownedSpriteRenderer.flipX = true;
+            }
+            else
+            {
+                lookingAtRight = true;
+                ownedSpriteRenderer.flipX = false;
+            }
+
+            onFacingDirectionChange?.Invoke(flipRight);
+        }
+
+        public void FlipLocalPos(bool flipRight)
+        {
+            bool wasLookingAtRight = lookingAtRight;
+            if (flipRight)
+            {
+                lookingAtRight = false;
+            }
+            else
+            {
+                lookingAtRight = true;
+            }
+
+            if (lookingAtRight != wasLookingAtRight && doesMirrorPosOnFacing)
+            {
+                transform.localPosition = new Vector3(-transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
+            }
+        }
     }
 
     public interface IDamageable
@@ -178,8 +217,8 @@ namespace GWBase
     }
 
 
-    [System.Serializable]
-    public class ActivationChange : UnityEvent<bool>
-    {
-    }
+    [System.Serializable] public class ActivationChange : UnityEvent<bool> { }
+
+
+    [System.Serializable] public class FacingDirectionChanged : UnityEvent<bool> { }
 }

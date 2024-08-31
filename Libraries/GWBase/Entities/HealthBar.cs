@@ -17,7 +17,7 @@ public class HealthBar : MonoBehaviour, IBootable
         slider.value = newSliderValue;
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         if(attachedObject) transform.position = attachedObject.transform.position + spawnOffset;
     }

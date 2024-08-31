@@ -11,9 +11,10 @@
         <stats>
             <stat Name="Damage">20</stat>
             <stat Name="DamageVariety">1.25</stat>
-            <stat Name="MovementSpeed">30</stat>
+            <stat Name="MovementSpeed">2500</stat>
             <stat Name="Lifetime">2</stat>
             <stat Name="HitLifetime">0.15</stat>
+            <stat Name="MaxSpeed">10</stat>
         </stats>
     </ThingDef>
 </Defs>

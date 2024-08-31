@@ -11,6 +11,7 @@ using System.Xml.XPath;
 using System.IO;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using static GWBase.AnimationSheet;
 namespace GWBase {
 
 public class AssetManager : Manager
@@ -24,14 +25,19 @@ public class AssetManager : Manager
     [SerializeField] public Dictionary<string, ThingDef> actionsDictionary = new();
     [SerializeField] public Dictionary<string, Assembly> assemblyDictionary = new();
     [SerializeField] public Dictionary<string, Sprite> texturesDictionary = new();
+    [SerializeField] public Dictionary<string, AnimationSheet> animationSheetsDictionary = new();
+    [SerializeField] public Dictionary<string, Texture2D> rawAnimationSheetsDictionary = new();
     private string[] validTextureExtensions = { ".jpg", ".jpeg", ".png" };
     private string[] validSoundExtensions = { ".mp3" };
     public List<string> NameOfLoadedAssemblies = new List<string>();
     public List<string> NameOfLoadedBehaviours = new List<string>();
     public List<string> NameOfLoadedTextures = new List<string>();
     public List<string> NameOfLoadedThings = new List<string>();
+    public List<AnimationSheet> SheetOfLoadedAnims = new List<AnimationSheet>();
+    public List<Texture2D> SheetOfLoadedRawAnims = new List<Texture2D>();
     public string dllFolder = "Assembly";
     public string texturesFolder = "Resources/Textures";
+    public string animationsFolder = "Resources/Animations";
     public string soundFolder = "Sound";
     public string pathToGameDatabase = "/Mods/.GameDatabase/";
     public string pathToAssemblies {
@@ -42,13 +48,15 @@ public class AssetManager : Manager
     }
     public string projectPath;
     public string uriStart = "file://";
-    public override IEnumerator Kickstart()
+
+        public override IEnumerator Kickstart()
     {
         assetLibrary = this;
         projectPath = Application.dataPath;
         yield return StartCoroutine(LoadCustomSounds(fullPathToGameDatabase+soundFolder));
         LoadCustomAssemblies(pathToAssemblies);
         LoadCustomTextures(fullPathToGameDatabase+texturesFolder);
+        LoadRawAnimationSheets(fullPathToGameDatabase+animationsFolder);
         LoadDefs();
     }
 
@@ -119,6 +127,14 @@ public class AssetManager : Manager
         foreach (var file in files)
         {
             LoadUpgrades(path, Path.GetFileName(file));
+        }
+
+
+        path = fullPathToGameDatabase+"Animations";
+        files = Directory.GetFiles(path);
+        foreach (var file in files)
+        {
+            LoadAnimationDef(path, Path.GetFileName(file));
         }
     }
 
@@ -202,6 +218,37 @@ public class AssetManager : Manager
             texturesDictionary.Add(Path.GetFileNameWithoutExtension(filePath), sprite);
             NameOfLoadedTextures.Add(Path.GetFileNameWithoutExtension(filePath));
             Debug.Log("[LOAD] Texture Added From [" + filePath + "]: " + Path.GetFileNameWithoutExtension(filePath));
+        }
+    }
+
+    void LoadAnimationDef(string path, string fileName)
+    {
+        var defFile = XElement.Load(path + "/" + fileName);
+        var animDefs = defFile.Elements("AnimationDef").Where(x => x.Attribute("abstract") == null);
+
+        foreach (var animDef in animDefs)
+        {
+            AnimationSheet animationSheet = new AnimationSheet();
+            animationSheet.info = YKUtility.FromXElement<AnimationSheetInfo>(animDef);
+            Texture2D correspondingAnimationSheet = rawAnimationSheetsDictionary.FirstOrDefault(x => x.Key == animationSheet.info.sheetName).Value;
+            animationSheet.Initiate(correspondingAnimationSheet, animationSheet.info.frameCount);
+            animationSheetsDictionary.Add(animationSheet.info.sheetName, animationSheet);
+            SheetOfLoadedAnims.Add(animationSheet);
+            Debug.Log("[LOAD] Animation Def Added From [" + path + "]: " + fileName);
+        }
+    }
+
+    void LoadRawAnimationSheets(string path)
+    {
+        var files = Directory.GetFiles(path);
+        foreach (var filePath in files)
+        {
+            if (!validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath)))) continue;
+
+            var texture2D = LoadPNG(filePath);
+            rawAnimationSheetsDictionary.Add(Path.GetFileNameWithoutExtension(filePath), texture2D);
+            SheetOfLoadedRawAnims.Add(texture2D);
+            Debug.Log($"[LOAD] Animation Raw Added From [{filePath }] in the name of { Path.GetFileNameWithoutExtension(filePath) }");
         }
     }
 

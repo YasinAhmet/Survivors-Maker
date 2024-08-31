@@ -58,7 +58,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 841028004bb904d06876ba8e25e4b335, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 7839472567634266479, guid: 3be29731cab10d7539c600de77e76bab, type: 3}
   m_Color: {r: 0.98818624, g: 0.98818624, b: 0.98818624, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -137,8 +137,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 1
-  m_Mass: 10.210176
+  m_UseAutoMass: 0
+  m_Mass: 1
   m_LinearDrag: 5
   m_AngularDrag: 5
   m_GravityScale: 0
@@ -165,6 +165,9 @@ MonoBehaviour:
   m_Script: {fileID: -1801443511, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onFacingDirectionChange:
+    m_PersistentCalls:
+      m_Calls: []
   onActivationChange:
     m_PersistentCalls:
       m_Calls: []
@@ -187,22 +190,37 @@ MonoBehaviour:
       type: 
       faction: 
       level: 0
+    animations: []
     equipmentNames: []
-  rareUpdateTickTime: 0.5
   stopIfObstacle: 1
   antiPushRadius: 0.4
+  velocityDropSpeed: 0.5
+  lastMovementVector: {x: 0, y: 0}
   faction: null
+  doesMirrorPosOnFacing: 0
+  lookingAtRight: 1
+  dontPassMaxSpeed: 1
+  onActionHappen:
+    m_PersistentCalls:
+      m_Calls: []
   onXpGain:
     m_PersistentCalls:
       m_Calls: []
-  lastMovementVector: {x: 0, y: 0}
   maxhealth: 100
   hitColorSpeed: 0.1
   xp: 40
   healthBar: {fileID: 0}
   killCount: 0
   currentState: 0
-  leader: {fileID: 0}
+  lastAxis: {x: 0, y: 0}
+  movementAnimationSheet:
+    info:
+      typeName: 
+      sheetName: 
+      frameCount: 0
+      framePerSecond: 0
+      doesLoop: 
+    calculatedFrames: []
 --- !u!58 &887809032209305599
 CircleCollider2D:
   m_ObjectHideFlags: 0

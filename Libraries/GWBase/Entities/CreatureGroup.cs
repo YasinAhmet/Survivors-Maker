@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace GWBase
 {
+     [Serializable]
     public class CreatureGroup
     {
         public GameObj_Creature groupLeader = null;
@@ -19,16 +21,32 @@ namespace GWBase
 
         public void AttachCreature(GameObj_Creature creature) {
             attachedCreatures.Add(creature);
-            int randomIndex = Random.Range(0, emptyPositions.Count);
-            var position = emptyPositions[randomIndex];
-            creature.transform.position = creature.transform.position + new Vector3(position.x, position.y, 0);
-            emptyPositions.Remove(position);
 
             if(groupLeader != null) {
+                int randomIndex = UnityEngine.Random.Range(0, emptyPositions.Count);
+                var position = emptyPositions[randomIndex];
+                emptyPositions.Remove(position);
                 creature.transform.SetParent(groupLeader.transform);
+                creature.SetRigidbodyMode("Kinematic");
+                creature.GroupAttached = new GroupMemberReference() {
+                group = this,
+                position = new Vector3(position.x, position.y, 0)
+            };
+            } else {
+                groupLeader = creature;
+                creature.GroupAttached = new GroupMemberReference() {
+                group = this,
+                position = new Vector3()
+            };
             }
         }
         
+    }
+
+    [Serializable]
+    public struct GroupMemberReference {
+        public CreatureGroup group;
+        public Vector3 position;
     }
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
     <PlayerSettings>
-        <playerGroup>LoneWolf</playerGroup>
+        <playerGroup>SpaceMarineGroup</playerGroup>
         <playerCharacter>SpaceMarine</playerCharacter>
         <statMultipliers>
             <damage>1.5</damage>

@@ -57,13 +57,7 @@ public class SpawnManager : Manager
                 GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, creature.transform);
                 PlayerController.playerController.ownedCreature = creature;
                 leaderObj = creature;
-                groupInstance.groupLeader = leaderObj;
-            } else {
-                if(leaderObj) creature.leader = leaderObj;
-                creature.SetRigidbodyMode("Kinematic");
             }
-
-            groupInstance.attachedCreatures.Add(creature);
             
             if(member.extraBehaviours != null && member.extraBehaviours.Count > 0) creature.PossessBehaviours(member.extraBehaviours.ToArray(), false);
         }

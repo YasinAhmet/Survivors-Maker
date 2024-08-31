@@ -25,7 +25,7 @@ public class FollowLeader : IObjBehaviour
     public void Start(XElement possess, object[] parameters)
     {
         ownedObject = (GameObj_Creature)parameters[0];
-        objectToFollow = ownedObject.leader;
+        //objectToFollow = ownedObject.leader;
         InitializeVariables(ownedObject);
         Debug.Log($"[CHASE] Following Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
     }
