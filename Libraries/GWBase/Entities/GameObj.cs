@@ -15,7 +15,6 @@ namespace GWBase
     {
         public FacingDirectionChanged onFacingDirectionChange;
         public ActivationChange onActivationChange;
-
         public HealthChangeEvent onHealthChange;
         [SerializeField] protected SpriteRenderer ownedSpriteRenderer;
         [SerializeField] protected Rigidbody2D ownedRigidbody;
@@ -33,6 +32,8 @@ namespace GWBase
         public bool doesMirrorPosOnFacing = false;
         public bool lookingAtRight = true;
         public bool dontPassMaxSpeed = true;
+        public float cachedMovementSpeed = 0;
+        public bool isActive = false;
 
 
         public virtual void Spawned()
@@ -40,7 +41,7 @@ namespace GWBase
 
         }
 
-        public virtual void Update()
+        public virtual void FixedUpdate()
         {
         }
 
@@ -57,6 +58,8 @@ namespace GWBase
             possessedThing = YKUtility.DeepClone<ThingDef>(entity);
             PossessTexture(entity);
             PossessBehaviours(entity.behaviours, true);
+            cachedMovementSpeed = possessedThing.GetStatValueByName("MaxSpeed");
+            isActive = true;
         }
 
         public virtual void PossessTexture(ThingDef entity)
@@ -99,15 +102,17 @@ namespace GWBase
 
         public virtual void MoveObject(Vector2 axis, float delta)
         {
-            Vector2 movementResult = Vector2.zero;
+            /*Vector2 movementResult = Vector2.zero;
             bool doesPass = DoesPassMaxSpeed(out float maxSpeed, out float currentSpeed);
-            if (doesPass && dontPassMaxSpeed) {
-                return;
-            } else {
-                movementResult = axis * possessedThing.GetStatValueByName("MovementSpeed");
-            }
+            
+            if (doesPass && dontPassMaxSpeed) { return; } 
+            else { movementResult = axis * cachedMovementSpeed; }
+*/
+            Vector2 movementResult = axis * cachedMovementSpeed;
+            if (movementResult == Vector2.zero) return;
+            if (ownedRigidbody.isKinematic) { ownedRigidbody.MovePosition(movementResult * delta); } else { ownedRigidbody.AddForce(movementResult * delta); }
 
-            if (stopIfObstacle)
+            /*if (stopIfObstacle)
             {
                 RaycastHit2D collision = Physics2D.CircleCast(
                                 (Vector2)transform.position + movementResult,
@@ -125,6 +130,7 @@ namespace GWBase
                 }
             }
             else { if (ownedRigidbody.isKinematic) { ownedRigidbody.MovePosition(movementResult * delta); } else { ownedRigidbody.AddForce(movementResult * delta); } }
+        */
         }
 
         public bool DoesPassMaxSpeed(out float maxSpeed, out float currentSpeed) {

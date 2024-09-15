@@ -22,8 +22,7 @@
         <stats>
             <stat Name="Health">150</stat>
             <stat Name="Damage">20</stat>
-            <stat Name="MovementSpeed">1500</stat>
-            <stat Name="MaxSpeed">5</stat>
+            <stat Name="MaxSpeed">600</stat>
         </stats>
         <equipments>
             <equipment Name="Gun">
@@ -58,12 +57,11 @@
         </spawnable>
         <stats>
             <stat Name="Health">100</stat>
-            <stat Name="MovementSpeed">800</stat>
             <stat Name="AttackSpeed">1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">5</stat>
+            <stat Name="MaxSpeed">450</stat>
         </stats>
     </ThingDef>
 
@@ -88,12 +86,11 @@
         </spawnable>
         <stats>
             <stat Name="Health">50</stat>
-            <stat Name="MovementSpeed">1200</stat>
             <stat Name="AttackSpeed">0.5</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">5</stat>
             <stat Name="AttackCooldown">0.8</stat>
-            <stat Name="MaxSpeed">7</stat>
+            <stat Name="MaxSpeed">700</stat>
         </stats>
     </ThingDef>
 </Defs>

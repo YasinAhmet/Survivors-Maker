@@ -85,7 +85,7 @@ namespace GWBase
 
         public void LaunchNewProjectile(ThingDef type)
         {
-            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.projectilesPool.ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction);
+            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction);
             slot.stats = stats;
             slot.hitEvent.AddListener(OwnedProjectileHit);
         }
@@ -96,10 +96,10 @@ namespace GWBase
         }
 
 
-        public override void Update()
+        public override void FixedUpdate()
         {
-            cooldownCounter += Time.deltaTime;
-            rotationUpdateCounter += Time.deltaTime;
+            cooldownCounter += Time.fixedDeltaTime;
+            rotationUpdateCounter += Time.fixedDeltaTime;
 
             if (rotationUpdateCounter > rotationUpdateTime)
             {
@@ -116,7 +116,7 @@ namespace GWBase
 
             foreach (var behaviour in installedBehaviours)
             {
-                behaviour?.Tick(null, Time.deltaTime);
+                behaviour?.Tick(null, Time.fixedDeltaTime);
             }
         }
 

@@ -14,7 +14,7 @@
             <stat Name="MovementSpeed">2500</stat>
             <stat Name="Lifetime">2</stat>
             <stat Name="HitLifetime">0.15</stat>
-            <stat Name="MaxSpeed">10</stat>
+            <stat Name="MaxSpeed">1200</stat>
         </stats>
     </ThingDef>
 </Defs>

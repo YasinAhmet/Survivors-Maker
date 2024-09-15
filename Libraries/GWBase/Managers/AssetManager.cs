@@ -11,6 +11,7 @@ using System.Xml.XPath;
 using System.IO;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using UnityEngine.Events;
 using static GWBase.AnimationSheet;
 namespace GWBase {
 
@@ -40,6 +41,10 @@ public class AssetManager : Manager
     public string animationsFolder = "Resources/Animations";
     public string soundFolder = "Sound";
     public string pathToGameDatabase = "/Mods/.GameDatabase/";
+
+    [Serializable]
+    public class LoadingUpdateEvent : UnityEvent<string>{}
+    public LoadingUpdateEvent LoadingUpdate;
     public string pathToAssemblies {
         get { return projectPath + "/Mods/" + dllFolder; }
     }
@@ -53,9 +58,13 @@ public class AssetManager : Manager
     {
         assetLibrary = this;
         projectPath = Application.dataPath;
+        LoadingUpdate?.Invoke("Loading Sounds..");
         yield return StartCoroutine(LoadCustomSounds(fullPathToGameDatabase+soundFolder));
+        LoadingUpdate?.Invoke("Loading Assemblies..");
         LoadCustomAssemblies(pathToAssemblies);
+        LoadingUpdate?.Invoke("Loading Textures..");
         LoadCustomTextures(fullPathToGameDatabase+texturesFolder);
+        LoadingUpdate?.Invoke("Loading Animations..");
         LoadRawAnimationSheets(fullPathToGameDatabase+animationsFolder);
         LoadDefs();
     }
@@ -100,14 +109,16 @@ public class AssetManager : Manager
     }
 
     void LoadDefs()
-    {
+    {        
+        LoadingUpdate?.Invoke("Loading Creatures..");
         var path = fullPathToGameDatabase+"Creatures";
         var files = Directory.GetFiles(path);
         foreach (var file in files)
         {
             LoadDef(path, Path.GetFileName(file));
         }
-
+        
+        LoadingUpdate?.Invoke("Loading Behaviours..");
         path = fullPathToGameDatabase+"Behaviours";
         files = Directory.GetFiles(path);
         foreach (var file in files)
@@ -115,6 +126,7 @@ public class AssetManager : Manager
             LoadBehaviours(path, Path.GetFileName(file));
         }
 
+        LoadingUpdate?.Invoke("Loading Actions..");
         path = fullPathToGameDatabase+"Actions";
         files = Directory.GetFiles(path);
         foreach (var file in files)
@@ -122,6 +134,7 @@ public class AssetManager : Manager
             LoadActions(path, Path.GetFileName(file));
         }
 
+        LoadingUpdate?.Invoke("Loading Upgrades..");
         path = fullPathToGameDatabase+"Upgrades";
         files = Directory.GetFiles(path);
         foreach (var file in files)
@@ -129,7 +142,7 @@ public class AssetManager : Manager
             LoadUpgrades(path, Path.GetFileName(file));
         }
 
-
+        LoadingUpdate?.Invoke("Processing Animations..");
         path = fullPathToGameDatabase+"Animations";
         files = Directory.GetFiles(path);
         foreach (var file in files)

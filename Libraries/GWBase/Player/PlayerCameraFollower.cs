@@ -16,10 +16,10 @@ public class PlayerCameraFollower : MonoBehaviour, IBootable
         targetTransform = PlayerController.playerController.ownedCreature.transform;
         yield return this;
     }
-    void Update()
+    void FixedUpdate()
     {
         try {
-            transform.position = Vector3.Lerp(transform.position, new Vector3(targetTransform.position.x, targetTransform.position.y, ViewWidth), Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(targetTransform.position.x, targetTransform.position.y, ViewWidth), Time.fixedDeltaTime);
         } catch {
             if(PlayerController.playerController?.ownedCreature != null)targetTransform = PlayerController.playerController.ownedCreature.transform;
         }

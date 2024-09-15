@@ -4,103 +4,129 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
+
 namespace GWBase
 {
 
     public class PoolManager : Manager
     {
+        [Serializable]
+        public class OnPoolManagerEvent : UnityEvent<PoolManager> { }
         public static PoolManager poolManager;
-        [SerializeField] public ObjectPool creaturesPool;
-        [SerializeField] public ObjectPool projectilesPool;
-        [SerializeField] public LightObjectPool effectsPool;
-        [SerializeField] public WorldUIObjectPool floatingTextPool;
+        public static OnPoolManagerEvent OnPoolManagerInitiated;
+        public int defaultPoolSize = 50;
         [SerializeField] protected float rareUpdateTickTime = 1.5f;
+        public Dictionary<string, ObjectPool> objectPools = new Dictionary<string, ObjectPool>();
+        public Dictionary<string, LightObjectPool> lightObjectPools = new Dictionary<string, LightObjectPool>();
+        public Dictionary<string, WorldUIObjectPool> uiObjectPools = new Dictionary<string, WorldUIObjectPool>();
         public float rareUpdateTimeCounter = 0;
+        public List<ObjectPool> cachedObjectPools = new List<ObjectPool>();
+
+        public ObjectPool GetObjectPool(string poolName)
+        {
+            return objectPools.FirstOrDefault(x => x.Key == poolName).Value;
+        }
+        
+        public LightObjectPool GetLightObjectPool(string poolName)
+        {
+            return lightObjectPools.FirstOrDefault(x => x.Key == poolName).Value;
+        }
+        
+        public WorldUIObjectPool GetUIObjectPool(string poolName)
+        {
+            return uiObjectPools.FirstOrDefault(x => x.Key == poolName).Value;
+        }
+        
+        public void TickPooledObjects(GameObj[] gameObjs)
+        {
+            foreach (var gameObj in gameObjs)
+            {
+                if (!gameObj.gameObject.activeSelf) continue;
+
+                foreach (var behaviour in gameObj.installedBehaviours)
+                {
+                    behaviour?.RareTick(null, Time.fixedDeltaTime);
+                }
+
+                gameObj.RareTick(rareUpdateTickTime);
+
+                foreach (var behaviour in gameObj.installedBehaviours)
+                {
+                    behaviour?.RareTick(null, rareUpdateTickTime);
+                }
+                
+            }
+        }
+
+
+        public int rareFixedUpdateTick = 10;
+        public int rareFixedUpdateCounter = 0;
+        public void RareFixedUpdate()
+        {
+            rareUpdateTimeCounter += Time.fixedDeltaTime;
+            bool goingToRareUpdate = rareUpdateTimeCounter > rareUpdateTickTime;
+            foreach (var objectPool in cachedObjectPools)
+            {
+                if(goingToRareUpdate)TickPooledObjects(objectPool.pooledObjects);
+                foreach (var gameObj in objectPool.pooledObjects)
+                {
+                    if (!gameObj.isActive) continue;
+                    gameObj.MoveObject(gameObj.lastMovementVector, Time.fixedDeltaTime*rareFixedUpdateTick);
+                }
+            }
+        }
 
         public void FixedUpdate()
         {
-            rareUpdateTimeCounter += Time.fixedDeltaTime;
-
-            foreach (var creature in creaturesPool.pooledObjects)
+            rareFixedUpdateCounter++;
+            if (rareFixedUpdateCounter > rareFixedUpdateTick)
             {
-                if (!creature.gameObject.activeSelf) continue;
-                creature.MoveObject(creature.lastMovementVector, Time.fixedDeltaTime);
-
-                foreach (var behaviour in creature.installedBehaviours)
-                {
-                    behaviour?.Tick(null, Time.fixedDeltaTime);
-                }
-
-                if (rareUpdateTimeCounter > rareUpdateTickTime)
-                {
-                    creature.RareTick(rareUpdateTickTime);
-
-                    foreach (var behaviour in creature.installedBehaviours)
-                    {
-                        behaviour?.RareTick(null, rareUpdateTickTime);
-                    }
-                }
-
+                rareFixedUpdateCounter = 0;
+                RareFixedUpdate();
             }
-
-            foreach (var projectile in projectilesPool.pooledObjects)
-            {
-                if (!projectile.gameObject.activeSelf) continue;
-
-                foreach (var behaviour in projectile.installedBehaviours)
-                {
-                    behaviour?.Tick(null, Time.fixedDeltaTime);
-                }
-
-                if (rareUpdateTimeCounter > rareUpdateTickTime)
-                {
-                    projectile.RareTick(rareUpdateTickTime);
-                    foreach (var behaviour in projectile.installedBehaviours)
-                    {
-                        behaviour?.RareTick(null, rareUpdateTickTime);
-                    }
-
-                    rareUpdateTimeCounter = 0;
-                }
-
-            }
-
         }
 
         public override IEnumerator Kickstart()
         {
             poolManager = this;
 
-
-            creaturesPool = new ObjectPool
+            var creaturesPool = new ObjectPool
             {
-                pooledObjects = new GameObj[50],
+                pooledObjects = new GameObj[defaultPoolSize],
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("enemy")
             };
             creaturesPool.FillList();
+            objectPools.Add("Creatures", creaturesPool);
 
-            projectilesPool = new ObjectPool
+            var projectilesPool = new ObjectPool
             {
-                pooledObjects = new GameObj[50],
+                pooledObjects = new GameObj[defaultPoolSize],
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("projectile")
             };
             projectilesPool.FillList();
+            objectPools.Add("Projectiles", projectilesPool);
 
 
-            effectsPool = new LightObjectPool
+            var effectsPool = new LightObjectPool
             {
-                pooledObjects = new GameObject[50],
+                pooledObjects = new GameObject[defaultPoolSize],
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("hitEffect")
             };
             effectsPool.FillList();
+            lightObjectPools.Add("Effects", effectsPool);
+            
 
-            floatingTextPool = new WorldUIObjectPool
+            var floatingTextPool = new WorldUIObjectPool
             {
-                pooledObjects = new GameObject[50],
+                pooledObjects = new GameObject[defaultPoolSize],
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("floatingText")
             };
             floatingTextPool.FillList();
+            uiObjectPools.Add("UI",floatingTextPool); 
+            cachedObjectPools = objectPools.Values.ToList();
 
+            OnPoolManagerInitiated?.Invoke(this);
             yield return this;
         }
     }

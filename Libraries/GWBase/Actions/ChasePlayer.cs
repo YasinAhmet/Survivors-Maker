@@ -69,7 +69,7 @@ public class ChasePlayer : IObjBehaviour
 
         yield return new WaitForSeconds(attackSpeed);
 
-        if(TargetInRange(out Vector2 direction, out float distance)) {
+        if(TargetInRange(out Vector3 direction, out float distance)) {
             objectToFollow.TryDamage(damage, out bool endedUpKilling);
             cooldownCounter = attackCooldown;
         } 
@@ -79,10 +79,10 @@ public class ChasePlayer : IObjBehaviour
     }
 
     public void TryMove() {
-        bool isInRange = TargetInRange(out Vector2 direction, out float distance);
+        bool isInRange = TargetInRange(out Vector3 direction, out float distance);
 
         if(isInRange)  {
-            direction = Vector2.zero;
+            direction = Vector3.zero;
 
             if(cooldownCounter <= 0) {;
                 ownedObject.StartCoroutine(TryAttack());
@@ -94,9 +94,12 @@ public class ChasePlayer : IObjBehaviour
         ownedObject.UpdateCharacterMovement(direction);
     }
 
-    public bool TargetInRange(out Vector2 direction, out float distance) {
-        direction = YKUtility.GetDirection(ownedObject.transform.position, objectToFollow.transform.position);
-        distance = Vector2.Distance(ownedObject.transform.position, objectToFollow.transform.position);
+    public bool TargetInRange(out Vector3 direction, out float distance)
+    {
+        Vector3 ownedPos = ownedObject.transform.position;
+        Vector3 followPos = objectToFollow.transform.position;
+        direction = (followPos - ownedPos).normalized;
+        distance = Vector3.Distance(followPos, ownedPos);
         return distance < reachDistance;
     }
 

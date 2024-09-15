@@ -9,6 +9,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+
 namespace GWBase
 {
 
@@ -55,7 +57,18 @@ namespace GWBase
 
         public float GetStatValueByName(string name)
         {
-            return float.Parse(stats.FirstOrDefault(x => x.Name.Equals(name)).Value, CultureInfo.InvariantCulture);
+            float value = 0;
+            try
+            {
+                value = float.Parse(stats.FirstOrDefault(x => x.Name.Equals(name)).Value, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                Debug.LogWarning($"Tried to find stat {name} but found null. Returning 0 instead.");
+                return 0;
+            }
+
+            return value;
         }
 
         public void AddNewStat(string statName, float statValue)

@@ -419,6 +419,17 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     ownedCreature: {fileID: 0}
+    ownedGroup:
+      groupLeader: {fileID: 0}
+      groupDef:
+        groupName: 
+        description: 
+        spawnableInfo:
+          type: 
+          faction: 
+          level: 0
+      attachedCreatures: []
+      groupFaction: 
     XPRequirementMultiplier: 2
   loaded: 0
 --- !u!114 &194952584
@@ -433,26 +444,10 @@ MonoBehaviour:
   m_Script: {fileID: 922296707, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creaturesPool:
-    pooledObjects: []
-    attachedPrefab: {fileID: 0}
-    maxAmount: 50
-    maxAmountIncrease: 50
-  projectilesPool:
-    pooledObjects: []
-    attachedPrefab: {fileID: 0}
-    maxAmount: 50
-    maxAmountIncrease: 50
-  effectsPool:
-    pooledObjects: []
-    attachedPrefab: {fileID: 0}
-    maxAmount: 50
-    maxAmountIncrease: 50
-  floatingTextPool:
-    pooledObjects: []
-    attachedPrefab: {fileID: 0}
-    maxAmount: 50
-    maxAmountIncrease: 50
+  defaultPoolSize: 50
+  rareUpdateTickTime: 0.66
+  rareUpdateTimeCounter: 0
+  cachedObjectPools: []
 --- !u!114 &194952585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1337,7 +1332,7 @@ MonoBehaviour:
   m_AssetsPPU: 30
   m_RefResolutionX: 1920
   m_RefResolutionY: 1080
-  m_CropFrame: 3
+  m_CropFrame: 0
   m_GridSnapping: 2
   m_FilterMode: 1
   m_UpscaleRT: 0
@@ -1372,15 +1367,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.23686723
-    y: -0.62988114
-    width: 1.8338109
-    height: 1.8336164
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 18
+  orthographic size: 9.933333
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

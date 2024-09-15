@@ -24,6 +24,12 @@ public class FireAttack : IObjBehaviour
     public string GetName(){return null;}
     public ParameterRequest[] GetParameters(){return null;}
     public void RareTick(object[] parameters, float deltaTime){
+        ownedProjectile.MoveObject(ownedProjectile.transform.right, deltaTime);
+        lifetimeCounter += deltaTime;
+
+        if(lifetimeCounter > lifetime) {
+            ownedProjectile.gameObject.SetActive(false);
+        }
     }
     public void Suspend(object[] parameters){}
 
@@ -35,6 +41,7 @@ public class FireAttack : IObjBehaviour
         lifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("Lifetime").Value, CultureInfo.InvariantCulture);
         hitlifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("HitLifetime").Value, CultureInfo.InvariantCulture);
         ownedProjectile.onHit.AddListener(HitHostileObject);
+        RareTick(null, 0.5f);
     }
 
     public void Tick(object[] parameters, float deltaTime){
@@ -51,7 +58,7 @@ public class FireAttack : IObjBehaviour
         ownedProjectile.gameObject.SetActive(false);
 
         var closestPoint = collider.ClosestPoint(ownedProjectile.GetComponent<Collider2D>().bounds.center);
-        PoolManager.poolManager.effectsPool.ObtainSlotForType(null, closestPoint, ownedProjectile.transform.eulerAngles.z, ownedProjectile.faction, hitlifetime);
+        PoolManager.poolManager.GetLightObjectPool("Effects").ObtainSlotForType(null, closestPoint, ownedProjectile.transform.eulerAngles.z, ownedProjectile.faction, hitlifetime);
         float totalDamage = float.Parse(ownedProjectile.stats.FirstOrDefault(x => x.Name.Equals("Damage")).Value, CultureInfo.InvariantCulture) + possessed.GetStatValueByName("Damage");
 
         if(collider.TryGetComponent<IDamageable>(out IDamageable damageable)) {
@@ -72,7 +79,7 @@ public class FireAttack : IObjBehaviour
     }
 
     public void SpawnFloatingText(Vector3 position, float damage) {
-        var obj = PoolManager.poolManager.floatingTextPool.ObtainSlotForType(null, position, 0, ownedProjectile.faction);
+        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position, 0, ownedProjectile.faction);
         obj.GetComponent<IBootable>().BootSync();
         obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
     }

@@ -4,7 +4,7 @@ using System.Collections;
 public class FPSCounter : MonoBehaviour
 {
     private float count;
-    
+
     private IEnumerator Start()
     {
         GUI.depth = 2;
@@ -17,6 +17,6 @@ public class FPSCounter : MonoBehaviour
     
     private void OnGUI()
     {
-        GUI.Label(new Rect(5, 40, 100, 25), "FPS: " + Mathf.Round(count));
+        GUI.Label(new Rect(5, 40, 200, 50), "FPS: " + Mathf.Round(count));
     }
 }

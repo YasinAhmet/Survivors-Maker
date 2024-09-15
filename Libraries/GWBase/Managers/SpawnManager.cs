@@ -50,7 +50,7 @@ public class SpawnManager : Manager
         foreach (var member in playerGroup.members)
         {
             ThingDef characterDefToAdd = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(member.defName)).Value;
-            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.creaturesPool.ObtainSlotForType(characterDefToAdd, Vector2.zero, 0, playerGroup.spawnableInfo.faction);
+            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(characterDefToAdd, Vector2.zero, 0, playerGroup.spawnableInfo.faction);
             groupInstance.AttachCreature(creature);
 
             if(member.isLeaderSTR != null && member.isLeaderSTR.Equals("Yes")) {
@@ -85,7 +85,7 @@ public class SpawnManager : Manager
 
         while (SPW_Activated)
         {
-            PoolManager.poolManager.creaturesPool.ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
+            PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
             yield return new WaitForSeconds(SPW_DelayBetweenSpawns);
         }
     }

@@ -72,9 +72,11 @@ public static class YKUtility
     {
         using (var ms = new MemoryStream())
         {
+#pragma warning disable SYSLIB0011
             var formatter = new BinaryFormatter();
             formatter.Serialize(ms, obj);
             ms.Position = 0;
+#pragma warning restore SYSLIB0011
 
             return (T)formatter.Deserialize(ms);
         }

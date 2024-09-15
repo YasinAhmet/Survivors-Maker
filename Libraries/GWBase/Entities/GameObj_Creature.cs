@@ -76,9 +76,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public override void Spawned()
         {
             base.Spawned();
-            healthBar = UIManager.uiManager.SpawnObjectAtWorldCanvas(PrefabManager.prefabManager.GetPrefabOf("healthBar"));
-            healthBar.GetComponent<HealthBar>().AttachObj(this);
-            healthBar.GetComponent<IBootable>().Boot();
         }
 
         public void UpdateCharacterMovement(Vector2 axis) { lastMovementVector = axis; }
@@ -130,7 +127,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 spawnedObj.transform.position = spawnedObj.transform.position + new Vector3(equipment.offset.x, equipment.offset.y, equipment.offset.z);
                 spawnedObj.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction);
                 GameObj_Shooter shooter = (GameObj_Shooter)spawnedObj;
-                shooter.onProjectileHit += OnHitToEnemy;
+                //shooter.onProjectileHit += OnHitToEnemy;
                 shooter.stats = possessedThing.stats;
 
                 if(equipment.offset.flipOffset == "Yes") {
@@ -205,6 +202,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
 
                 gameObject.SetActive(false);
+                isActive = false;
                 ownedSpriteRenderer.color = Color.white;
                 onActivationChange?.Invoke(false);
                 return true;
