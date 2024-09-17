@@ -17,7 +17,6 @@ namespace GWBase
         public static PoolManager poolManager;
         public static OnPoolManagerEvent OnPoolManagerInitiated;
         public int defaultPoolSize = 50;
-        [SerializeField] protected float rareUpdateTickTime = 1.5f;
         public Dictionary<string, ObjectPool> objectPools = new Dictionary<string, ObjectPool>();
         public Dictionary<string, LightObjectPool> lightObjectPools = new Dictionary<string, LightObjectPool>();
         public Dictionary<string, WorldUIObjectPool> uiObjectPools = new Dictionary<string, WorldUIObjectPool>();
@@ -66,6 +65,7 @@ namespace GWBase
             }
         }
 
+        [SerializeField] protected float rareUpdateTickTime = 1.5f;
         private float timePassedSinceLastTick = 1;
         private void FixedUpdate()
         {

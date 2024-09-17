@@ -9,6 +9,7 @@ namespace GWBase {
 public class PlayerController
 {
     public XpGainedUpdate onXP = new();
+    public HealthChangeEvent onOwnedHealthChange = new();
 
     public static PlayerController playerController;
     public GameObj_Creature ownedCreature;
@@ -25,6 +26,7 @@ public class PlayerController
 
         ownedCreature.onXpGain.AddListener(GainXP);
         ownedCreature.onActionHappen.AddListener(ActionInfoProcessor);
+        ownedCreature.onHealthChange.AddListener(onOwnedHealthChange.Invoke);
         Debug.Log($"[PLAYER] XP Listener Fetched..");
     }
 
@@ -62,6 +64,9 @@ public class PlayerController
             targetXP = 300,
             level = 1
         };
+
+        GameObject orb = UIManager.uiManager.SpawnComponentAtUI(PrefabManager.prefabManager.GetPrefabOf("healthOrb"));
+        orb.GetComponent<IBootable>().BootSync();
 
         yield return this;
     }

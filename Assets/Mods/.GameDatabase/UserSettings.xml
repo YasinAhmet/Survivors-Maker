@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
     <PlayerSettings>
-        <playerGroup>LoneWolf</playerGroup>
+        <playerGroup>SimpleGuy</playerGroup>
         <playerCharacter>SpaceMarine</playerCharacter>
 		<spawnEnemies>Yes</spawnEnemies>
 		<playSoundEffects>No</playSoundEffects>
-		<rareTickTime>0.25</rareTickTime>
+		<rareTickTime>0.15</rareTickTime>
         <statMultipliers>
             <damage>1.5</damage>
             <travelSpeed>2</travelSpeed>

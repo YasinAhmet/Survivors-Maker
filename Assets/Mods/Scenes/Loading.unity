@@ -676,6 +676,8 @@ MonoBehaviour:
     prefabObj: {fileID: 7333716597796151682, guid: 7e9a29366a5fd2110931efabd2a7107f, type: 3}
   - name: gameOverScreen
     prefabObj: {fileID: 6399744749443573402, guid: 7aed74459ab5c301880ea84807c3ac62, type: 3}
+  - name: healthOrb
+    prefabObj: {fileID: 774086238527357872, guid: 3f8811239d170cd4abe689c837cd52f9, type: 3}
 --- !u!114 &1736317616
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -418,6 +418,9 @@ MonoBehaviour:
     onXP:
       m_PersistentCalls:
         m_Calls: []
+    onOwnedHealthChange:
+      m_PersistentCalls:
+        m_Calls: []
     ownedCreature: {fileID: 0}
     ownedGroup:
       groupLeader: {fileID: 0}
@@ -445,10 +448,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultPoolSize: 50
-  rareUpdateTickTime: 0.25
   cachedObjectPools: []
   enabled: 1
   multiThreadTick: 1
+  rareUpdateTickTime: 0.25
 --- !u!114 &194952585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,8 +543,8 @@ MonoBehaviour:
         m_CallState: 2
   linkedManagers:
   - {fileID: 194952581}
-  - {fileID: 194952583}
   - {fileID: 194952586}
+  - {fileID: 194952583}
   - {fileID: 194952584}
   - {fileID: 194952585}
   linkedBootable:

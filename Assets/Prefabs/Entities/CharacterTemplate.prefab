@@ -199,6 +199,7 @@ MonoBehaviour:
     stats: []
     TexturePath: 
     TextureSize: 1
+    mass: 1
     spawnable:
       type: 
       faction: 
@@ -338,11 +339,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8692104434234018929, guid: c337de15460159340b4e522a6996e323, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 175.9707
       objectReference: {fileID: 0}
     - target: {fileID: 8692104434234018929, guid: c337de15460159340b4e522a6996e323, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 59.999996
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8692104434234018929, guid: c337de15460159340b4e522a6996e323, type: 3}
       propertyPath: m_LocalScale.x
@@ -382,11 +383,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8692104434234018929, guid: c337de15460159340b4e522a6996e323, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.015
       objectReference: {fileID: 0}
     - target: {fileID: 8692104434234018929, guid: c337de15460159340b4e522a6996e323, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.26
+      value: 1.073
       objectReference: {fileID: 0}
     - target: {fileID: 8692104434234018929, guid: c337de15460159340b4e522a6996e323, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
