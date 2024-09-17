@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,13 +21,16 @@ namespace GWBase
         public Dictionary<string, ObjectPool> objectPools = new Dictionary<string, ObjectPool>();
         public Dictionary<string, LightObjectPool> lightObjectPools = new Dictionary<string, LightObjectPool>();
         public Dictionary<string, WorldUIObjectPool> uiObjectPools = new Dictionary<string, WorldUIObjectPool>();
-        public float rareUpdateTimeCounter = 0;
         public List<ObjectPool> cachedObjectPools = new List<ObjectPool>();
+        public bool enabled = true;
+        public bool multiThreadTick = true;
+        JobHandle poolTickHandle;
 
         public ObjectPool GetObjectPool(string poolName)
         {
             return objectPools.FirstOrDefault(x => x.Key == poolName).Value;
         }
+        
         
         public LightObjectPool GetLightObjectPool(string poolName)
         {
@@ -37,53 +41,39 @@ namespace GWBase
         {
             return uiObjectPools.FirstOrDefault(x => x.Key == poolName).Value;
         }
-        
-        public void TickPooledObjects(GameObj[] gameObjs)
+
+        private void OnDisable()
         {
-            foreach (var gameObj in gameObjs)
-            {
-                if (!gameObj.gameObject.activeSelf) continue;
-
-                foreach (var behaviour in gameObj.installedBehaviours)
-                {
-                    behaviour?.RareTick(null, Time.fixedDeltaTime);
-                }
-
-                gameObj.RareTick(rareUpdateTickTime);
-
-                foreach (var behaviour in gameObj.installedBehaviours)
-                {
-                    behaviour?.RareTick(null, rareUpdateTickTime);
-                }
-                
-            }
+            enabled = false;
         }
 
-
-        public int rareFixedUpdateTick = 10;
-        public int rareFixedUpdateCounter = 0;
-        public void RareFixedUpdate()
+        public void PoolTick(float deltaTime)
         {
-            rareUpdateTimeCounter += Time.fixedDeltaTime;
-            bool goingToRareUpdate = rareUpdateTimeCounter > rareUpdateTickTime;
-            foreach (var objectPool in cachedObjectPools)
+            
+            foreach (var objectPool in PoolManager.poolManager.cachedObjectPools)
             {
-                if(goingToRareUpdate)TickPooledObjects(objectPool.pooledObjects);
                 foreach (var gameObj in objectPool.pooledObjects)
                 {
                     if (!gameObj.isActive) continue;
-                    gameObj.MoveObject(gameObj.lastMovementVector, Time.fixedDeltaTime*rareFixedUpdateTick);
+                    gameObj.MoveObject(gameObj.lastMovementVector,deltaTime);
+                    foreach (var behaviour in gameObj.installedBehaviours)
+                    {
+                        behaviour?.RareTick(null, rareUpdateTickTime);
+                    }
+
+                    gameObj.RareTick(rareUpdateTickTime);
                 }
             }
         }
 
-        public void FixedUpdate()
+        private float timePassedSinceLastTick = 1;
+        private void FixedUpdate()
         {
-            rareFixedUpdateCounter++;
-            if (rareFixedUpdateCounter > rareFixedUpdateTick)
+            timePassedSinceLastTick += Time.fixedDeltaTime;
+            if (timePassedSinceLastTick > rareUpdateTickTime)
             {
-                rareFixedUpdateCounter = 0;
-                RareFixedUpdate();
+                PoolTick(timePassedSinceLastTick);
+                timePassedSinceLastTick = 0;
             }
         }
 
@@ -127,8 +117,11 @@ namespace GWBase
             cachedObjectPools = objectPools.Values.ToList();
 
             OnPoolManagerInitiated?.Invoke(this);
+            enabled = true;
+            rareUpdateTickTime = SettingsManager.playerSettings.rareTickTime;
             yield return this;
         }
+        
     }
 
 }

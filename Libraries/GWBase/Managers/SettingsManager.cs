@@ -35,6 +35,7 @@ namespace GWBase
         {
             var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "UserSettings.xml");
             playerSettings = YKUtility.FromXElement<PlayerSettings>(defFile.Element("PlayerSettings"));
+            playerSettings.shouldPlaySoundEffects = playerSettings.playSoundEffects == "Yes";
             
             foreach (var plugin in defFile.Element("GamePlugins").Elements("plugin"))
             {
@@ -71,6 +72,15 @@ namespace GWBase
 
             [XmlElement("playerCharacter")]
             public string playerCharacter;
+            
+            [XmlElement("spawnEnemies")]
+            public string shouldSpawn;
+            [XmlElement("rareTickTime")]
+            public float rareTickTime;
+            [XmlElement("playSoundEffects")]
+            public string playSoundEffects;
+
+            public bool shouldPlaySoundEffects;
         }
 
         [XmlRoot("plugin")]

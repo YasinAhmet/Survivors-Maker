@@ -22,6 +22,7 @@ namespace GWBase
         [SerializeField] private GameObject healthBar;
         public int killCount = 0;
         public CreatureState currentState;
+        public Transform ownedTransform;
 public GroupMemberReference groupAttached = new GroupMemberReference();
         public GroupMemberReference GroupAttached {
             set {
@@ -76,6 +77,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public override void Spawned()
         {
             base.Spawned();
+            ownedTransform = transform;
         }
 
         public void UpdateCharacterMovement(Vector2 axis) { lastMovementVector = axis; }
@@ -123,7 +125,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 var thingDef = AssetManager.assetLibrary.thingDefsDictionary.FirstOrDefault(x => x.Key == equipment.name).Value;
                 var prefab = PrefabManager.prefabManager.GetPrefabOf("equipment");
                 var spawnedObj = Instantiate(prefab).GetComponent<GameObj>();
-                spawnedObj.transform.parent = gameObject.transform;
+                spawnedObj.transform.parent = transform;
                 spawnedObj.transform.position = spawnedObj.transform.position + new Vector3(equipment.offset.x, equipment.offset.y, equipment.offset.z);
                 spawnedObj.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction);
                 GameObj_Shooter shooter = (GameObj_Shooter)spawnedObj;

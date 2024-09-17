@@ -22,7 +22,7 @@
         <stats>
             <stat Name="Health">150</stat>
             <stat Name="Damage">20</stat>
-            <stat Name="MaxSpeed">600</stat>
+            <stat Name="MaxSpeed">150</stat>
         </stats>
         <equipments>
             <equipment Name="Gun">
@@ -39,7 +39,7 @@
     <ThingDef ParentName="BaseCreature" Name="Orc">
         <description>Description.</description>
         <textureName>Monster</textureName>
-        <textureSize>0.5</textureSize>
+        <textureSize>0.8</textureSize>
         <SoundConfig>
             <DamageTaken>
                 <sound>paine.mp3</sound>
@@ -57,18 +57,18 @@
         </spawnable>
         <stats>
             <stat Name="Health">100</stat>
-            <stat Name="AttackSpeed">1</stat>
+            <stat Name="AttackSpeed">0.2</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">450</stat>
+            <stat Name="MaxSpeed">40</stat>
         </stats>
     </ThingDef>
 
     <ThingDef ParentName="BaseCreature" Name="Ghost">
         <description>Description.</description>
         <textureName>Ghost</textureName>
-        <textureSize>0.45</textureSize>
+        <textureSize>0.8</textureSize>
         <SoundConfig>
             <DamageTaken>
                 <sound>paind.mp3</sound>
@@ -82,15 +82,15 @@
         </behaviours>
         <spawnable Type="creature">
             <faction>Hostile</faction>
-            <level>1</level>
+            <level>2</level>
         </spawnable>
         <stats>
             <stat Name="Health">50</stat>
-            <stat Name="AttackSpeed">0.5</stat>
+            <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">5</stat>
             <stat Name="AttackCooldown">0.8</stat>
-            <stat Name="MaxSpeed">700</stat>
+            <stat Name="MaxSpeed">85</stat>
         </stats>
     </ThingDef>
 </Defs>

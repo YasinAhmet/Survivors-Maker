@@ -36,6 +36,17 @@
                             </parameter>
                         </customParameters>
                     </behaviour>
+					
+                    <behaviour Name="IncreaseStat">
+                        <customParameters>
+                            <parameter Name="StatName">
+                                <value>Health</value>
+                            </parameter>
+                            <parameter Name="BonusRate">
+                                <value>150000</value>
+                            </parameter>
+                        </customParameters>
+                    </behaviour>
                 </behaviours>
             </member>
         </members>

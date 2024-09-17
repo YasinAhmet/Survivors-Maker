@@ -29,23 +29,23 @@ public class PlayerController
     }
 
     public void ActionInfoProcessor(string key, object value) {
-        Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
+        //Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
         var sessionInformation = GameManager.sessionInformation;
         switch (key) {
             case "hitGiven":
-                Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
+                //Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
                 HitResult hitResult = (HitResult)value;
                 sessionInformation.totalDamageGiven += (int)hitResult.damage;
                 sessionInformation.totalHitsGiven += 1;
                 if(hitResult.killed) sessionInformation.killCount++;
                 break;
             case "hitTaken":
-                Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
+                //Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
                 sessionInformation.totalHitsTaken += 1;
                 sessionInformation.totalDamageTaken += (int)(float)value;
                 break;
             default:
-                Debug.Log($"[PC] Unknown action: {key}");
+                //Debug.Log($"[PC] Unknown action: {key}");
                 break;
         }
 

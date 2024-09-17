@@ -83,9 +83,10 @@ public class SpawnManager : Manager
     {
         yield return new WaitForSeconds(SPW_FirstDelay);
 
-        while (SPW_Activated)
+        while (SPW_Activated && SettingsManager.playerSettings.shouldSpawn == "Yes")
         {
-            PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
+            GameObj slot = PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
+            UIManager.uiManager.AttachObjectToWorldCanvas(slot.gameObject);
             yield return new WaitForSeconds(SPW_DelayBetweenSpawns);
         }
     }

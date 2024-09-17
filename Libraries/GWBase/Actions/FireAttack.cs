@@ -41,7 +41,7 @@ public class FireAttack : IObjBehaviour
         lifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("Lifetime").Value, CultureInfo.InvariantCulture);
         hitlifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("HitLifetime").Value, CultureInfo.InvariantCulture);
         ownedProjectile.onHit.AddListener(HitHostileObject);
-        RareTick(null, 0.5f);
+        RareTick(null, SettingsManager.playerSettings.rareTickTime);
     }
 
     public void Tick(object[] parameters, float deltaTime){

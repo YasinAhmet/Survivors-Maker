@@ -7,7 +7,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 namespace GWBase {
 
 [Serializable]
@@ -57,50 +62,44 @@ public class ChasePlayer : IObjBehaviour
     public void TickLogic() {
         switch(ownedObject.currentState) {
             case GameObj_Creature.CreatureState.Idle: case GameObj_Creature.CreatureState.Moving:
-                TryMove();
+                TargetInRange(ownedObject.ownedTransform.position, objectToFollow.ownedTransform.position, out Vector3 direction, out float distance);
+
+                if(distance < reachDistance && cooldownCounter <= 0) TryAttack();
+                else TryMove(direction);
                 break;
         }
     }
-
-    public IEnumerator TryAttack() {
+ 
+    public void TryAttack() {
         cooldownCounter = attackCooldown;
         ownedObject.UpdateCharacterMovement(Vector2.zero);
         ownedObject.currentState = GameObj_Creature.CreatureState.OnAction;
 
-        yield return new WaitForSeconds(attackSpeed);
-
-        if(TargetInRange(out Vector3 direction, out float distance)) {
-            objectToFollow.TryDamage(damage, out bool endedUpKilling);
-            cooldownCounter = attackCooldown;
-        } 
+        objectToFollow.TryDamage(damage, out bool endedUpKilling);
+        cooldownCounter = attackCooldown;
 
         ownedObject.currentState = GameObj_Creature.CreatureState.Idle;
-        yield return this;
     }
 
-    public void TryMove() {
-        bool isInRange = TargetInRange(out Vector3 direction, out float distance);
-
-        if(isInRange)  {
-            direction = Vector3.zero;
-
-            if(cooldownCounter <= 0) {;
-                ownedObject.StartCoroutine(TryAttack());
-            }
-            return;
-        }
-
+    public void TryMove(Vector3 direction) {
         ownedObject.currentState = GameObj_Creature.CreatureState.Moving;
         ownedObject.UpdateCharacterMovement(direction);
     }
 
-    public bool TargetInRange(out Vector3 direction, out float distance)
+    public bool TargetInRange(Vector3 ownedPos, Vector3 followPos, out Vector3 direction, out float distance)
     {
-        Vector3 ownedPos = ownedObject.transform.position;
-        Vector3 followPos = objectToFollow.transform.position;
         direction = (followPos - ownedPos).normalized;
-        distance = Vector3.Distance(followPos, ownedPos);
-        return distance < reachDistance;
+
+        // Calculate the squared distance instead of the actual distance
+        float squaredDistance = (followPos - ownedPos).sqrMagnitude;
+        float squaredReachDistance = reachDistance * reachDistance;
+
+        // Return true if the squared distance is less than the squared reach distance
+        bool inRange = squaredDistance < squaredReachDistance;
+
+        // You can still output the actual distance if needed
+        distance = Mathf.Sqrt(squaredDistance);
+        return inRange;
     }
 
         public void Tick(object[] parameters, float deltaTime){}
