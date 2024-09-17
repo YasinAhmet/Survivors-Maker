@@ -5,7 +5,7 @@
         <playerCharacter>SpaceMarine</playerCharacter>
 		<spawnEnemies>Yes</spawnEnemies>
 		<playSoundEffects>No</playSoundEffects>
-		<rareTickTime>0.15</rareTickTime>
+		<rareTickTime>0.25</rareTickTime>
         <statMultipliers>
             <damage>1.5</damage>
             <travelSpeed>2</travelSpeed>

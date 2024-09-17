@@ -4,6 +4,7 @@
         <description>Description.</description>
         <textureName>Cursed armor</textureName>
         <textureSize>0.35</textureSize>
+        <mass>20</mass>
         <animations>
             <animation Name="Movement" SheetName="Marine1_Walking"></animation>
         </animations>
@@ -22,7 +23,7 @@
         <stats>
             <stat Name="Health">150</stat>
             <stat Name="Damage">20</stat>
-            <stat Name="MaxSpeed">150</stat>
+            <stat Name="MaxSpeed">2500</stat>
         </stats>
         <equipments>
             <equipment Name="Gun">

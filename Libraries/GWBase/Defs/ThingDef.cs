@@ -38,6 +38,9 @@ namespace GWBase
 
         [XmlElement("textureSize")]
         public float TextureSize = 1f;
+        
+        [XmlElement("mass")]
+        public float mass = 1f;
 
         [XmlElement("spawnable")]
         public SpawnableInfo spawnable;

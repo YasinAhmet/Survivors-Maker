@@ -63,6 +63,7 @@ namespace GWBase
             cachedMovementSpeed = possessedThing.GetStatValueByName("MaxSpeed");
             isActive = true;
             isKinematicObj = ownedRigidbody.isKinematic;
+            ownedRigidbody.mass = possessedThing.mass;
         }
 
         public virtual void PossessTexture(ThingDef entity)
