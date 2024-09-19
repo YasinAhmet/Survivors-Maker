@@ -12,6 +12,9 @@ namespace GWBase
     [Serializable]
     public class ObjectPool
     {
+        public delegate void newObjectsDelegate(List<GameObj> newObjects);
+
+        public event newObjectsDelegate newObjectsInitiated;
         [SerializeField] public GameObj[] pooledObjects;
         [SerializeField] public GameObject attachedPrefab;
         [SerializeField] private int maxAmount = 50;
@@ -71,13 +74,18 @@ namespace GWBase
 
         public void FillList()
         {
+            List<GameObj> newObjects = new List<GameObj>();
             for (int i = 0; i < maxAmount; i++)
             {
                 if (pooledObjects[i] == null)
                 {
-                    pooledObjects[i] = CreateSlot();
+                    var newGameObject = CreateSlot();
+                    pooledObjects[i] = newGameObject;
+                    newObjects.Add(newGameObject);
                 }
             }
+
+            newObjectsInitiated?.Invoke(newObjects);
         }
 
         public GameObj CreateSlot()

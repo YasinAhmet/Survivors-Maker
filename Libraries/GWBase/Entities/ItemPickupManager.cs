@@ -7,7 +7,7 @@ namespace GWBase
     public class ItemPickupManager : MonoBehaviour
     {
         public GameObj owner;
-        public bool autoGrab = true;
+        public bool autoGrab = false;
         public float rangeToGrab;
         private void OnTriggerEnter2D(Collider2D other)
         {

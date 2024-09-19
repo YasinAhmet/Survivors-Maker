@@ -36,7 +36,7 @@ namespace GWMisc
             randomness = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Randomness")).parameterValue, CultureInfo.InvariantCulture);
             waitTimeMultiplier = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("WaitTimeMultiplier")).parameterValue, CultureInfo.InvariantCulture);
             targettedCamera = Camera.main;
-            await SetupShaking();
+            SetupShaking();
         }
 
         public void Start(XElement possess, object[] parameters)
@@ -52,7 +52,7 @@ namespace GWMisc
             }
 
             attachedObj = SettingsManager.settingsManager.playerController.ownedCreature;
-            attachedObj.onHealthChange.AddListener(TryShake);
+            attachedObj.onHealthChange += (TryShake);
         }
 
         public async void TryShake(HealthInfo healthInfo)

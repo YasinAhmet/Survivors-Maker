@@ -31,7 +31,7 @@ namespace GWBase
             yield return this;
         }
 
-        public async void LoadSettings()
+        public void LoadSettings()
         {
             var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "UserSettings.xml");
             playerSettings = YKUtility.FromXElement<PlayerSettings>(defFile.Element("PlayerSettings"));
@@ -44,7 +44,7 @@ namespace GWBase
             }
         }
 
-        public async void SerializePlugin(Plugin plugin) {
+        public void SerializePlugin(Plugin plugin) {
             foreach (var behaviourDef in plugin.behaviours)
             {
                 SerializeBehaviour(behaviourDef);

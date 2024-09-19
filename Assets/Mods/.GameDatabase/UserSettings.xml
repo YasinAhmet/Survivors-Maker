@@ -31,5 +31,28 @@
                 <behaviour Name="GameOverScreenPlugin"></behaviour>
             </behaviours>
         </plugin>
+        <plugin Name="XPOrb">
+            <description>Sexy xp orbs -_-</description>
+            <behaviours>
+                <behaviour Name="XPOrbPlugin">
+                    <customParameters>
+                        <parameter Name="LocationRandomization"><value>1</value></parameter>
+                        <parameter Name="OrbSize"><value>0.6</value></parameter>
+                    </customParameters>
+				</behaviour>
+            </behaviours>
+        </plugin>
+        <plugin Name="UpgradeOrbs">
+            <description>Chad orbs that make you even more chadder</description>
+            <behaviours>
+                <behaviour Name="UpgradeOrbPlugin">
+                    <customParameters>
+                        <parameter Name="DropChance"><value>0.6</value></parameter>
+                        <parameter Name="DropChancePerLevel"><value>0.05</value></parameter>
+                        <parameter Name="LocationRandomization"><value>1</value></parameter>
+                    </customParameters>
+				</behaviour>
+            </behaviours>
+        </plugin>
     </GamePlugins>
 </Defs>

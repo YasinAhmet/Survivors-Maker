@@ -2,5 +2,6 @@
 <Defs>
     <behaviour Name="ShakeScreenPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
     <behaviour Name="GameOverScreenPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
-
+    <behaviour Name="XPOrbPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
+    <behaviour Name="UpgradeOrbPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
 </Defs>

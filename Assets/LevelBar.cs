@@ -14,13 +14,17 @@ public class LevelBar : MonoBehaviour, IBootable
     public float targetValue = 0;
     public float currentValue = 0;
     public float easingSpeed = 1f;
+    public bool alreadyLerping = false;
+    float timeElapsed = 0;
+    float start = 0;
 
     public void UpdateLevelBar(LevelInfo levelInfo)
     {
         Debug.Log($"[LEVEL] Updating level bar...");
-        StopCoroutine("EaseToTarget");
         targetValue = levelInfo.currentXP / levelInfo.targetXP;
-        StartCoroutine(EaseToTarget(easingSpeed));
+        start = currentValue;
+        timeElapsed = 0f;
+        if(!alreadyLerping)StartCoroutine(EaseToTarget(easingSpeed));
         text.text = $"{levelInfo.currentXP}/{levelInfo.targetXP}";
     }
 
@@ -31,9 +35,7 @@ public class LevelBar : MonoBehaviour, IBootable
 
     public IEnumerator EaseToTarget(float duration)
     {
-        float start = currentValue;
-        float timeElapsed = 0f;
-
+        alreadyLerping = true;
         while (timeElapsed < duration)
         {
             timeElapsed += Time.deltaTime;
@@ -49,18 +51,22 @@ public class LevelBar : MonoBehaviour, IBootable
         // Ensure the final value is exactly the target
         currentValue = targetValue;
         slider.value = currentValue;
+        alreadyLerping = false;
     }
 
 
 
     public void BootSync()
     {
-
     }
 
     public IEnumerator Boot()
     {
-        PlayerController.playerController.onXP.AddListener(UpdateLevelBar);
+        while (PlayerController.playerController == null)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        PlayerController.playerController.onXP += (UpdateLevelBar);
         yield return this;
     }
 }

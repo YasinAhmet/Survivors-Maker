@@ -24,6 +24,7 @@
             <stat Name="Health">150</stat>
             <stat Name="Damage">20</stat>
             <stat Name="MaxSpeed">2500</stat>
+            <stat Name="XPValue">40</stat>
         </stats>
         <equipments>
             <equipment Name="Gun">
@@ -63,6 +64,7 @@
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
             <stat Name="MaxSpeed">40</stat>
+            <stat Name="XPValue">30</stat>
         </stats>
     </ThingDef>
 
@@ -92,6 +94,7 @@
             <stat Name="Damage">5</stat>
             <stat Name="AttackCooldown">0.8</stat>
             <stat Name="MaxSpeed">85</stat>
+            <stat Name="XPValue">60</stat>
         </stats>
     </ThingDef>
 </Defs>

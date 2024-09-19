@@ -57,6 +57,7 @@ public class SpawnManager : Manager
                 GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, creature.transform);
                 PlayerController.playerController.ownedCreature = creature;
                 leaderObj = creature;
+                creature.pickupManager.autoGrab = true;
             }
             
             if(member.extraBehaviours != null && member.extraBehaviours.Count > 0) creature.PossessBehaviours(member.extraBehaviours.ToArray(), false);

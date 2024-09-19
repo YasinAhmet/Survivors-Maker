@@ -2,6 +2,10 @@
 <Defs>
     <UpgradeDef Name="RandomStatIncrease">
         <description>Random stat increase for leader. %25 bonus to a random stat that you don't know until you pick the upgrade...</description>
+		<RenderInfo>
+			<imageDef>lifeLeechOrb</imageDef>
+			<renderSize>0.7</renderSize>
+		</RenderInfo>
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>
@@ -17,6 +21,10 @@
     </UpgradeDef>
     <UpgradeDef Name="HealthStatIncrease">
         <description>Health increase for leader. %25 bonus to Health stat.</description>
+		<RenderInfo>
+			<imageDef>healthOrb</imageDef>
+			<renderSize>0.8</renderSize>
+		</RenderInfo>
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>

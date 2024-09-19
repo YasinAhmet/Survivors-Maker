@@ -8,8 +8,6 @@ using UnityEngine;
 namespace GWBase {
 
 public class GameObject_Area : MonoBehaviour {
-    [SerializeField] private Rigidbody2D ownedRigidbody2D;
-    [SerializeField] private CircleCollider2D ownedCollider2D;
     public List<Collider2D> collidersInside = new();
     public string faction;
 

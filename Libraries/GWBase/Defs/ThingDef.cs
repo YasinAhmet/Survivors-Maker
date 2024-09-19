@@ -19,6 +19,10 @@ namespace GWBase
     [XmlRoot("ThingDef")]
     public class ThingDef
     {
+        public delegate void StatChanged(string statName, float newValue, float oldValue);
+
+        public event StatChanged onStatChange;
+        
         [XmlElement("SoundConfig")]
         public SoundConfig soundConfig;
 
@@ -114,7 +118,10 @@ namespace GWBase
             {
                 if (stats[i].Name == statName)
                 {
+                    float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
                     stats[i].Value = newValue.ToString();
+                    Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
+                    onStatChange?.Invoke(statName, newValue, oldValue);
                     return;
                 }
             }

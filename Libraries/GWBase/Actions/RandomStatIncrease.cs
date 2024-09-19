@@ -14,7 +14,7 @@ namespace GWBase {
 public class RandomStatIncrease : IncreaseStat
 {
     string[] randomStatPool = {"Damage", "MovementSpeed", "Health", "MaxHealth"};
-    public override async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public override Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         CustomParameter parameter = new CustomParameter() {
             parameterName = GetRandomStat()
@@ -23,7 +23,7 @@ public class RandomStatIncrease : IncreaseStat
         CustomParameter[] customRandomParameters = {parameter};
 
         base.Start(possess, parameters, customRandomParameters);
-        
+        return Task.CompletedTask;
     }
 
     public string GetRandomStat() {

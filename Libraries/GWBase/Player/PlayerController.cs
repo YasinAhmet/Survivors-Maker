@@ -8,8 +8,9 @@ namespace GWBase {
 [Serializable]
 public class PlayerController
 {
-    public XpGainedUpdate onXP = new();
-    public HealthChangeEvent onOwnedHealthChange = new();
+    public delegate void XpGainedUpdate(LevelInfo levelInfo);
+    public event XpGainedUpdate onXP = delegate(LevelInfo info) {  };
+    public event GameObj.HealthChangeEvent onOwnedHealthChange = delegate(HealthInfo info) {  };
 
     public static PlayerController playerController;
     public GameObj_Creature ownedCreature;
@@ -24,25 +25,24 @@ public class PlayerController
             yield return new WaitForSeconds(0.25f);
         }
 
-        ownedCreature.onXpGain.AddListener(GainXP);
-        ownedCreature.onActionHappen.AddListener(ActionInfoProcessor);
-        ownedCreature.onHealthChange.AddListener(onOwnedHealthChange.Invoke);
-        Debug.Log($"[PLAYER] XP Listener Fetched..");
+        ownedCreature.onXpGain += (GainXP);
+        ownedCreature.onActionHappen += (ActionInfoProcessor);
+        ownedCreature.onHealthChange += (onOwnedHealthChange.Invoke);
     }
 
     public void ActionInfoProcessor(string key, object value) {
-        //Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
-        var sessionInformation = GameManager.sessionInformation;
+        Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
+        var sessionInformation = GameManager.gameManager.sessionInformation;
         switch (key) {
             case "hitGiven":
-                //Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
+                Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
                 HitResult hitResult = (HitResult)value;
                 sessionInformation.totalDamageGiven += (int)hitResult.damage;
                 sessionInformation.totalHitsGiven += 1;
                 if(hitResult.killed) sessionInformation.killCount++;
                 break;
             case "hitTaken":
-                //Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
+                Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
                 sessionInformation.totalHitsTaken += 1;
                 sessionInformation.totalDamageTaken += (int)(float)value;
                 break;
@@ -51,7 +51,7 @@ public class PlayerController
                 break;
         }
 
-        GameManager.sessionInformation = sessionInformation;
+        GameManager.gameManager.sessionInformation = sessionInformation;
     }
 
     public IEnumerator Start()
@@ -84,18 +84,14 @@ public class PlayerController
 
     public void GainXP(float amount)
     {
+        Debug.Log("Player got level");
         currentLevel.currentXP += amount;
-        GameManager.sessionInformation.totalXP += (int)amount;
+        GameManager.gameManager.sessionInformation.totalXP += (int)amount;
         TryLevelUp();
 
         onXP?.Invoke(currentLevel);
     }
-
-
-    [System.Serializable]
-    public class XpGainedUpdate : UnityEvent<LevelInfo>
-    {
-    }
+    
 
     public struct LevelInfo
     {

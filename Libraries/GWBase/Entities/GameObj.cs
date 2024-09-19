@@ -13,9 +13,18 @@ namespace GWBase
 
     public class GameObj : MonoBehaviour
     {
-        public FacingDirectionChanged onFacingDirectionChange;
-        public ActivationChange onActivationChange;
-        public HealthChangeEvent onHealthChange;
+        
+        public delegate void XpGained(float xp);
+        public delegate void HealthChangeEvent(HealthInfo healthInfo);
+
+        public delegate void ActivationChange(bool change);
+        
+        public delegate void FacingDirectionChanged(bool direction);
+        public event XpGained onXpGain = delegate(float f) {  };
+        
+        public event FacingDirectionChanged onFacingDirectionChange = delegate(bool direction) {  };
+        public event ActivationChange onActivationChange = delegate(bool change) {  };
+        public event HealthChangeEvent onHealthChange = delegate(HealthInfo info) {  };
         [SerializeField] protected SpriteRenderer ownedSpriteRenderer;
         [SerializeField] protected Rigidbody2D ownedRigidbody;
         [SerializeField] protected CircleCollider2D ownedCollider;
@@ -29,6 +38,7 @@ namespace GWBase
         [SerializeField] public Vector2 lastMovementVector;
         private BehaviourHandler<GameObj> behaviourHandler = null;
         public string faction = "null";
+        [SerializeField] protected float xp = 40;
         public bool doesMirrorPosOnFacing = false;
         public bool lookingAtRight = true;
         public bool dontPassMaxSpeed = true;
@@ -37,6 +47,26 @@ namespace GWBase
         public GameObject selfObject;
         public bool isKinematicObj = false;
 
+        public void CallHealthEvent(HealthInfo healthInfo)
+        {
+            onHealthChange.Invoke(healthInfo);
+        }
+        public void CallFacingDirectionChanged(bool direction)
+        {
+            onFacingDirectionChange.Invoke(direction);
+        }
+        public void CallActivationChange(bool activation)
+        {
+            onActivationChange.Invoke(activation);
+        }
+
+
+        public void GainXP(float amount)
+        {
+            Debug.Log("XP Gained!!");
+            xp += amount;
+            onXpGain.Invoke(amount);
+        }
 
         public virtual void Spawned()
         {
@@ -53,7 +83,8 @@ namespace GWBase
         }
 
         public virtual void Possess<T>(ThingDef entity, string faction)
-        {
+        {            
+            onXpGain = null;
             Debug.Log("An object possessed thing: " + entity.Name + " Faction is : " + faction);
             this.faction = faction;
             gameObject.layer = LayerMask.NameToLayer(faction);
@@ -186,21 +217,14 @@ namespace GWBase
     }
 
 
-    [System.Serializable]
-    public class HealthChangeEvent : UnityEvent<HealthInfo>
-    {
-    }
+    
 
     public struct HealthInfo
     {
         public float currentHealth;
         public float damageTaken;
         public bool changeMax;
+        public bool gotKilled;
+        public GameObj infoOf;
     }
-
-
-    [System.Serializable] public class ActivationChange : UnityEvent<bool> { }
-
-
-    [System.Serializable] public class FacingDirectionChanged : UnityEvent<bool> { }
 }

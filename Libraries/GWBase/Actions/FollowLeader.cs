@@ -16,9 +16,7 @@ public class FollowLeader : IObjBehaviour
 
     public GameObj_Creature objectToFollow;
     public GameObj_Creature ownedObject;
-
-    private float rareTickCounter = 0;
-
+    
     public float reachDistance = 2f;
     public float cooldownCounter;
 
@@ -78,9 +76,10 @@ public class FollowLeader : IObjBehaviour
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         Start(possess, parameters);
+        return Task.CompletedTask;
     }
 }
 

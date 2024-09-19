@@ -10,8 +10,8 @@ public class GameManager : Manager
     public static GameManager gameManager;
     public bool gameState = false;
     public float gameSpeed = 1;
-    public static SessionInformation sessionInformation = new SessionInformation();
-    public async void SetGameState(bool active) {
+    public SessionInformation sessionInformation = new SessionInformation();
+    public void SetGameState(bool active) {
         if (active) {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

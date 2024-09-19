@@ -12,17 +12,15 @@ namespace GWBase
 
     public class GameObj_Creature : GameObj, IDamageable, IAnimatable
     {
-        public ActionHappened onActionHappen;
-        public XpGained onXpGain;
 
-        private BehaviourHandler<GameObj_Creature> behaviourHandler = null;
+        public delegate void ActionHappened(string actionType, object typeObj);
+        public event ActionHappened onActionHappen = delegate(string type, object obj) {  };
         [SerializeField] private float maxhealth = 100;
         [SerializeField] private float hitColorSpeed = 0.1f;
-        [SerializeField] private float xp = 40;
-        [SerializeField] private GameObject healthBar;
         public int killCount = 0;
         public CreatureState currentState;
         public Transform ownedTransform;
+        public ItemPickupManager pickupManager;
 public GroupMemberReference groupAttached = new GroupMemberReference();
         public GroupMemberReference GroupAttached {
             set {
@@ -44,19 +42,20 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public override void Possess<GameObj_Creature>(ThingDef entity, string faction)
         {
-            onXpGain?.RemoveAllListeners();
             base.Possess<GameObj_Creature>(entity, faction);
             PossessEquipments(entity, faction);
             killCount = 0;
+            
 
-            onHealthChange?.Invoke(new HealthInfo()
+            CallHealthEvent(new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
                 damageTaken = 0,
-                changeMax = true
+                changeMax = true,
+                infoOf = this
             });
 
-            onActivationChange?.Invoke(true);
+            CallActivationChange(true);
             InitializeAnims();
         }
 
@@ -103,8 +102,9 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
         }
 
-        private void FixedUpdate()
+        public override void FixedUpdate()
         {
+            base.FixedUpdate();
             if (currentState == CreatureState.Moving && movementAnimationSheet != null && movementAnimationSheet.info.frameCount > 0 && !isPlayingAnimation)
             {
                 StartCoroutine(PlayAnimation(movementAnimationSheet));
@@ -129,12 +129,12 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 spawnedObj.transform.position = spawnedObj.transform.position + new Vector3(equipment.offset.x, equipment.offset.y, equipment.offset.z);
                 spawnedObj.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction);
                 GameObj_Shooter shooter = (GameObj_Shooter)spawnedObj;
-                //shooter.onProjectileHit += OnHitToEnemy;
+                shooter.onProjectileHit += OnHitToEnemy;
                 shooter.stats = possessedThing.stats;
 
                 if(equipment.offset.flipOffset == "Yes") {
                     spawnedObj.doesMirrorPosOnFacing = true;
-                    onFacingDirectionChange.AddListener(spawnedObj.FlipLocalPos);
+                    onFacingDirectionChange += (spawnedObj.FlipLocalPos);
 
                 }
             }
@@ -142,13 +142,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public void OnHitToEnemy(HitResult result)
         {
-            onActionHappen?.Invoke("hitGiven", result);
-            if (result.killed)
-            {
-                Debug.Log("[XP] Target killed.. Got XP.");
-                float xpToGrant = result.hitTarget.GetComponent<IDamageable>().GetXP();
-                onXpGain.Invoke(xpToGrant);
-            }
+            onActionHappen.Invoke("hitGiven", result);
         }
 
         public void Heal(float amount, bool bypassMax)
@@ -161,29 +155,33 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
 
 
-            onHealthChange?.Invoke(new HealthInfo()
+            CallHealthEvent(new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
-                damageTaken = -amount
+                damageTaken = -amount,
+                infoOf = this
             });
         }
 
         public bool TryDamage(float amount, out bool endedUpKilling)
         {
-            onActionHappen?.Invoke("hitTaken", amount);
+            onActionHappen.Invoke("hitTaken", amount);
             possessedThing.RemoveFromStat("Health", amount);
 
             var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
             AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
 
             if (!IsHealthDepleted()) StartCoroutine(HitColorChange());
-            onHealthChange?.Invoke(new HealthInfo()
+            endedUpKilling = IsHealthDepleted();
+            var currentHealthInfo = new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
-                damageTaken = amount
-            });
-
-            endedUpKilling = TryDestroy();
+                damageTaken = amount,
+                gotKilled = endedUpKilling,
+                infoOf = this
+            };
+            
+            CallHealthEvent(currentHealthInfo);
             return true;
         }
 
@@ -206,7 +204,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 gameObject.SetActive(false);
                 isActive = false;
                 ownedSpriteRenderer.color = Color.white;
-                onActivationChange?.Invoke(false);
+                CallActivationChange(false);
                 return true;
             }
             else
@@ -272,9 +270,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public enum CreatureState { Idle, Moving, OnAction, Dead }
 
-        [System.Serializable] public class XpGained : UnityEvent<float> { }
-
-        [System.Serializable] public class ActionHappened : UnityEvent<string, object> { }
     }
 
 }

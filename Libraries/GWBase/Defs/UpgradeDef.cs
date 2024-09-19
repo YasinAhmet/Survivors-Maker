@@ -18,11 +18,24 @@ public class UpgradeDef
     [XmlArray("behaviours")]
     [XmlArrayItem("behaviour")]
     public List<BehaviourInfo> behaviours;
+
+    [XmlElement("RenderInfo")] 
+    public RenderInfo renderInfo;
 }
 
 public interface IUpgradeTaker{
     public void PossessUpgrade(UpgradeDef def);
     public UpgradeDef GetPossessed();
     public bool IsSelected();
+}
+
+[Serializable]
+[XmlRoot("RenderInfo")]
+public struct RenderInfo
+{
+    [XmlElement("imageDef")] 
+    public string imageDefName;
+    [XmlElement("renderSize")] 
+    public float renderSize;
 }
 }

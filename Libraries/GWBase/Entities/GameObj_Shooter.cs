@@ -12,7 +12,7 @@ namespace GWBase
     {
         public delegate void OnProjectileHit(HitResult hitResult);
         public event OnProjectileHit onProjectileHit;
-        [SerializeField] private GameObject_Area rangeArea;
+        [SerializeField] private GameObject_Area rangeArea = null;
         [SerializeField] private ThingDef currentProjectileDef;
         [SerializeField] private float attackPerSecond = 1.1f;
         private float AttackCooldown

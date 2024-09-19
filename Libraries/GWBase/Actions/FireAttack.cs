@@ -84,9 +84,10 @@ public class FireAttack : IObjBehaviour
         obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
     }
 
-    public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         Start(possess, parameters);
+        return Task.CompletedTask;
     }
 }
 

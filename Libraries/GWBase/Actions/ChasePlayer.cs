@@ -11,8 +11,6 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 using Unity.Burst;
-using Unity.Collections;
-using Unity.Jobs;
 namespace GWBase {
 
 [Serializable]
@@ -21,9 +19,7 @@ public class ChasePlayer : IObjBehaviour
 
     public GameObj_Creature objectToFollow;
     public GameObj_Creature ownedObject;
-
-    private float rareTickCounter = 0;
-
+    
     public float reachDistance = 2f;
     public float attackSpeed = 1f;
     public float damage = 1f;
@@ -37,7 +33,7 @@ public class ChasePlayer : IObjBehaviour
         InitializeVariables(ownedObject);
         
 
-        Debug.Log($"[CHASE] Chase Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
+        //Debug.Log($"[CHASE] Chase Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
     }
 
     public void InitializeVariables(GameObj_Creature creature){
@@ -107,9 +103,10 @@ public class ChasePlayer : IObjBehaviour
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         Start(possess, parameters);
+        return Task.CompletedTask;
     }
 }
 

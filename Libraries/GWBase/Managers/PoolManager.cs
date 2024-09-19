@@ -21,9 +21,10 @@ namespace GWBase
         public Dictionary<string, LightObjectPool> lightObjectPools = new Dictionary<string, LightObjectPool>();
         public Dictionary<string, WorldUIObjectPool> uiObjectPools = new Dictionary<string, WorldUIObjectPool>();
         public List<ObjectPool> cachedObjectPools = new List<ObjectPool>();
-        public bool enabled = true;
-        public bool multiThreadTick = true;
-        JobHandle poolTickHandle;
+
+        public delegate void CreatureEvent(GameObj_Creature creature);
+
+        public event CreatureEvent creatureGotKilled;
 
         public ObjectPool GetObjectPool(string poolName)
         {
@@ -77,6 +78,24 @@ namespace GWBase
             }
         }
 
+        public void CheckDeath(HealthInfo healthInfo)
+        {
+            if (healthInfo.gotKilled)
+            {
+                GameObj_Creature gameObjCreature = (GameObj_Creature)healthInfo.infoOf;
+                creatureGotKilled?.Invoke(gameObjCreature);
+                gameObjCreature.TryDestroy();
+            }
+        }
+
+        public void FetchCreatureList(List<GameObj> newObjects)
+        {
+            foreach (var newObj in newObjects)
+            {
+                newObj.onHealthChange += (CheckDeath);
+            }
+        }
+
         public override IEnumerator Kickstart()
         {
             poolManager = this;
@@ -86,6 +105,7 @@ namespace GWBase
                 pooledObjects = new GameObj[defaultPoolSize],
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("enemy")
             };
+            creaturesPool.newObjectsInitiated += FetchCreatureList;
             creaturesPool.FillList();
             objectPools.Add("Creatures", creaturesPool);
 
