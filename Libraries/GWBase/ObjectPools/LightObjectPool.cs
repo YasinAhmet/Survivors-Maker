@@ -21,7 +21,7 @@ namespace GWBase
             gmObject.SetActive(false);
         }
 
-        public virtual GameObject ObtainSlotForType(ThingDef creature, Vector2 location, float rotation, string faction, float forSeconds)
+        public virtual GameObject ObtainSlotForType(Vector2 location, float rotation, float forSeconds)
         {
             var slot = FindOrCreateSlot();
             slot.gameObject.SetActive(true);
@@ -32,7 +32,7 @@ namespace GWBase
             return slot;
         }
 
-        public virtual GameObject ObtainSlotForType(ThingDef creature, Vector2 location, float rotation, string faction)
+        public virtual GameObject ObtainSlotForType(Vector2 location, float rotation)
         {
             var slot = FindOrCreateSlot();
             slot.gameObject.SetActive(true);

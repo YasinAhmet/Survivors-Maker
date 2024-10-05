@@ -5,7 +5,7 @@
         <playerCharacter>SpaceMarine</playerCharacter>
 		<spawnEnemies>Yes</spawnEnemies>
 		<playSoundEffects>No</playSoundEffects>
-		<rareTickTime>0.15</rareTickTime>
+		<rareTickTime>0.05</rareTickTime>
         <statMultipliers>
             <damage>1.5</damage>
             <travelSpeed>2</travelSpeed>
@@ -47,7 +47,7 @@
             <behaviours>
                 <behaviour Name="UpgradeOrbPlugin">
                     <customParameters>
-                        <parameter Name="DropChance"><value>0.6</value></parameter>
+                        <parameter Name="DropChance"><value>0.1</value></parameter>
                         <parameter Name="DropChancePerLevel"><value>0.05</value></parameter>
                         <parameter Name="LocationRandomization"><value>1</value></parameter>
                     </customParameters>

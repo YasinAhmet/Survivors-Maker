@@ -66,8 +66,8 @@ public class FollowLeader : IObjBehaviour
     }
 
     public bool TargetInRange(out Vector2 direction, out float distance) {
-        direction = YKUtility.GetDirection(ownedObject.transform.position, objectToFollow.transform.position);
-        distance = Vector2.Distance(ownedObject.transform.position, objectToFollow.transform.position);
+        direction = YKUtility.GetDirection(((Component)ownedObject).transform.position, ((Component)objectToFollow).transform.position);
+        distance = Vector2.Distance(((Component)ownedObject).transform.position, ((Component)objectToFollow).transform.position);
         return distance < reachDistance;
     }
 

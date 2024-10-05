@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
-    <UpgradeDef Name="RandomStatIncrease">
-        <description>Random stat increase for leader. %25 bonus to a random stat that you don't know until you pick the upgrade...</description>
+    <UpgradeDef Name="HealthStatIncrease">
+        <description>Health increase for leader.</description>
+        <onDrop>Yes</onDrop>
+        <onLevel>Yes</onLevel>
 		<RenderInfo>
-			<imageDef>lifeLeechOrb</imageDef>
-			<renderSize>0.7</renderSize>
+			<imageDef>healthOrb</imageDef>
+			<renderSize>0.8</renderSize>
+		</RenderInfo>
+        <behaviours>
+		<behaviour Name="IncreaseStat">
+                <customParameters>
+                    <parameter Name="StatName">
+                        <value>MaxHealth</value>
+                    </parameter>
+                    <parameter Name="BonusRate">
+                        <value>25</value>
+                    </parameter>
+                </customParameters>
+            </behaviour>
+            <behaviour Name="IncreaseStat">
+			
+                <customParameters>
+                    <parameter Name="StatName">
+                        <value>Health</value>
+                    </parameter>
+                    <parameter Name="BonusRate">
+                        <value>24</value>
+                    </parameter>
+                </customParameters>
+            </behaviour>
+            
+        </behaviours> 
+    </UpgradeDef>
+	<UpgradeDef Name="DamageStatIncrease">
+        <description>Damage increase for leader.</description>
+        <onLevel>Yes</onLevel>
+		<RenderInfo>
+			<imageDef>damageOrb</imageDef>
+			<renderSize>0.8</renderSize>
 		</RenderInfo>
         <behaviours>
             <behaviour Name="IncreaseStat">
@@ -13,29 +47,38 @@
                         <value>Damage</value>
                     </parameter>
                     <parameter Name="BonusRate">
-                        <value>1.25</value>
+                        <value>10</value>
                     </parameter>
                 </customParameters>
             </behaviour>
         </behaviours> 
     </UpgradeDef>
-    <UpgradeDef Name="HealthStatIncrease">
-        <description>Health increase for leader. %25 bonus to Health stat.</description>
+	<UpgradeDef Name="MovementStatIncrease">
+        <description>Movement increase for leader.</description>
+        <onDrop>Yes</onDrop>
+        <onLevel>Yes</onLevel>
 		<RenderInfo>
-			<imageDef>healthOrb</imageDef>
+			<imageDef>lifeLeechOrb</imageDef>
 			<renderSize>0.8</renderSize>
 		</RenderInfo>
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>
                     <parameter Name="StatName">
-                        <value>Health</value>
+                        <value>MaxSpeed</value>
                     </parameter>
                     <parameter Name="BonusRate">
-                        <value>1.55</value>
+                        <value>15</value>
                     </parameter>
                 </customParameters>
             </behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	<UpgradeDef Name="AddCompanionToGroup">
+        <description>Add a space marine to the group.</description>
+        <onLevel>Yes</onLevel>
+        <behaviours>
+            <behaviour Name="AddCompanionUpgrade"></behaviour>
         </behaviours> 
     </UpgradeDef>
 </Defs>

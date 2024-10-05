@@ -20,15 +20,16 @@ public class FireAttack : IObjBehaviour
 
     private float lifetimeCounter = 0;
     private ThingDef possessed;
+    
 
     public string GetName(){return null;}
     public ParameterRequest[] GetParameters(){return null;}
-    public void RareTick(object[] parameters, float deltaTime){
-        ownedProjectile.MoveObject(ownedProjectile.transform.right, deltaTime);
+    public void RareTick(object[] parameters, float deltaTime)
+    {
         lifetimeCounter += deltaTime;
 
         if(lifetimeCounter > lifetime) {
-            ownedProjectile.gameObject.SetActive(false);
+            ownedProjectile.CallActivationChange(false);
         }
     }
     public void Suspend(object[] parameters){}
@@ -41,11 +42,10 @@ public class FireAttack : IObjBehaviour
         lifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("Lifetime").Value, CultureInfo.InvariantCulture);
         hitlifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("HitLifetime").Value, CultureInfo.InvariantCulture);
         ownedProjectile.onHit.AddListener(HitHostileObject);
-        RareTick(null, SettingsManager.playerSettings.rareTickTime);
+        return;
     }
 
     public void Tick(object[] parameters, float deltaTime){
-        ownedProjectile.MoveObject(ownedProjectile.transform.right, deltaTime);
         lifetimeCounter += deltaTime;
 
         if(lifetimeCounter > lifetime) {
@@ -55,25 +55,25 @@ public class FireAttack : IObjBehaviour
 
     public void HitHostileObject(Collider2D collider) {
         if(!ownedProjectile.gameObject.activeSelf) return;
-        ownedProjectile.gameObject.SetActive(false);
+        ownedProjectile.CallActivationChange(false);
 
-        var closestPoint = collider.ClosestPoint(ownedProjectile.GetComponent<Collider2D>().bounds.center);
-        PoolManager.poolManager.GetLightObjectPool("Effects").ObtainSlotForType(null, closestPoint, ownedProjectile.transform.eulerAngles.z, ownedProjectile.faction, hitlifetime);
+        var closestPoint = collider.transform.position;
+        PoolManager.poolManager.GetLightObjectPool("Effects").ObtainSlotForType(closestPoint, ownedProjectile.transform.eulerAngles.z, hitlifetime);
         float totalDamage = float.Parse(ownedProjectile.stats.FirstOrDefault(x => x.Name.Equals("Damage")).Value, CultureInfo.InvariantCulture) + possessed.GetStatValueByName("Damage");
 
         if(collider.TryGetComponent<IDamageable>(out IDamageable damageable)) {
             float randomDamage = (float)Math.Floor(UnityEngine.Random.Range(totalDamage, totalDamage*possessed.GetStatValueByName("DamageVariety")));
-            bool didHit = damageable.TryDamage(randomDamage, out bool didKill);
+            bool didHit = damageable.TryDamage(randomDamage, out HealthInfo healthInfo);
 
             if(didHit) {
                 HitResult newHit = new(){
                     hitTarget = collider.gameObject,
                     damage = randomDamage,
-                    killed = didKill,
+                    killed = healthInfo.gotKilled,
                     hitPosition = closestPoint
                 };
                 ownedProjectile.ProcessHit(newHit);
-                SpawnFloatingText(closestPoint, randomDamage);
+                SpawnFloatingText(closestPoint, healthInfo.damageTaken);
             }
         }
     }

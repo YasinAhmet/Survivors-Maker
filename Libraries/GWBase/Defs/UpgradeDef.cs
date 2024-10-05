@@ -15,6 +15,11 @@ public class UpgradeDef
     [XmlElement("description")]
     public string description;
     
+    [XmlElement("onDrop")]
+    public string onDropUpgrade;
+    [XmlElement("onLevel")]
+    public string onLevelUpgrade;
+    
     [XmlArray("behaviours")]
     [XmlArrayItem("behaviour")]
     public List<BehaviourInfo> behaviours;

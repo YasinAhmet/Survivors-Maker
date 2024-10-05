@@ -10,9 +10,9 @@ namespace GWBase
     [Serializable]
     public class WorldUIObjectPool : LightObjectPool
     {
-        public override GameObject ObtainSlotForType(ThingDef creature, Vector2 location, float rotation, string faction)
+        public GameObject ObtainSlotForType(ThingDef creature, Vector2 location, float rotation, string faction)
         {
-            var gameobj = base.ObtainSlotForType(creature, location, rotation, faction);
+            var gameobj = base.ObtainSlotForType(location, rotation);
             UIManager.uiManager.AttachObjectToWorldCanvas(gameobj);
             return gameobj;
         }

@@ -79,6 +79,7 @@ public class PlayerController
             LevelUpEvent levelUpEvent = new LevelUpEvent();
             await levelUpEvent.StartPopup();
             await levelUpEvent.WaitForDone();
+            currentLevel.level++;
         }
     }
 
@@ -93,6 +94,7 @@ public class PlayerController
     }
     
 
+    [Serializable]
     public struct LevelInfo
     {
         public float currentXP;

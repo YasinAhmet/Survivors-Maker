@@ -15,7 +15,9 @@ namespace GWBase
         public delegate void newObjectsDelegate(List<GameObj> newObjects);
 
         public event newObjectsDelegate newObjectsInitiated;
+        public Transform parentTransform;
         [SerializeField] public GameObj[] pooledObjects;
+        [SerializeField] public List<GameObj> freeObjects = new List<GameObj>();
         [SerializeField] public GameObject attachedPrefab;
         [SerializeField] private int maxAmount = 50;
         [SerializeField] private int maxAmountIncrease = 50;
@@ -25,10 +27,10 @@ namespace GWBase
         {
             UnityEngine.Object.Destroy(pooledObjects[targetIndex].gameObject);
             var TargetSlot = UnityEngine.Object.Instantiate(newObj).GetComponent<GameObj>();
+            TargetSlot.transform.position = location;
             TargetSlot.Spawned();
             TargetSlot.Possess<GameObj>(creatureDef, faction);
-            TargetSlot.gameObject.SetActive(true);
-            TargetSlot.transform.position = location;
+            TargetSlot.CallActivationChange(true);
             pooledObjects[targetIndex] = TargetSlot;
             return TargetSlot;
         }
@@ -36,22 +38,22 @@ namespace GWBase
         public GameObj ObtainSlotForType(ThingDef creature, Vector2 location, float rotation, string faction)
         {
             var slot = FindOrCreateSlot();
-            slot.Possess<GameObj>(creature, faction);
-            slot.gameObject.SetActive(true);
+            //Debug.Log($"Obtaining Object Pool slot for type {creature.Name}.. Location:  {location}", slot.gameObject);
             slot.transform.position = location;
             slot.transform.eulerAngles = new Vector3(0, 0, rotation);
+            slot.Possess<GameObj>(creature, faction);
+            slot.CallActivationChange(true);
             return slot;
         }
 
         public GameObj FindOrCreateSlot()
         {
-            var foundSlot = FindFreeSlot();
-
-            if (foundSlot == null)
+            if (freeObjects.Count == 0)
             {
                 IncreaseSizeOfPool(maxAmountIncrease);
-                foundSlot = FindFreeSlot();
             }
+            
+            var foundSlot = FindFreeSlot();
 
             return foundSlot;
         }
@@ -59,7 +61,9 @@ namespace GWBase
 
         public GameObj FindFreeSlot()
         {
-            return pooledObjects.FirstOrDefault(x => x != null && !x.gameObject.activeSelf);
+            var found = freeObjects.ElementAt(0);
+            freeObjects.RemoveAt(0);
+            return found;
         }
 
         public void IncreaseSizeOfPool(int by)
@@ -77,15 +81,23 @@ namespace GWBase
             List<GameObj> newObjects = new List<GameObj>();
             for (int i = 0; i < maxAmount; i++)
             {
-                if (pooledObjects[i] == null)
+                if (!pooledObjects[i])
                 {
                     var newGameObject = CreateSlot();
                     pooledObjects[i] = newGameObject;
+                    newGameObject.activityChange += NewGameObjectOnactivityChange;
+                    newGameObject.transform.SetParent(parentTransform);
+                    freeObjects.Add(newGameObject);
                     newObjects.Add(newGameObject);
                 }
             }
 
             newObjectsInitiated?.Invoke(newObjects);
+        }
+
+        private void NewGameObjectOnactivityChange(GameObj obj, bool active)
+        {
+            if(!active) freeObjects.Add(obj);
         }
 
         public GameObj CreateSlot()

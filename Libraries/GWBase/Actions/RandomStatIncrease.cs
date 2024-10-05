@@ -13,11 +13,13 @@ namespace GWBase {
 [Serializable]
 public class RandomStatIncrease : IncreaseStat
 {
-    string[] randomStatPool = {"Damage", "MovementSpeed", "Health", "MaxHealth"};
+    string[] randomStatPool = {"Damage", "MaxSpeed", "Health", "MaxHealth"};
     public override Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
+        float targetStatIncrease = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("BonusRate")).parameterValue, CultureInfo.InvariantCulture);
         CustomParameter parameter = new CustomParameter() {
-            parameterName = GetRandomStat()
+            parameterName = GetRandomStat(),
+            parameterValue = targetStatIncrease.ToString()
         };
 
         CustomParameter[] customRandomParameters = {parameter};

@@ -13,7 +13,7 @@ public class PlayerCameraFollower : MonoBehaviour, IBootable
     {
         while (PlayerController.playerController.ownedCreature == null) yield return new WaitForSeconds(0.25f);
        
-        targetTransform = PlayerController.playerController.ownedCreature.transform;
+        targetTransform = ((Component)PlayerController.playerController.ownedCreature).transform;
         yield return this;
     }
     void FixedUpdate()
@@ -21,7 +21,7 @@ public class PlayerCameraFollower : MonoBehaviour, IBootable
         try {
             transform.position = Vector3.Lerp(transform.position, new Vector3(targetTransform.position.x, targetTransform.position.y, ViewWidth), Time.fixedDeltaTime);
         } catch {
-            if(PlayerController.playerController?.ownedCreature != null)targetTransform = PlayerController.playerController.ownedCreature.transform;
+            if(PlayerController.playerController?.ownedCreature != null)targetTransform = ((Component)PlayerController.playerController.ownedCreature).transform;
         }
     }
 

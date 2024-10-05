@@ -59,7 +59,47 @@ namespace GWBase
 
         public Stat FindStatByName(string name)
         {
-            return stats.FirstOrDefault(x => x.Name.Equals(name));
+            foreach (var stat in stats)
+            {
+                if (stat.Name == name)
+                {
+                    return stat;
+                }
+            }
+
+            return new Stat();
+        }
+
+        public ThingDef()
+        {
+            
+        }
+
+        public ThingDef(ThingDef toPossess)
+        {
+            soundConfig = toPossess.soundConfig;
+            behaviours = toPossess.behaviours;
+            Name = toPossess.Name;
+
+            List<Stat> stats = new List<Stat>();
+            foreach (var stat in toPossess.stats)
+            {
+                Stat newStat = new()
+                {
+                    Name = stat.Name,
+                    Value = stat.Value
+                };
+                stats.Add(newStat);
+            }
+
+            this.stats = stats.ToArray();
+            TexturePath = toPossess.TexturePath;
+            TextureSize = toPossess.TextureSize;
+            mass = toPossess.mass;
+            spawnable = toPossess.spawnable;
+            animations = toPossess.animations;
+            equipmentNames = toPossess.equipmentNames;
+
         }
 
         public float GetStatValueByName(string name)
@@ -67,7 +107,13 @@ namespace GWBase
             float value = 0;
             try
             {
-                value = float.Parse(stats.FirstOrDefault(x => x.Name.Equals(name)).Value, CultureInfo.InvariantCulture);
+                foreach (var stat in stats)
+                {
+                    if (stat.Name == name)
+                    {
+                        value = float.Parse(stat.Value,CultureInfo.InvariantCulture);
+                    }
+                }
             }
             catch
             {
@@ -122,6 +168,23 @@ namespace GWBase
                     stats[i].Value = newValue.ToString();
                     Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
                     onStatChange?.Invoke(statName, newValue, oldValue);
+                    return;
+                }
+            }
+
+            AddNewStat(statName, newValue);
+        }
+        
+        public void ReplaceStat(string statName, float newValue, bool withoutSignal)
+        {
+            for (int i = 0; i < stats.Count(); i++)
+            {
+                if (stats[i].Name == statName)
+                {
+                    float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
+                    stats[i].Value = newValue.ToString();
+                    Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
+                    if(withoutSignal == false)onStatChange?.Invoke(statName, newValue, oldValue);
                     return;
                 }
             }

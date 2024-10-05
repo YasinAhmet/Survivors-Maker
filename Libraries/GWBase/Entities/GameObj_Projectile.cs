@@ -10,6 +10,7 @@ namespace GWBase {
 
 public class GameObj_Projectile : GameObj
 {
+    public GameObj_Shooter shooter;
     public HitEvent hitEvent;
     public TriggerContactEvent onHit;
     public HitResult foundResult;
@@ -28,12 +29,17 @@ public class GameObj_Projectile : GameObj
     {
         onHit.RemoveAllListeners();
         base.Possess<T>(entity, faction);
+        gameObject.layer = LayerMask.NameToLayer(faction);
     }
 
-    void OnTriggerEnter2D(Collider2D other){
-        if(other.gameObject.layer != LayerMask.NameToLayer(faction)) {
-            Debug.Log($"[HIT] Hit... {other.gameObject.name}");
-            onHit?.Invoke(other);
+    private void OnTriggerEnter2D(Collider2D col)
+    { 
+        if (col.TryGetComponent<IDamageable>(out IDamageable damageable))
+        {
+            if (damageable.GetTeam() != faction)
+            {
+                onHit?.Invoke(col);
+            }
         }
     }
 

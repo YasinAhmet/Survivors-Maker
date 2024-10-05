@@ -8,18 +8,13 @@
         </spawnable>
         <positions>
             <position>
-                <x>0</x>
-                <y>0</y>
+                <x>-3</x>
+                <y>3</y>
                 <z>0</z>
             </position>
             <position>
-                <x>-1</x>
-                <y>1</y>
-                <z>0</z>
-            </position>
-            <position>
-                <x>1</x>
-                <y>-1</y>
+                <x>3</x>
+                <y>-3</y>
                 <z>0</z>
             </position>
         </positions>
@@ -60,18 +55,23 @@
         </spawnable>
         <positions>
             <position>
-                <x>0</x>
-                <y>0</y>
+                <x>-3</x>
+                <y>3</y>
                 <z>0</z>
             </position>
             <position>
-                <x>-1</x>
-                <y>1</y>
+                <x>3</x>
+                <y>-3</y>
                 <z>0</z>
             </position>
             <position>
-                <x>1</x>
-                <y>-1</y>
+                <x>-6</x>
+                <y>6</y>
+                <z>0</z>
+            </position>
+            <position>
+                <x>6</x>
+                <y>-6</y>
                 <z>0</z>
             </position>
         </positions>

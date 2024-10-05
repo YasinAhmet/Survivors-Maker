@@ -19,65 +19,41 @@ public class ChasePlayer : IObjBehaviour
 
     public GameObj_Creature objectToFollow;
     public GameObj_Creature ownedObject;
-    
     public float reachDistance = 2f;
-    public float attackSpeed = 1f;
-    public float damage = 1f;
-    public float cooldownCounter;
-    public float attackCooldown;
 
-    public void Start(XElement possess, object[] parameters)
+    public virtual void Start(XElement possess, object[] parameters)
     {
         ownedObject = (GameObj_Creature)parameters[0];
         objectToFollow = ((PlayerController)parameters[1]).ownedCreature;
         InitializeVariables(ownedObject);
-        
-
-        //Debug.Log($"[CHASE] Chase Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
     }
 
-    public void InitializeVariables(GameObj_Creature creature){
-        reachDistance = ConvertStat(creature, "ReachDistance");
-        attackSpeed = ConvertStat(creature, "AttackSpeed");
-        damage = ConvertStat(creature, "Damage");
-        attackCooldown = ConvertStat(creature, "AttackCooldown");
-    }
-    
-    public float ConvertStat(GameObj_Creature creature, string statname) {
-        string statValue = creature.GetPossessed().FindStatByName(statname).Value;
-        float.TryParse(statValue, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float statValueInFloat);
-        return statValueInFloat;
+    public virtual void InitializeVariables(GameObj_Creature creature){
+        reachDistance = YKUtility.ConvertStat(creature, "ReachDistance");
     }
 
-    public void RareTick(object[] parameters, float deltaTime)
+    public virtual void RareTick(object[] parameters, float deltaTime)
     {
-        cooldownCounter -= deltaTime;
         TickLogic();
     }
 
-    public void TickLogic() {
+    public virtual void TickLogic() {
         switch(ownedObject.currentState) {
             case GameObj_Creature.CreatureState.Idle: case GameObj_Creature.CreatureState.Moving:
-                TargetInRange(ownedObject.ownedTransform.position, objectToFollow.ownedTransform.position, out Vector3 direction, out float distance);
+                var ownedPos = ownedObject.ownedTransform.position;
+                var followPos = objectToFollow.ownedTransform.position;
+                
+                ownedObject.directionLookingAt =
+                    YKUtility.GetDirection(ownedPos, followPos);
+                TargetInRange(ownedPos, followPos, out Vector3 direction, out float distance);
 
-                if(distance < reachDistance && cooldownCounter <= 0) TryAttack();
+                if(distance < reachDistance) ownedObject.RequestAction("MeleeAttack");
                 else TryMove(direction);
                 break;
         }
     }
- 
-    public void TryAttack() {
-        cooldownCounter = attackCooldown;
-        ownedObject.UpdateCharacterMovement(Vector2.zero);
-        ownedObject.currentState = GameObj_Creature.CreatureState.OnAction;
 
-        objectToFollow.TryDamage(damage, out bool endedUpKilling);
-        cooldownCounter = attackCooldown;
-
-        ownedObject.currentState = GameObj_Creature.CreatureState.Idle;
-    }
-
-    public void TryMove(Vector3 direction) {
+    public virtual void TryMove(Vector3 direction) {
         ownedObject.currentState = GameObj_Creature.CreatureState.Moving;
         ownedObject.UpdateCharacterMovement(direction);
     }
@@ -103,7 +79,7 @@ public class ChasePlayer : IObjBehaviour
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public virtual Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         Start(possess, parameters);
         return Task.CompletedTask;

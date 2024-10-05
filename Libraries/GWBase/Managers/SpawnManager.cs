@@ -9,6 +9,8 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Unity.Collections;
 using UnityEngine;
+using Random = System.Random;
+
 namespace GWBase {
 
 public class SpawnManager : Manager
@@ -24,6 +26,7 @@ public class SpawnManager : Manager
     public bool SPW_Activated = true;
     public float SPW_DelayBetweenSpawns = 0.7f;
     public float SPW_FirstDelay = 2f;
+    public Map currentMap;
 
     [SerializeField] private string EnemyTeamName = "Hostile";
 
@@ -32,6 +35,10 @@ public class SpawnManager : Manager
         spawnManager = this;
         InitializeSpawnables(AssetManager.assetLibrary.thingDefsDictionary);
         SpawnPlayerGroup();
+        
+        var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "Maps.xml");
+        currentMap = YKUtility.FromXElement<Map>(defFile.Element("Map"));
+        currentMap.Load();
         StartCoroutine(EnemySpawnTick());
         yield return this;
     }
@@ -54,7 +61,7 @@ public class SpawnManager : Manager
             groupInstance.AttachCreature(creature);
 
             if(member.isLeaderSTR != null && member.isLeaderSTR.Equals("Yes")) {
-                GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, creature.transform);
+                GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, ((Component)creature).transform);
                 PlayerController.playerController.ownedCreature = creature;
                 leaderObj = creature;
                 creature.pickupManager.autoGrab = true;
@@ -65,21 +72,7 @@ public class SpawnManager : Manager
 
         StartCoroutine(PlayerController.playerController.TryFetchCreature());
     }
-
-    /*public void BreakdownNameToThingDef(string defName, out ThingDef thingDef)
-    {
-        thingDef = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(defName)).Value;
-        Debug.Log("BREAKDOWN: " + defName);
-    }
-
-    /*public void SpawnPlayer(string byChar)
-    {
-        BreakdownNameToThingDef(byChar, out ThingDef playerCharDef);
-        var player = (GameObj_Creature)PoolManager.poolManager.creaturesPool.HardSet(PrefabManager.prefabManager.GetPrefabOf("player"), playerCharDef, Vector2.zero, 0, PlayerTeamName);
-        PlayerController.playerController.ownedCreature = player;
-        StartCoroutine(PlayerController.playerController.TryFetchCreature());
-    }*/
-
+    
     public IEnumerator EnemySpawnTick()
     {
         yield return new WaitForSeconds(SPW_FirstDelay);
@@ -129,16 +122,50 @@ public class SpawnManager : Manager
 
     public ThingDef GetRandomEnemy()
     {
-        return spawnableEnemiesDictionary[YKUtility.GetRandomIndex<ThingDef>(spawnableEnemiesDictionary)];
+        var entity = currentMap.GetRandomEntity();
+        return spawnableEnemiesDictionary.FirstOrDefault(x => x.Key == entity.defName).Value;
     }
 
     public Vector3 GetRandomSpawnPosition()
     {
-        Vector3 randomPoint = new(UnityEngine.Random.Range(RNP_Min, RNP_Max), UnityEngine.Random.Range(RNP_Min, RNP_Max));
+        if (UnityEngine.Random.Range(0, 2) == 1)
+        {
+            if(YKUtility.Random)return Camera.main.ScreenToWorldPoint(GetRandomHorizontalSpawnPosition() + Camera.main.transform.position);
+            else return Camera.main.ScreenToWorldPoint(-GetRandomHorizontalSpawnPosition() + Camera.main.transform.position);
+        }
+        else
+        {
+            if(YKUtility.Random)return Camera.main.ScreenToWorldPoint(GetRandomVerticalSpawnPosition() + Camera.main.transform.position);
+            else return Camera.main.ScreenToWorldPoint(-GetRandomVerticalSpawnPosition() + Camera.main.transform.position);
+        }
+        
+        /*Vector3 randomPoint = new(UnityEngine.Random.Range(RNP_Min, RNP_Max), UnityEngine.Random.Range(RNP_Min, RNP_Max));
         if (UnityEngine.Random.value > 0.5f) randomPoint = randomPoint * -1;
         randomPoint.z = RNP_PointDistance;
         Vector3 worldPoint = Camera.main.ViewportToWorldPoint(randomPoint);
-        return worldPoint;
+        return worldPoint;*/
+    }
+
+    public Vector3 GetRandomVerticalSpawnPosition()
+    {
+        float verticalBoundPos = Screen.width*1.5f;
+        float randomHorizontalPos = UnityEngine.Random.Range(0, Screen.height);
+
+        if (YKUtility.Random) randomHorizontalPos = -randomHorizontalPos;
+        if (YKUtility.Random) verticalBoundPos = -verticalBoundPos;
+
+        return new Vector3(verticalBoundPos, randomHorizontalPos);
+    }
+    
+    public Vector3 GetRandomHorizontalSpawnPosition()
+    {
+        float verticalBoundPos = UnityEngine.Random.Range(0, Screen.width);
+        float randomHorizontalPos = Screen.height*1.5f;
+
+        if (YKUtility.Random) randomHorizontalPos = -randomHorizontalPos;
+        if (YKUtility.Random) verticalBoundPos = -verticalBoundPos;
+
+        return new Vector3(verticalBoundPos, randomHorizontalPos);
     }
 
 }

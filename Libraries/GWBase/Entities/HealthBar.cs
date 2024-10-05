@@ -8,11 +8,9 @@ namespace GWBase {
 public class HealthBar : MonoBehaviour
 {
     [SerializeField] private Slider slider = null;
-    [SerializeField] private float maxHealth = 0;
     
     public void UpdateHealthBar(HealthInfo healthInfo) {
-        if(healthInfo.changeMax) maxHealth = healthInfo.currentHealth;
-        var newSliderValue = healthInfo.currentHealth/maxHealth;
+        var newSliderValue = healthInfo.currentHealth/healthInfo.maxHealth;
         slider.value = newSliderValue;
     }
 
@@ -22,7 +20,7 @@ public class HealthBar : MonoBehaviour
         UpdateHealthBar(new HealthInfo()
         {
             currentHealth = owned.GetPossessed().GetStatValueByName("Health"),
-            changeMax = true
+            maxHealth = owned.GetPossessed().GetStatValueByName("MaxHealth")
         });
         owned.onHealthChange += UpdateHealthBar;
     }

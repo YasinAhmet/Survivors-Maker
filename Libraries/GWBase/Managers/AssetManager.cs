@@ -28,6 +28,7 @@ public class AssetManager : Manager
     [SerializeField] public Dictionary<string, Sprite> texturesDictionary = new();
     [SerializeField] public Dictionary<string, AnimationSheet> animationSheetsDictionary = new();
     [SerializeField] public Dictionary<string, Texture2D> rawAnimationSheetsDictionary = new();
+    [SerializeField] public Dictionary<string, Map> mapDictionary = new();
     private string[] validTextureExtensions = { ".jpg", ".jpeg", ".png" };
     private string[] validSoundExtensions = { ".mp3" };
     public List<string> NameOfLoadedAssemblies = new List<string>();
@@ -224,13 +225,19 @@ public class AssetManager : Manager
         foreach (var filePath in files)
         {
             //Debug.Log(Path.GetExtension(filePath) + " " + validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath))));
-            if (!validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath)))) continue;
+            foreach (var pair in validTextureExtensions)
+            {
+                if(pair == Path.GetExtension(filePath)) goto ValidExtension;
+            }
 
+            
+            ValidExtension:
             var texture2D = LoadPNG(filePath);
             Sprite sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
             texturesDictionary.Add(Path.GetFileNameWithoutExtension(filePath), sprite);
             NameOfLoadedTextures.Add(Path.GetFileNameWithoutExtension(filePath));
             Debug.Log("[LOAD] Texture Added From [" + filePath + "]: " + Path.GetFileNameWithoutExtension(filePath));
+            
         }
     }
 
@@ -243,7 +250,12 @@ public class AssetManager : Manager
         {
             AnimationSheet animationSheet = new AnimationSheet();
             animationSheet.info = YKUtility.FromXElement<AnimationSheetInfo>(animDef);
-            Texture2D correspondingAnimationSheet = rawAnimationSheetsDictionary.FirstOrDefault(x => x.Key == animationSheet.info.sheetName).Value;
+            Texture2D correspondingAnimationSheet = null;
+            foreach (var sheet in rawAnimationSheetsDictionary)
+            {
+                if (sheet.Key == animationSheet.info.sheetName) correspondingAnimationSheet = sheet.Value;
+            }
+            
             animationSheet.Initiate(correspondingAnimationSheet, animationSheet.info.frameCount);
             animationSheetsDictionary.Add(animationSheet.info.sheetName, animationSheet);
             SheetOfLoadedAnims.Add(animationSheet);
@@ -256,7 +268,14 @@ public class AssetManager : Manager
         var files = Directory.GetFiles(path);
         foreach (var filePath in files)
         {
-            if (!validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath)))) continue;
+            foreach (var pair in validTextureExtensions)
+            {
+                if(pair == Path.GetExtension(filePath)) goto ValidExtension;
+            }
+
+            
+            ValidExtension:
+            //if (!validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath)))) continue;
 
             var texture2D = LoadPNG(filePath);
             rawAnimationSheetsDictionary.Add(Path.GetFileNameWithoutExtension(filePath), texture2D);
@@ -275,12 +294,31 @@ public class AssetManager : Manager
             fileData = File.ReadAllBytes(filePath);
             tex = new Texture2D(2, 2);
             ImageConversion.LoadImage(tex, fileData);
+            tex.filterMode = FilterMode.Point;
         }
         return tex;
     }
     public Assembly GetAssembly(string name)
     {
-        return assemblyDictionary.FirstOrDefault(x => x.Key.Equals(name)).Value;
+        foreach (var pair in assemblyDictionary)
+        {
+            if (pair.Key == name)
+            {
+                return pair.Value;
+            }
+        }
+
+        return null;
+    }
+
+    public ObjBehaviourRef GetBehaviour(string name)
+    {
+        foreach (var behaviour in behaviourDictionary)
+        {
+            if (behaviour.Key == name) return behaviour.Value;
+        }
+
+        return null;
     }
 }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <Map Name="TestMap">
+		<tierLvlDistr>1.5</tierLvlDistr>
+		<entities>
+			<entity DefName="Archer" Tier="1"><rarity>1</rarity></entity>
+		</entities>
+    </Map>
+</Defs>

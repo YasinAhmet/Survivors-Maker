@@ -20,17 +20,29 @@
             <faction>Player</faction>
             <level>1</level>
         </spawnable>
+        <behaviours>
+            <behaviour Name="DashListenerPlugin">
+                    <customParameters>
+                        <parameter Name="Cooldown"><value>1.5</value></parameter>
+                        <parameter Name="Force"><value>1</value></parameter>
+                        <parameter Name="Recovery"><value>0.35</value></parameter>
+                        <parameter Name="Slows"><value>Yes</value></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
         <stats>
             <stat Name="Health">150</stat>
-            <stat Name="Damage">20</stat>
-            <stat Name="MaxSpeed">2500</stat>
+            <stat Name="MaxHealth">150</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="MaxSpeed">10000</stat>
             <stat Name="XPValue">40</stat>
+            <stat Name="GrabRange">5</stat>
         </stats>
         <equipments>
             <equipment Name="Gun">
                 <offset>
-                    <x>0.1</x>
-                    <y>-0.35</y>
+                    <x>0.2</x>
+                    <y>-0.5</y>
                     <z>0</z>
                     <flipOffset>Yes</flipOffset>
                 </offset>
@@ -52,6 +64,18 @@
         </SoundConfig>
         <behaviours>
             <behaviour Name="ChasePlayer"></behaviour>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>
+                        <parameter Name="AttackTime"><value>0.5</value></parameter>
+                        <parameter Name="AttackCooldown"><value>1</value></parameter>
+                        <parameter Name="HitboxSize"><value>2</value></parameter>
+                        <parameter Name="HitsInstantly"><value>No</value></parameter>
+                        <parameter Name="RecalculatesHitBox"><value>No</value></parameter>
+                        <parameter Name="HitboxForwardOffset"><value>1.5</value></parameter>
+                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
+                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                    </customParameters>
+			</behaviour>
         </behaviours>
         <spawnable Type="creature">
             <faction>Hostile</faction>
@@ -59,14 +83,115 @@
         </spawnable>
         <stats>
             <stat Name="Health">100</stat>
-            <stat Name="AttackSpeed">0.2</stat>
+            <stat Name="MaxHealth">100</stat>
+            <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">40</stat>
+            <stat Name="MaxSpeed">200</stat>
             <stat Name="XPValue">30</stat>
         </stats>
     </ThingDef>
+	
+	<ThingDef ParentName="BaseCreature" Name="Archer">
+        <description>Description.</description>
+        <textureName>normalguy</textureName>
+        <textureSize>4</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour Name="ChasePlayer"></behaviour>
+        </behaviours>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">100</stat>
+            <stat Name="MaxHealth">100</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">15</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">200</stat>
+            <stat Name="XPValue">30</stat>
+        </stats>
+        <equipments>
+            <equipment Name="Bow">
+                <offset>
+                    <x>0.2</x>
+                    <y>0</y>
+                    <z>0</z>
+                    <flipOffset>Yes</flipOffset>
+                </offset>
+            </equipment>
+        </equipments>
+    </ThingDef>
+	
+	<ThingDef ParentName="BaseCreature" Name="TowerGuy">
+        <description>Description.</description>
+        <textureName>towerguy</textureName>
+        <textureSize>4</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour Name="ChasePlayer"></behaviour>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>
+                        <parameter Name="AttackTime"><value>0.5</value></parameter>
+                        <parameter Name="AttackCooldown"><value>1</value></parameter>
+                        <parameter Name="HitboxSize"><value>2</value></parameter>
+                        <parameter Name="HitsInstantly"><value>No</value></parameter>
+                        <parameter Name="RecalculatesHitBox"><value>No</value></parameter>
+                        <parameter Name="HitboxForwardOffset"><value>1.5</value></parameter>
+                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
+                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                    </customParameters>
+			</behaviour>
+            <behaviour Name="DashListenerPlugin">
+                    <customParameters>
+                        <parameter Name="Cooldown"><value>1.5</value></parameter>
+                        <parameter Name="Force"><value>1</value></parameter>
+                        <parameter Name="Recovery"><value>0.35</value></parameter>
+                        <parameter Name="Slows"><value>Yes</value></parameter>
+                    </customParameters>
+			</behaviour>
+			
+            <behaviour Name="BlockDamageDash">
+                    <customParameters>
+                        <parameter Name="BlockChance"><value>0.45</value></parameter>
+                        <parameter Name="BlockPower"><value>1</value></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">250</stat>
+            <stat Name="MaxHealth">250</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">2</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">150</stat>
+            <stat Name="XPValue">30</stat>
+        </stats>
+    </ThingDef>
+	
 
     <ThingDef ParentName="BaseCreature" Name="Ghost">
         <description>Description.</description>
@@ -81,6 +206,17 @@
             </Death>
         </SoundConfig>
         <behaviours>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>
+                        <parameter Name="AttackTime"><value>0.5</value></parameter>
+                        <parameter Name="AttackCooldown"><value>1</value></parameter>
+                        <parameter Name="HitboxSize"><value>1</value></parameter>
+                        <parameter Name="HitsInstantly"><value>Yes</value></parameter>
+                        <parameter Name="HitboxForwardOffset"><value>1</value></parameter>
+                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
+                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                    </customParameters>
+			</behaviour>
             <behaviour Name="ChasePlayer"></behaviour>
         </behaviours>
         <spawnable Type="creature">
@@ -89,12 +225,62 @@
         </spawnable>
         <stats>
             <stat Name="Health">50</stat>
+            <stat Name="MaxHealth">50</stat>
             <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">5</stat>
             <stat Name="AttackCooldown">0.8</stat>
-            <stat Name="MaxSpeed">85</stat>
+            <stat Name="MaxSpeed">450</stat>
             <stat Name="XPValue">60</stat>
+        </stats>
+    </ThingDef>
+	
+	<ThingDef ParentName="BaseCreature" Name="Hooker">
+        <description>Description.</description>
+        <textureName>hooker</textureName>
+        <textureSize>4</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour Name="HookerBrain">
+				<customParameters>
+					<parameter Name="HookSpeed"><value>5</value></parameter>
+					<parameter Name="HookPower"><value>0.15</value></parameter>
+				</customParameters>
+			</behaviour>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>	
+                        <parameter Name="AttackTime"><value>0.5</value></parameter>
+                        <parameter Name="AttackCooldown"><value>1</value></parameter>
+                        <parameter Name="ReachDistance"><value>15</value></parameter>
+                        <parameter Name="HitboxSize"><value>2</value></parameter>
+                        <parameter Name="HitsInstantly"><value>No</value></parameter>
+                        <parameter Name="RecalculatesHitBox"><value>No</value></parameter>
+                        <parameter Name="HitboxForwardOffset"><value>1.5</value></parameter>
+                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
+                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">100</stat>
+            <stat Name="MaxHealth">100</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">10</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">200</stat>
+            <stat Name="XPValue">30</stat>
         </stats>
     </ThingDef>
 </Defs>

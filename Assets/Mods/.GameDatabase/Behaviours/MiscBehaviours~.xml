@@ -4,4 +4,31 @@
     <behaviour Name="GameOverScreenPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
     <behaviour Name="XPOrbPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
     <behaviour Name="UpgradeOrbPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
+	<behaviour Name="AddCompanionUpgrade" From="GWMisc" Namespace="GWMisc" IsOneTime="Yes">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
+	<behaviour Name="DashListenerPlugin" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
+	<behaviour Name="BlockDamageDash" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
+	
+	<behaviour Name="ProjectileForkingUpgrade" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
+	<behaviour Name="HookerBrain" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+            <parameterRequest Type="GetPlayerController"></parameterRequest>
+        </parameters>
+    </behaviour>
 </Defs>

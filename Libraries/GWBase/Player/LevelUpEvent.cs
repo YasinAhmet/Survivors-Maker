@@ -19,10 +19,13 @@ namespace GWBase
             spawned = UIManager.uiManager.SpawnComponentAtUI(levelUpScreenPrefab);
             upgradeTakers = spawned.transform.GetComponentsInChildren<IUpgradeTaker>().ToList();
 
+            List<UpgradeDef> upgradesCanBeTaken = (from val in AssetManager.assetLibrary.upgradeDefsDictionary where val.Value.onLevelUpgrade == "Yes" select val.Value).ToList();
+            
             foreach (var upgradeTaker in upgradeTakers)
             {
-                var upgradeToPossess = YKUtility.GetRandomElement<UpgradeDef>(AssetManager.assetLibrary.upgradeDefsDictionary);
+                var upgradeToPossess = YKUtility.GetRandomElement<UpgradeDef>(upgradesCanBeTaken);
                 upgradeTaker.PossessUpgrade(upgradeToPossess);
+                upgradesCanBeTaken.Remove(upgradeToPossess);
             }
 
             return Task.CompletedTask;

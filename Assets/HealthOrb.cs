@@ -14,21 +14,17 @@ public class HealthOrb : MonoBehaviour, IBootable
     public float targetValue = 0;
     public float currentValue = 0;
     public float easingSpeed = 1f;
-    public float maxValue = 1;
     public bool alreadyLerping = false;
     float timeElapsed = 0;
     float start = 0;
+    [SerializeField] private float maxHealth;
 
     public void UpdateBar(HealthInfo healthInfo)
     {
-        if (maxValue < healthInfo.currentHealth)
-        {
-            maxValue = healthInfo.currentHealth;
-        }
-
-        start = (healthInfo.currentHealth+healthInfo.damageTaken) / maxValue;
+        maxHealth = healthInfo.maxHealth;
+        start = (healthInfo.currentHealth+healthInfo.damageTaken) / maxHealth;
         timeElapsed = 0f;
-        targetValue = (healthInfo.currentHealth) / maxValue;
+        targetValue = (healthInfo.currentHealth) / maxHealth;
         if(!alreadyLerping)StartCoroutine(EaseToTarget(easingSpeed));
 
     }
@@ -63,16 +59,18 @@ public class HealthOrb : MonoBehaviour, IBootable
     public void HealthChangeConverter(string statName, float newValue, float oldValue)
     {
         Debug.Log("Health change converter run.. " + statName + " " + newValue + " " + oldValue);
+        if (statName == "MaxHealth")
+        {
+            StopAllCoroutines();
+            maxHealth = newValue;
+            alreadyLerping = false;
+        }
+        
         if (statName == "Health")
         {
-            if (maxValue < newValue)
-            {
-                maxValue = newValue;
-            }
-
-            start = (oldValue) / maxValue;
+            start = (oldValue) / maxHealth;
             timeElapsed = 0f;
-            targetValue = (newValue) / maxValue;
+            targetValue = (newValue) / maxHealth;
             if(!alreadyLerping)StartCoroutine(EaseToTarget(easingSpeed));
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -11,10 +12,13 @@ namespace GWMisc
     {
         public float dropChance;
         public float dropChancePerLevel;
+        private List<UpgradeDef> upgradesCanBeTaken;
+
         public override async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             dropChance = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("DropChance")).parameterValue, CultureInfo.InvariantCulture);
             dropChancePerLevel = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("DropChancePerLevel")).parameterValue, CultureInfo.InvariantCulture);
+            upgradesCanBeTaken = (from val in AssetManager.assetLibrary.upgradeDefsDictionary where val.Value.onDropUpgrade == "Yes" select val.Value).ToList();
             await base.Start(possess, parameters, customParameters);
         }
 
@@ -28,15 +32,15 @@ namespace GWMisc
             }
             
             base.DropOrb(target);
-            string randomUpgradeKey = YKUtility.GetRandomIndex(assetManager.upgradeDefsDictionary);
-            var randomUpgradeDef =
-                assetManager.upgradeDefsDictionary.FirstOrDefault(x => x.Key == randomUpgradeKey).Value;
+            string randomUpgradeKey = YKUtility.GetRandomElement(upgradesCanBeTaken).upgradeName;
+            var randomUpgradeDef = upgradesCanBeTaken.FirstOrDefault(x => x.upgradeName == randomUpgradeKey);
 
             var renderer = cachedSpawned.GetComponent<SpriteRenderer>();
             renderer.sprite =
                 assetManager.texturesDictionary.FirstOrDefault(x => x.Key == randomUpgradeDef.renderInfo.imageDefName).Value;
             cachedSpawned.transform.localScale *= randomUpgradeDef.renderInfo.renderSize;
             Debug.Log($"Upgrade render def name: {randomUpgradeDef.renderInfo.imageDefName}, and def itself {randomUpgradeKey}, def found {randomUpgradeDef.upgradeName}");
+            cachedSpawned.name = randomUpgradeDef.upgradeName;
             
             CustomParameter xPParameter = new CustomParameter()
             {
@@ -49,8 +53,7 @@ namespace GWMisc
         public override void OnGrab(GameObj by, GameObject targ, IGrabbable which)
         {
             string key = which.GetParameter("UpgradeIndex").parameterValue;
-            var randomUpgradeDef =
-                assetManager.upgradeDefsDictionary.FirstOrDefault(x => x.Key == key).Value;
+            var randomUpgradeDef = upgradesCanBeTaken.FirstOrDefault(x => x.upgradeName == key);
             by.PossessUpgrades(new []{randomUpgradeDef});
             GameObject.Destroy(targ);
         }

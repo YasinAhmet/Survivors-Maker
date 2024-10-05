@@ -26,7 +26,7 @@ public class GameRestarter : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            PlayerController.playerController.ownedCreature.TryDamage(25, out bool didDie);
+            PlayerController.playerController.ownedCreature.TryDamage(25, out HealthInfo info);
         }
     }
 }

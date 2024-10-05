@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -7,16 +8,42 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using GWBase;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 public static class YKUtility
 {
+    public static bool Random
+    {
+        get
+        {
+            return RandomBool();
+        }
+    }
+    public static bool RandomBool()
+    {
+        return UnityEngine.Random.Range(0, 2) == 1;
+    }
     public static int GetRandomIndex<T>(List<T> list)
     {
         if (list.Count == 0) return 0;
 
         System.Random random = new System.Random();
         return random.Next(0, list.Count);
+    }
+    
+    public static void SpawnFloatingText(Vector3 position, float damage) {
+        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position, 0, "Player");
+        obj.GetComponent<IBootable>().BootSync();
+        obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
+    }
+    
+    public static float ConvertStat(GameObj creature, string statname) {
+        string statValue = creature.GetPossessed().FindStatByName(statname).Value;
+        float.TryParse(statValue, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float statValueInFloat);
+        return statValueInFloat;
     }
 
     public static string GetRandomIndex<T>(Dictionary<string, T> dict)

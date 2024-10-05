@@ -10,7 +10,7 @@ namespace GWBase
 
     public class GameObj_Shooter : GameObj
     {
-        public delegate void OnProjectileHit(HitResult hitResult);
+        public delegate void OnProjectileHit(HitResult hitResult, GameObj_Projectile projectile);
         public event OnProjectileHit onProjectileHit;
         [SerializeField] private GameObject_Area rangeArea = null;
         [SerializeField] private ThingDef currentProjectileDef;
@@ -33,7 +33,8 @@ namespace GWBase
 
         public override void Possess<GameObj_Shooter>(ThingDef entity, string faction)
         {
-            base.Possess<GameObj_Shooter>(entity, faction);
+            base.Possess<GameObj_Shooter>(entity, faction);          
+            gameObject.layer = LayerMask.NameToLayer(faction+"Projectile");
             SetupRangeArea(entity);
 
             attackPerSecond = float.Parse(entity.FindStatByName("AttackPerSecond").Value, CultureInfo.InvariantCulture);
@@ -47,8 +48,8 @@ namespace GWBase
             if (rangeArea == null) return;
 
             range = float.Parse(entity.FindStatByName("Range").Value);
-            rangeArea.faction = faction;
-            rangeArea.gameObject.layer = gameObject.layer;
+            rangeArea.faction = faction;          
+            rangeArea.gameObject.layer = LayerMask.NameToLayer(faction+"Projectile");
             rangeArea.transform.localScale = new Vector3(range, range, 1);
             rangeArea.gameObject.SetActive(true);
         }
@@ -70,10 +71,10 @@ namespace GWBase
 
         public void LookAtTarget(Transform target)
         {
-            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(transform, target.transform.position) + AngleOffset));
-            transform.rotation = newRotation;
+            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(ownedTransform, target.position) + AngleOffset));
+            ownedTransform.rotation = newRotation;
 
-            if (transform.rotation.z > quaternionToFlip)
+            if (ownedTransform.rotation.z > quaternionToFlip)
             {
                 ownedSpriteRenderer.flipY = true;
             }
@@ -85,13 +86,24 @@ namespace GWBase
 
         public void LaunchNewProjectile(ThingDef type)
         {
-            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction);
+            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction+"Projectile");
+            slot.ownedRigidbody.velocity = transform.right*slot.cachedMovementSpeed;
+            slot.transform.position = transform.position;
+            slot.shooter = this;
+            slot.stats = stats;
+            slot.hitEvent.AddListener(OwnedProjectileHit);
+        }
+        
+        public void LaunchNewProjectileCustom(ThingDef type, Vector2 position, float rotation)
+        {
+            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, position, rotation, faction+"Projectile");
+            slot.shooter = this;
             slot.stats = stats;
             slot.hitEvent.AddListener(OwnedProjectileHit);
         }
 
         public void OwnedProjectileHit(GameObj_Projectile projectile, HitResult result) {
-            onProjectileHit?.Invoke(result);
+            onProjectileHit?.Invoke(result, projectile);
             projectile.hitEvent.RemoveListener(OwnedProjectileHit);
         }
 

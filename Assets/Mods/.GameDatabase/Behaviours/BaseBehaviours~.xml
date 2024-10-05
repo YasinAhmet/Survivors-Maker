@@ -7,6 +7,13 @@
             <parameterRequest Type="GetPlayerController"></parameterRequest>
         </parameters>
     </behaviour>
+	
+	<behaviour Name="MeleeAttacker" From="GWBase" Namespace="GWBase">
+        <reachDistance>1.5</reachDistance>
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+    </behaviour>
 
     <behaviour Name="FollowLeader" From="GWBase" Namespace="GWBase">
         <reachDistance>1.5</reachDistance>

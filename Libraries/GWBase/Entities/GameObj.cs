@@ -14,6 +14,9 @@ namespace GWBase
     public class GameObj : MonoBehaviour
     {
         
+        public delegate void ActionRequest(string actionName);
+        public event ActionRequest actionRequested;
+        
         public delegate void XpGained(float xp);
         public delegate void HealthChangeEvent(HealthInfo healthInfo);
 
@@ -21,12 +24,15 @@ namespace GWBase
         
         public delegate void FacingDirectionChanged(bool direction);
         public event XpGained onXpGain = delegate(float f) {  };
+
+        public delegate void ActivityChange(GameObj obj, bool active);
+        public event ActivityChange activityChange; 
         
         public event FacingDirectionChanged onFacingDirectionChange = delegate(bool direction) {  };
-        public event ActivationChange onActivationChange = delegate(bool change) {  };
         public event HealthChangeEvent onHealthChange = delegate(HealthInfo info) {  };
+        public event HealthChangeEvent pre_onHealthChange = delegate(HealthInfo info) {  };
         [SerializeField] protected SpriteRenderer ownedSpriteRenderer;
-        [SerializeField] protected Rigidbody2D ownedRigidbody;
+        [SerializeField] public Rigidbody2D ownedRigidbody;
         [SerializeField] protected CircleCollider2D ownedCollider;
         [SerializeField] protected ThingDef possessedThing;
 
@@ -46,10 +52,20 @@ namespace GWBase
         public bool isActive = false;
         public GameObject selfObject;
         public bool isKinematicObj = false;
+        public Transform ownedTransform;
+             
+        public delegate void Possessed();
+
+        public event Possessed OnPosesssed;
 
         public void CallHealthEvent(HealthInfo healthInfo)
         {
-            onHealthChange.Invoke(healthInfo);
+            onHealthChange?.Invoke(healthInfo);
+        }
+        
+        public void CallPreHealthEvent(HealthInfo healthInfo)
+        {
+            pre_onHealthChange?.Invoke(healthInfo);
         }
         public void CallFacingDirectionChanged(bool direction)
         {
@@ -57,7 +73,14 @@ namespace GWBase
         }
         public void CallActivationChange(bool activation)
         {
-            onActivationChange.Invoke(activation);
+            activityChange.Invoke(this, activation);
+            isActive = activation;
+            gameObject.SetActive(activation);
+        }
+
+        public void RequestAction(string actionName)
+        {
+            actionRequested?.Invoke(actionName);
         }
 
 
@@ -71,36 +94,54 @@ namespace GWBase
         public virtual void Spawned()
         {
             selfObject = gameObject;
+            ownedTransform = transform;
         }
 
         public virtual void FixedUpdate()
         {
         }
 
+        public virtual void Collided(Collider2D collider)
+        {
+            
+        }
+
 
         public virtual void RareTick(float timePassed)
         {
         }
+        
+        private void UpdateColliderSize() {
+            Vector3 spriteHalfSize = ownedSpriteRenderer.sprite.bounds.extents;
+            ownedCollider.radius = spriteHalfSize.x > spriteHalfSize.y ? spriteHalfSize.x : spriteHalfSize.y;
+        }
 
         public virtual void Possess<T>(ThingDef entity, string faction)
-        {            
+        {
+            ownedTransform = transform;
             onXpGain = null;
-            Debug.Log("An object possessed thing: " + entity.Name + " Faction is : " + faction);
+            //Debug.Log("An object possessed thing: " + entity.Name + " Faction is : " + faction);
             this.faction = faction;
-            gameObject.layer = LayerMask.NameToLayer(faction);
-            possessedThing = YKUtility.DeepClone<ThingDef>(entity);
+            possessedThing = new ThingDef(entity);
+            cachedMovementSpeed = possessedThing.GetStatValueByName("MaxSpeed");
             PossessTexture(entity);
             PossessBehaviours(entity.behaviours, true);
-            cachedMovementSpeed = possessedThing.GetStatValueByName("MaxSpeed");
             isActive = true;
-            isKinematicObj = ownedRigidbody.isKinematic;
-            ownedRigidbody.mass = possessedThing.mass;
+
+            if (ownedRigidbody != null)
+            {
+                isKinematicObj = ownedRigidbody.isKinematic;
+                ownedRigidbody.mass = possessedThing.mass;
+            }
+
+            OnPosesssed?.Invoke();
         }
 
         public virtual void PossessTexture(ThingDef entity)
         {
             ownedSpriteRenderer.sprite = AssetManager.assetLibrary.texturesDictionary.First(x => x.Key.Equals(possessedThing.TexturePath)).Value;
-            gameObject.transform.localScale = new Vector3(possessedThing.TextureSize, possessedThing.TextureSize, possessedThing.TextureSize);
+            ownedSpriteRenderer.transform.localScale = new Vector3(possessedThing.TextureSize, possessedThing.TextureSize, possessedThing.TextureSize);
+            UpdateColliderSize();
         }
 
         public virtual void PossessUpgrades(UpgradeDef[] upgrades)
@@ -118,8 +159,7 @@ namespace GWBase
 
             foreach (var behaviour in behaviourInfo)
             {
-                var keyPair = AssetManager.assetLibrary.behaviourDictionary.FirstOrDefault(x => x.Key == behaviour.behaviourName);
-                ObjBehaviourRef foundBehaviour = keyPair.Value;
+                ObjBehaviourRef foundBehaviour = AssetManager.assetLibrary.GetBehaviour(behaviour.behaviourName);
                 var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
                 Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
                 IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
@@ -128,20 +168,30 @@ namespace GWBase
                 {
                     ownedThing = this
                 };
+                
 
-                newBehaviour.Start(foundBehaviour.linkedXmlSource, behaviourHandler.GetObjectsByRequests(foundBehaviour.parameterRequests), behaviour.customParameters.ToArray());
+                newBehaviour.Start(foundBehaviour.linkedXmlSource, behaviourHandler.GetObjectsByRequests(foundBehaviour.parameterRequests), behaviour.customParameters?.ToArray());
                 if (foundBehaviour.isOneTime == "No") installedBehaviours.Add(newBehaviour);
             }
         }
 
-        public virtual void MoveObject(Vector2 axis, float delta)
+        public virtual void MoveObject(Vector2 axis, float delta, bool passMax)
         {
-            Vector2 movementResult = axis * cachedMovementSpeed;
-            if (isKinematicObj) { ownedRigidbody.MovePosition(movementResult); } else { ownedRigidbody.AddForce(movementResult); }
+            float speed = (cachedMovementSpeed * delta);
+            if (!ownedRigidbody || isKinematicObj)
+            {
+                ownedTransform.position += new Vector3(axis.x*speed, axis.y*speed, 0);
+                return;
+            }
+            if (DoesPassMaxSpeed(out float max, out float current) && !passMax)
+            {
+                return;
+            }
+            ownedRigidbody.AddForce(new Vector3(axis.x*speed, axis.y*speed, 0)); 
         }
 
         public bool DoesPassMaxSpeed(out float maxSpeed, out float currentSpeed) {
-            maxSpeed = possessedThing.GetStatValueByName("MaxSpeed");
+            maxSpeed = cachedMovementSpeed;
             currentSpeed = ownedRigidbody.velocity.magnitude;
             return currentSpeed > maxSpeed;
         }
@@ -149,6 +199,14 @@ namespace GWBase
         public ThingDef GetPossessed()
         {
             return possessedThing;
+        }
+
+        
+        public virtual bool TryDamage(float amount, out HealthInfo healthInfo)
+        {
+            healthInfo = new HealthInfo();
+            healthInfo.gotKilled = false;
+            return false;
         }
 
         public AudioClip GetAudioClipOf(string[] audioNamesList)
@@ -202,18 +260,19 @@ namespace GWBase
 
             if (lookingAtRight != wasLookingAtRight && doesMirrorPosOnFacing)
             {
-                transform.localPosition = new Vector3(-transform.localPosition.x, transform.localPosition.y, transform.localPosition.z);
+                ((Component)this).transform.localPosition = new Vector3(-((Component)this).transform.localPosition.x, ((Component)this).transform.localPosition.y, ((Component)this).transform.localPosition.z);
             }
         }
     }
 
     public interface IDamageable
     {
-        public bool TryDamage(float amount, out bool endedUpKilling);
+        public bool TryDamage(float amount, out HealthInfo healthInfo);
         public bool TryDestroy();
         public float GetHealth();
         public bool IsHealthDepleted();
         public float GetXP();
+        public string GetTeam();
     }
 
 
@@ -223,7 +282,7 @@ namespace GWBase
     {
         public float currentHealth;
         public float damageTaken;
-        public bool changeMax;
+        public float maxHealth;
         public bool gotKilled;
         public GameObj infoOf;
     }

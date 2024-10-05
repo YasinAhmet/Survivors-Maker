@@ -13,7 +13,23 @@
             <stat Name="DamageVariety">1.25</stat>
             <stat Name="Lifetime">3</stat>
             <stat Name="HitLifetime">0.15</stat>
-            <stat Name="MaxSpeed">500</stat>
+            <stat Name="MaxSpeed">10</stat>
+        </stats>
+    </ThingDef>
+	<ThingDef ParentName="BaseAttack" Name="Arrow">
+        <description>This is a projectile.</description>
+        <textureName>arrow</textureName>
+        <textureSize>4</textureSize>
+        <hitSpriteSheet>hit2</hitSpriteSheet>
+        <behaviours>
+            <behaviour Name="FireAttack"></behaviour>
+        </behaviours>
+        <stats>
+            <stat Name="Damage">10</stat>
+            <stat Name="DamageVariety">1.75</stat>
+            <stat Name="Lifetime">5</stat>
+            <stat Name="HitLifetime">0.25</stat>
+            <stat Name="MaxSpeed">6</stat>
         </stats>
     </ThingDef>
 </Defs>

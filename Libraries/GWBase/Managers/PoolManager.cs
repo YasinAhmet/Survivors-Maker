@@ -21,6 +21,8 @@ namespace GWBase
         public Dictionary<string, LightObjectPool> lightObjectPools = new Dictionary<string, LightObjectPool>();
         public Dictionary<string, WorldUIObjectPool> uiObjectPools = new Dictionary<string, WorldUIObjectPool>();
         public List<ObjectPool> cachedObjectPools = new List<ObjectPool>();
+        public float movementSpeedToRaycast = 1;
+        public bool projectilesRaycast = false;
 
         public delegate void CreatureEvent(GameObj_Creature creature);
 
@@ -52,30 +54,24 @@ namespace GWBase
             
             foreach (var objectPool in PoolManager.poolManager.cachedObjectPools)
             {
+                
                 foreach (var gameObj in objectPool.pooledObjects)
                 {
                     if (!gameObj.isActive) continue;
-                    gameObj.MoveObject(gameObj.lastMovementVector,deltaTime);
+                    gameObj.MoveObject(gameObj.lastMovementVector,deltaTime, false);
                     foreach (var behaviour in gameObj.installedBehaviours)
                     {
-                        behaviour?.RareTick(null, rareUpdateTickTime);
+                        behaviour?.RareTick(null, deltaTime);
                     }
-
-                    gameObj.RareTick(rareUpdateTickTime);
+                    
                 }
             }
+
         }
 
-        [SerializeField] protected float rareUpdateTickTime = 1.5f;
-        private float timePassedSinceLastTick = 1;
         private void FixedUpdate()
         {
-            timePassedSinceLastTick += Time.fixedDeltaTime;
-            if (timePassedSinceLastTick > rareUpdateTickTime)
-            {
-                PoolTick(timePassedSinceLastTick);
-                timePassedSinceLastTick = 0;
-            }
+            PoolTick(Time.fixedDeltaTime);
         }
 
         public void CheckDeath(HealthInfo healthInfo)
@@ -106,6 +102,9 @@ namespace GWBase
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("enemy")
             };
             creaturesPool.newObjectsInitiated += FetchCreatureList;
+            var newPool = Instantiate(new GameObject());
+            newPool.name = "----------" + "Creatures" + "----------";
+            creaturesPool.parentTransform = newPool.transform;
             creaturesPool.FillList();
             objectPools.Add("Creatures", creaturesPool);
 
@@ -114,6 +113,9 @@ namespace GWBase
                 pooledObjects = new GameObj[defaultPoolSize],
                 attachedPrefab = PrefabManager.prefabManager.GetPrefabOf("projectile")
             };
+            newPool = Instantiate(new GameObject());
+            newPool.name = "----------" + "Projectiles" + "----------";
+            projectilesPool.parentTransform = newPool.transform;
             projectilesPool.FillList();
             objectPools.Add("Projectiles", projectilesPool);
 
@@ -138,7 +140,7 @@ namespace GWBase
 
             OnPoolManagerInitiated?.Invoke(this);
             enabled = true;
-            rareUpdateTickTime = SettingsManager.playerSettings.rareTickTime;
+            Time.fixedDeltaTime = SettingsManager.playerSettings.rareTickTime;
             yield return this;
         }
         

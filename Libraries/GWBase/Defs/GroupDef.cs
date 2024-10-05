@@ -42,6 +42,7 @@ namespace GWBase
         }
     }
 
+    [Serializable]
     [XmlRoot("position")]
     public struct GroupPositionData {
         [XmlElement("x")]

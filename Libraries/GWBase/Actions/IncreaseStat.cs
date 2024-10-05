@@ -33,12 +33,26 @@ public class IncreaseStat : IObjBehaviour
         string targetStatName = customParameters.FirstOrDefault(x => x.parameterName.Equals("StatName")).parameterValue;
         Debug.Log($"[STAT INCREASE] Stat Increase setup.." + targetStatName);
         float targetStatIncrease = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("BonusRate")).parameterValue, CultureInfo.InvariantCulture);
+        targetStatIncrease = TypeSpecialAction(targetStatName, targetStatIncrease);
+        
         ThingDef possessed = ownedObject.GetPossessed();
-        float newValue = float.Parse(possessed.FindStatByName(targetStatName).Value, CultureInfo.InvariantCulture) * targetStatIncrease;
+        float newValue = float.Parse(possessed.FindStatByName(targetStatName).Value, CultureInfo.InvariantCulture) + targetStatIncrease;
+        
         possessed.ReplaceStat(targetStatName, newValue);
         Debug.Log($"[STAT INCREASE] Stat Increase over.. {newValue} {targetStatIncrease}");
         return Task.CompletedTask;
 
+    }
+
+    public float TypeSpecialAction(string type, float value)
+    {
+        if (type == "MaxSpeed")
+        {
+            value *= ownedObject.GetPossessed().mass;
+            ownedObject.cachedMovementSpeed += value;
+        }
+
+        return value;
     }
 }
 

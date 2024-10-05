@@ -363,7 +363,6 @@ GameObject:
   - component: {fileID: 194952583}
   - component: {fileID: 194952584}
   - component: {fileID: 194952585}
-  - component: {fileID: 194952588}
   - component: {fileID: 194952589}
   m_Layer: 0
   m_Name: GameMode
@@ -415,12 +414,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputSpeaker: {fileID: 6187621314025665081, guid: ae88b5fb196d916569d20a1ef3a85a1c, type: 3}
   playerController:
-    onXP:
-      m_PersistentCalls:
-        m_Calls: []
-    onOwnedHealthChange:
-      m_PersistentCalls:
-        m_Calls: []
     ownedCreature: {fileID: 0}
     ownedGroup:
       groupLeader: {fileID: 0}
@@ -434,6 +427,10 @@ MonoBehaviour:
       attachedCreatures: []
       groupFaction: 
     XPRequirementMultiplier: 2
+    currentLevel:
+      currentXP: 0
+      targetXP: 0
+      level: 0
   loaded: 0
 --- !u!114 &194952584
 MonoBehaviour:
@@ -449,8 +446,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultPoolSize: 50
   cachedObjectPools: []
-  enabled: 1
-  multiThreadTick: 1
   rareUpdateTickTime: 0.25
 --- !u!114 &194952585
 MonoBehaviour:
@@ -470,6 +465,10 @@ MonoBehaviour:
   SPW_Activated: 1
   SPW_DelayBetweenSpawns: 0.7
   SPW_FirstDelay: 2
+  currentMap:
+    tierLvlDistribution: 0
+    cachedLevel: 0
+    cachedTotalWeight: 0
   EnemyTeamName: Hostile
 --- !u!114 &194952586
 MonoBehaviour:
@@ -486,18 +485,6 @@ MonoBehaviour:
   canvas: {fileID: 0}
   worldCanvas: {fileID: 0}
   levelBar: {fileID: 0}
---- !u!114 &194952588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 194952577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8ee4d3e739df76f28b0d0b6ef3df66f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &194952589
 MonoBehaviour:
   m_ObjectHideFlags: 0
