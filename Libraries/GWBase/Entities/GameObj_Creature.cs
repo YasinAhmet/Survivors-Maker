@@ -71,7 +71,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
             catch (Exception ex)
             {
-                Debug.LogWarning("[Error] initializing animation: " + ex.Message);
+                //Debug.LogWarning("[Error] initializing animation: " + ex.Message);
             }
         }
 
@@ -149,10 +149,10 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         }
         
 
-        public void OnHitToEnemy(HitResult result, GameObj_Projectile projectile)
+        public void OnHitToEnemy(HitResult result)
         {
             onActionHappen.Invoke("hitGiven", result);
-            onHit?.Invoke(result, projectile);
+            onHit?.Invoke(result);
         }
 
         public void Heal(float amount, bool bypassMax)
@@ -232,7 +232,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDeathSounds);
                 AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
 
-                gameObject.SetActive(false);
+                selfObject.SetActive(false);
                 isActive = false;
                 ownedSpriteRenderer.color = Color.white;
                 CallActivationChange(false);
@@ -257,7 +257,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public IEnumerator PlayAnimation(AnimationSheet animationDef)
         {
             {
-                Debug.Log("Animation playing");
+                //Debug.Log("Animation playing");
                 isPlayingAnimation = true;
                 currentAnimationPlaying = animationDef.info.typeName;
                 bool haventExecutedOnce = true;
@@ -284,7 +284,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public void StopCurrentAnimation()
         {
-            Debug.Log("Animation stopped");
+            //Debug.Log("Animation stopped");
             isPlayingAnimation = false;
             StopCoroutine(movementCoroutine);
             movementCoroutine = null;

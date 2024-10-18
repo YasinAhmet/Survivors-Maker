@@ -32,21 +32,22 @@ namespace GWMisc
             }
         }
 
+        Transform ownedtransform;
         public override Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             Start(possess, parameters);
             hookSpeed = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("HookSpeed")).parameterValue, CultureInfo.InvariantCulture);
             hookPower = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("HookPower")).parameterValue, CultureInfo.InvariantCulture);
+            ownedtransform = ownedObject.transform;
             return Task.CompletedTask;
         }
 
         public override void RareTick(object[] parameters, float deltaTime)
         {
-            Transform ownedtransform = ownedObject.transform;
             HookEvent.RemainingLifeTime -= deltaTime;
             if (HookEvent.RemainingLifeTime < 0 && HookEvent.Ongoing)
             {
-                Debug.Log("[HOOKER] Hook Gone");
+                //Debug.Log("[HOOKER] Hook Gone");
                 HookEvent.ObjReference.transform.localScale = new Vector3(1, 1, 1);
                 HookEvent.ObjReference.SetActive(false);
                 HookEvent.Ongoing = false;
@@ -54,7 +55,7 @@ namespace GWMisc
             }
             if (HookEvent.Ongoing && !HookEvent.Entangled)
             {
-                Debug.Log("[HOOKER] GOING," + HookEvent.ObjReference.name);
+                //Debug.Log("[HOOKER] GOING," + HookEvent.ObjReference.name);
                 var objTransform = this.HookEvent.ObjReference.transform;
                 objTransform.position += (objTransform.right*hookSpeed)*deltaTime;
 
@@ -72,7 +73,7 @@ namespace GWMisc
             else if (HookEvent.Ongoing && HookEvent.Entangled)
             {
                 Vector3 entangledTransformPos = HookEvent.EntangledThing.transform.position;
-                Debug.Log("[HOOKER] PULLING");
+                //Debug.Log("[HOOKER] PULLING");
                 var axisTowardsHooker = YKUtility.GetDirection(entangledTransformPos,
                     ownedtransform.position);
                 HookEvent.EntangledThing.MoveObject(axisTowardsHooker, deltaTime*hookPower, false);
@@ -93,11 +94,12 @@ namespace GWMisc
 
         public void ThrowHook()
         {
-            Debug.Log("[HOOKER] Throwing Hook");
+            // Debug.Log("[HOOKER] Throwing Hook");
             var pool = PoolManager.poolManager.GetLightObjectPool("Effects");
-            var rotation = YKUtility.GetRotationToTargetPoint(ownedObject.transform,
-                objectToFollow.transform.position + (Vector3)objectToFollow.ownedRigidbody.velocity);
-            var obj = pool.ObtainSlotForType(ownedObject.transform.position, rotation+180);
+            var ownedTransform = ownedObject.ownedTransform;
+            var position = ownedTransform.position;
+            var rotation = YKUtility.GetRotationToTargetPoint(position, position + (Vector3)objectToFollow.ownedRigidbody.velocity);
+            var obj = pool.ObtainSlotForType(position, rotation);
             obj.name = "Hook";
             obj.GetComponent<SpriteRenderer>().sprite = HookSprite;
             HookEvent = new HookEvent()

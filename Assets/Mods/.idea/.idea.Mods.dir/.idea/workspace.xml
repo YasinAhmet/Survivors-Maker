@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="02b51db0-c0f1-4eb4-b5c0-987344bef9ef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Hack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Hack.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HealthOrb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../HealthOrb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LevelBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../LevelBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Actions/BaseActions~.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Actions/BaseActions~.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Behaviours/MiscBehaviours~.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Behaviours/MiscBehaviours~.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Creatures/BaseEntities~.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Creatures/BaseEntities~.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Creatures/BaseGroups~.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Creatures/BaseGroups~.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Creatures/BaseWeapons~.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Creatures/BaseWeapons~.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Maps.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Maps.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Banshee.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Cursed armor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Ghost.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Ghoul.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Lich.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Skeleton.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Vampire.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Wendigo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Resources/Textures/Zombie.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/Upgrades/BaseUpgrades.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/Upgrades/BaseUpgrades.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.GameDatabase/UserSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.GameDatabase/UserSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assembly/GWBase.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly/GWBase.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assembly/GWMisc.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly/GWMisc.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scenes/MainGame.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Scenes/MainGame.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Prefabs/Entities/CharacterTemplate.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../Prefabs/Entities/CharacterTemplate.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Prefabs/Entities/GunTemplate.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../Prefabs/Entities/GunTemplate.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Prefabs/Entities/ProjectileTemplate.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../Prefabs/Entities/ProjectileTemplate.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Settings/UniversalRP.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../Settings/UniversalRP.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../UniversalRenderPipelineGlobalSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../UniversalRenderPipelineGlobalSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/ChasePlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/ChasePlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/FireAttack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/FireAttack.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/FollowLeader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/FollowLeader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/IncreaseStat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/IncreaseStat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/MeleeAttacker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Actions/MeleeAttacker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Defs/ObjBehaviourDef.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Defs/ObjBehaviourDef.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Defs/ThingDef.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Defs/ThingDef.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj_Creature.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj_Creature.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj_Projectile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj_Projectile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj_Shooter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/GameObj_Shooter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/ItemPickupManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Entities/ItemPickupManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/AssetManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/AssetManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/ManagerBooter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/ManagerBooter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/PoolManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/PoolManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/SettingsManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/SettingsManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/SpawnManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Managers/SpawnManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Misc/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Misc/Map.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/ObjectPools/LightObjectPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/ObjectPools/LightObjectPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Player/PlayerCameraFollower.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Player/PlayerCameraFollower.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/Player/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/YKUtility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/YKUtility.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/bin/Debug/netstandard2.1/GWBase.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/bin/Debug/netstandard2.1/GWBase.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWBase/obj/Debug/netstandard2.1/GWBase.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/BlockDamageDash.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/BlockDamageDash.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/DashListenerPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/DashListenerPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/GameOverScreenPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/GameOverScreenPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/HookerBrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/HookerBrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/OrbPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/OrbPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/ProjectileForkingUpgrade.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/ProjectileForkingUpgrade.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/ShockEffect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/ShockEffect.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/UpgradeOrbPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/UpgradeOrbPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/XPOrbPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/Plugins/XPOrbPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/bin/Debug/netstandard2.1/GWBase.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/bin/Debug/netstandard2.1/GWBase.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/bin/Debug/netstandard2.1/GWMisc.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/bin/Debug/netstandard2.1/GWMisc.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/bin/Debug/netstandard2.1/GWMisc.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/bin/Debug/netstandard2.1/GWMisc.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/GraphicsSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectSettings/Physics2DSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectSettings/Physics2DSettings.asset" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2nWrCuval6PlJVnZmjaGq2Je6o0" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="02b51db0-c0f1-4eb4-b5c0-987344bef9ef" name="Changes" comment="" />
+      <created>1729099548582</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729099548582</updated>
+      <workItem from="1729099554724" duration="10000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>

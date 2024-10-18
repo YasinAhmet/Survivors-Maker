@@ -76,7 +76,7 @@ public class ChasePlayer : IObjBehaviour
 
         public void Tick(object[] parameters, float deltaTime){}
         public void Suspend(object[] parameters){}
-        public string GetName(){ return null; }
+        public string GetName(){ return "ChasePlayer"; }
         public ParameterRequest[] GetParameters(){return null;}
 
     public virtual Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)

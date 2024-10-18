@@ -2,10 +2,11 @@
 <Defs>
     <PlayerSettings>
         <playerGroup>SimpleGuy</playerGroup>
-        <playerCharacter>SpaceMarine</playerCharacter>
+        <playerCharacter>Wizard</playerCharacter>
 		<spawnEnemies>Yes</spawnEnemies>
 		<playSoundEffects>No</playSoundEffects>
 		<rareTickTime>0.05</rareTickTime>
+		<movementSpeed>0.8</movementSpeed>
         <statMultipliers>
             <damage>1.5</damage>
             <travelSpeed>2</travelSpeed>
@@ -17,10 +18,10 @@
             <behaviours>
                 <behaviour Name="ShakeScreenPlugin">
                     <customParameters>
-                        <parameter Name="Power"><value>0.03</value></parameter>
-                        <parameter Name="Duration"><value>0.2</value></parameter>
-                        <parameter Name="Randomness"><value>0.15</value></parameter>
-                        <parameter Name="WaitTimeMultiplier"><value>1000</value></parameter>
+                        <parameter Name="Power" Value="0.03"></parameter>
+                        <parameter Name="Duration" Value="0.2"></parameter>
+                        <parameter Name="Randomness" Value="0.15"></parameter>
+                        <parameter Name="WaitTimeMultiplier" Value="1000"></parameter>
                     </customParameters>
                 </behaviour>
             </behaviours>
@@ -36,13 +37,13 @@
             <behaviours>
                 <behaviour Name="XPOrbPlugin">
                     <customParameters>
-                        <parameter Name="LocationRandomization"><value>1</value></parameter>
-                        <parameter Name="OrbSize"><value>0.6</value></parameter>
+                        <parameter Name="OrbSize" Value="0.6"></parameter>
+                        <parameter Name="LocationRandomization" Value="1"></parameter>
                     </customParameters>
 				</behaviour>
             </behaviours>
         </plugin>
-        <plugin Name="UpgradeOrbs">
+        <!--<plugin Name="UpgradeOrbs">
             <description>Chad orbs that make you even more chadder</description>
             <behaviours>
                 <behaviour Name="UpgradeOrbPlugin">
@@ -53,6 +54,6 @@
                     </customParameters>
 				</behaviour>
             </behaviours>
-        </plugin>
+        </plugin>-->
     </GamePlugins>
 </Defs>

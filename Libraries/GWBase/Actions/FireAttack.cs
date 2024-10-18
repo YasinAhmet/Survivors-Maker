@@ -42,6 +42,7 @@ public class FireAttack : IObjBehaviour
         lifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("Lifetime").Value, CultureInfo.InvariantCulture);
         hitlifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("HitLifetime").Value, CultureInfo.InvariantCulture);
         ownedProjectile.onHit.AddListener(HitHostileObject);
+        ownedProjectile.lastMovementVector = ownedProjectile.ownedTransform.right;
         return;
     }
 
@@ -49,33 +50,47 @@ public class FireAttack : IObjBehaviour
         lifetimeCounter += deltaTime;
 
         if(lifetimeCounter > lifetime) {
-            ownedProjectile.gameObject.SetActive(false);
+            ownedProjectile.CallActivationChange(false);
         }
     }
 
     public void HitHostileObject(Collider2D collider) {
         if(!ownedProjectile.gameObject.activeSelf) return;
-        ownedProjectile.CallActivationChange(false);
+        if(!collider.TryGetComponent(out GameObj gameObj)) return;
+        
+        var piercingLevel = possessed.GetStatValueByName("Piercing");
+        if (piercingLevel <= 0)
+        {
+            ownedProjectile.CallActivationChange(false);
+        }
+        else
+        {
+            possessed.ReplaceStat("Piercing", piercingLevel - 1);
+        }
+        
 
-        var closestPoint = collider.transform.position;
+        var closestPoint = gameObj.ownedTransform.position;
         PoolManager.poolManager.GetLightObjectPool("Effects").ObtainSlotForType(closestPoint, ownedProjectile.transform.eulerAngles.z, hitlifetime);
         float totalDamage = float.Parse(ownedProjectile.stats.FirstOrDefault(x => x.Name.Equals("Damage")).Value, CultureInfo.InvariantCulture) + possessed.GetStatValueByName("Damage");
 
-        if(collider.TryGetComponent<IDamageable>(out IDamageable damageable)) {
             float randomDamage = (float)Math.Floor(UnityEngine.Random.Range(totalDamage, totalDamage*possessed.GetStatValueByName("DamageVariety")));
-            bool didHit = damageable.TryDamage(randomDamage, out HealthInfo healthInfo);
+            var damageType = possessed.FindStatByName("DamageType").Value;
+            float resistance = gameObj.GetPossessed().GetStatValueByName(damageType+"Resistance");
+            float processedDamage = randomDamage - Math.Min(randomDamage * resistance, 1);
+            bool didHit = gameObj.TryDamage(processedDamage, out HealthInfo healthInfo);
 
             if(didHit) {
                 HitResult newHit = new(){
-                    hitTarget = collider.gameObject,
+                    hitTarget = gameObj,
                     damage = randomDamage,
                     killed = healthInfo.gotKilled,
-                    hitPosition = closestPoint
+                    hitPosition = closestPoint,
+                    hitSource = ownedProjectile
                 };
                 ownedProjectile.ProcessHit(newHit);
                 SpawnFloatingText(closestPoint, healthInfo.damageTaken);
             }
-        }
+        
     }
 
     public void SpawnFloatingText(Vector3 position, float damage) {

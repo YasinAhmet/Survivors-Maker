@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
     <Map Name="TestMap">
-		<tierLvlDistr>1.5</tierLvlDistr>
-		<entities>
-			<entity DefName="Archer" Tier="1"><rarity>1</rarity></entity>
-		</entities>
+		<tierLvlDistr>1</tierLvlDistr>
+		<propSpawnInterval>2</propSpawnInterval>
+		<eventSpawnInterval>10</eventSpawnInterval>
+		<eventSpawnChance>0.2</eventSpawnChance>
+		<eventSpawnChanceIncrease>0.05</eventSpawnChanceIncrease>
+		<content Type="Hostiles">
+			<entity DefName="Orc" Tier="1"><rarity>1.5</rarity></entity>
+			<entity DefName="TowerGuy" Tier="2"><rarity>1.5</rarity></entity>
+			<entity DefName="Archer" Tier="2"><rarity>1.4</rarity></entity>
+		</content>
+		<content Type="Events">
+		</content>
+		<content Type="Props">
+			<entity DefName="urn" Tier="1"><rarity>1</rarity></entity>
+		</content>
+		<behaviours>
+            <behaviour Name="PropSpawnPlugin"></behaviour>
+            <behaviour Name="DamageTypeModule"></behaviour>
+        </behaviours>
     </Map>
 </Defs>

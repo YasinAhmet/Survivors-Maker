@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using GWBase;
+using ProjectilesUtility;
 using UnityEngine;
 
 namespace GWMisc
@@ -22,23 +23,18 @@ namespace GWMisc
             return Task.CompletedTask;
         }
 
-        private void OwnedOnOnHit(HitResult hitResult, GameObj_Projectile projectile)
+        private void OwnedOnOnHit(HitResult hitResult)
         {
+            var projectile = (GameObj_Projectile)hitResult.hitSource;
+            if(projectile.GetPossessed().GetStatValueByName("ChainAmount") <= 0) return;
+            
             float randomChance = Random.Range(0, 1.0f);
             if (randomChance > _forkChance) return;
 
-            GameObject hitTarget = hitResult.hitTarget;
-            UnityEngine.Vector2 position = hitTarget.transform.position;
-            Collider2D[] targetsToFork = Physics2D.OverlapCircleAll(position, _forkRange);
-
-            foreach (var target in targetsToFork)
-            {
-                randomChance = Random.Range(0, 1.0f);
-                if (randomChance > _forkChance) continue;
-
-                float rotation = YKUtility.GetRotationToTargetPoint(hitTarget.transform, target.transform.position);
-                projectile.shooter.LaunchNewProjectileCustom(projectile.GetPossessed(), position, rotation);
-            }
+            GameObj hitTarget = hitResult.hitTarget;
+            UnityEngine.Vector2 position = hitTarget.ownedTransform.position;
+            
+            ProjectileBehaviourLibrary.ChainProjectileAllByChance(projectile, _forkRange, _forkChance);
         }
 
         

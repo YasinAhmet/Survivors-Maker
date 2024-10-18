@@ -36,7 +36,7 @@ namespace GWBase
         [SerializeField] protected CircleCollider2D ownedCollider;
         [SerializeField] protected ThingDef possessedThing;
 
-        [SerializeField] public List<IObjBehaviour> installedBehaviours = new();
+        [SerializeField] public IObjBehaviour[] installedBehaviours = new IObjBehaviour[5];
 
         [SerializeField] protected bool stopIfObstacle = true;
         [SerializeField] protected float antiPushRadius = 0.4f;
@@ -83,10 +83,47 @@ namespace GWBase
             actionRequested?.Invoke(actionName);
         }
 
+        public void AddBehaviour(IObjBehaviour newBehaviour)
+        {
+            for (int i = 0; i < installedBehaviours.Length; i++)
+            {
+                var slot = installedBehaviours[i];
+                if (slot == null)
+                {
+                    installedBehaviours[i] = newBehaviour;
+                    return;
+                }
+            }
+        }
+//
+        public void RemoveBehaviour(string name)
+        {
+            for (int i = 0; i < installedBehaviours.Length; i++)
+            {
+                var behaviour = installedBehaviours[i];
+                if(behaviour == null) continue;
+                
+                if (behaviour.GetName() == name)
+                {
+                    installedBehaviours[i].Suspend(null);
+                    installedBehaviours[i] = null;
+                }
+            }
+        }
+
+        public void RemoveAllBehaviours()
+        {
+            foreach (var behaviour in installedBehaviours)
+            {
+                if(behaviour == null) continue;
+                RemoveBehaviour(behaviour.GetName());
+            }
+        }
+
 
         public void GainXP(float amount)
         {
-            Debug.Log("XP Gained!!");
+            //Debug.Log("XP Gained!!");
             xp += amount;
             onXpGain.Invoke(amount);
         }
@@ -125,6 +162,7 @@ namespace GWBase
             possessedThing = new ThingDef(entity);
             cachedMovementSpeed = possessedThing.GetStatValueByName("MaxSpeed");
             PossessTexture(entity);
+            if(ownedCollider)UpdateColliderSize();
             PossessBehaviours(entity.behaviours, true);
             isActive = true;
 
@@ -141,7 +179,6 @@ namespace GWBase
         {
             ownedSpriteRenderer.sprite = AssetManager.assetLibrary.texturesDictionary.First(x => x.Key.Equals(possessedThing.TexturePath)).Value;
             ownedSpriteRenderer.transform.localScale = new Vector3(possessedThing.TextureSize, possessedThing.TextureSize, possessedThing.TextureSize);
-            UpdateColliderSize();
         }
 
         public virtual void PossessUpgrades(UpgradeDef[] upgrades)
@@ -154,7 +191,7 @@ namespace GWBase
 
         public virtual void PossessBehaviours(BehaviourInfo[] behaviourInfo, bool clean)
         {
-            if (installedBehaviours != null && clean) installedBehaviours.Clear();
+            if (installedBehaviours != null && clean) RemoveAllBehaviours();
             if (behaviourInfo == null || behaviourInfo == Array.Empty<BehaviourInfo>()) return;
 
             foreach (var behaviour in behaviourInfo)
@@ -171,7 +208,7 @@ namespace GWBase
                 
 
                 newBehaviour.Start(foundBehaviour.linkedXmlSource, behaviourHandler.GetObjectsByRequests(foundBehaviour.parameterRequests), behaviour.customParameters?.ToArray());
-                if (foundBehaviour.isOneTime == "No") installedBehaviours.Add(newBehaviour);
+                if (foundBehaviour.isOneTime == "No") AddBehaviour(newBehaviour);
             }
         }
 
@@ -183,11 +220,11 @@ namespace GWBase
                 ownedTransform.position += new Vector3(axis.x*speed, axis.y*speed, 0);
                 return;
             }
-            if (DoesPassMaxSpeed(out float max, out float current) && !passMax)
+            /*if (DoesPassMaxSpeed(out float max, out float current) && !passMax)
             {
                 return;
-            }
-            ownedRigidbody.AddForce(new Vector3(axis.x*speed, axis.y*speed, 0)); 
+            }*/
+            ownedRigidbody.velocity += new Vector2(axis.x * speed, axis.y * speed);
         }
 
         public bool DoesPassMaxSpeed(out float maxSpeed, out float currentSpeed) {

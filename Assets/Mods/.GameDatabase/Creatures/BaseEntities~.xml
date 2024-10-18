@@ -2,8 +2,8 @@
 <Defs>
     <ThingDef ParentName="BaseCreature" Name="SpaceMarine">
         <description>Description.</description>
-        <textureName>Cursed armor</textureName>
-        <textureSize>0.35</textureSize>
+        <textureName>SpaceMarine</textureName>
+        <textureSize>4</textureSize>
         <mass>20</mass>
         <animations>
             <animation Name="Movement" SheetName="Marine1_Walking"></animation>
@@ -23,18 +23,18 @@
         <behaviours>
             <behaviour Name="DashListenerPlugin">
                     <customParameters>
-                        <parameter Name="Cooldown"><value>1.5</value></parameter>
-                        <parameter Name="Force"><value>1</value></parameter>
-                        <parameter Name="Recovery"><value>0.35</value></parameter>
-                        <parameter Name="Slows"><value>Yes</value></parameter>
+                        <parameter Name="Cooldown" Value="1.5"></parameter>
+                        <parameter Name="Force" Value="1"></parameter>
+                        <parameter Name="Recovery" Value="0.35"></parameter>
+                        <parameter Name="Slows" Value="Yes"></parameter>
                     </customParameters>
 			</behaviour>
         </behaviours>
         <stats>
-            <stat Name="Health">150</stat>
-            <stat Name="MaxHealth">150</stat>
+            <stat Name="Health">180</stat>
+            <stat Name="MaxHealth">180</stat>
             <stat Name="Damage">10</stat>
-            <stat Name="MaxSpeed">10000</stat>
+            <stat Name="MaxSpeed">80</stat>
             <stat Name="XPValue">40</stat>
             <stat Name="GrabRange">5</stat>
         </stats>
@@ -43,6 +43,58 @@
                 <offset>
                     <x>0.2</x>
                     <y>-0.5</y>
+                    <z>0</z>
+                    <flipOffset>Yes</flipOffset>
+                </offset>
+            </equipment>
+        </equipments>
+    </ThingDef>
+	<ThingDef ParentName="BaseCreature" Name="Wizard">
+        <description>Description.</description>
+        <textureName>sorcerer</textureName>
+        <textureSize>6</textureSize>
+        <mass>20</mass>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <spawnable Type="creature">
+            <faction>Player</faction>
+            <level>1</level>
+        </spawnable>
+        <behaviours>
+            <behaviour Name="DashListenerPlugin">
+                    <customParameters>
+                        <parameter Name="Cooldown" Value="1.5"></parameter>
+                        <parameter Name="Force" Value="1"></parameter>
+                        <parameter Name="Recovery" Value="0.35"></parameter>
+                        <parameter Name="Slows" Value="Yes"></parameter>
+                    </customParameters>
+			</behaviour>
+            <behaviour Name="ProjectileForkingUpgrade">
+				<customParameters>
+					<parameter Name="ForkChance" Value="0.4"></parameter>
+					<parameter Name="ForkRange" Value="3"></parameter>
+				</customParameters>
+			</behaviour>
+        </behaviours>
+        <stats>
+            <stat Name="Health">180</stat>
+            <stat Name="MaxHealth">180</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="MaxSpeed">10</stat>
+            <stat Name="XPValue">40</stat>
+            <stat Name="GrabRange">3</stat>
+        </stats>
+        <equipments>
+            <equipment Name="Staff">
+                <offset>
+                    <x>0</x>
+                    <y>-0.2</y>
                     <z>0</z>
                     <flipOffset>Yes</flipOffset>
                 </offset>
@@ -66,14 +118,14 @@
             <behaviour Name="ChasePlayer"></behaviour>
             <behaviour Name="MeleeAttacker">
                     <customParameters>
-                        <parameter Name="AttackTime"><value>0.5</value></parameter>
-                        <parameter Name="AttackCooldown"><value>1</value></parameter>
-                        <parameter Name="HitboxSize"><value>2</value></parameter>
-                        <parameter Name="HitsInstantly"><value>No</value></parameter>
-                        <parameter Name="RecalculatesHitBox"><value>No</value></parameter>
-                        <parameter Name="HitboxForwardOffset"><value>1.5</value></parameter>
-                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
-                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                        <parameter Name="AttackTime" Value="0.5"></parameter>
+                        <parameter Name="AttackCooldown" Value="1"></parameter>
+                        <parameter Name="HitboxSize" Value="2"></parameter>
+                        <parameter Name="HitsInstantly" Value="No"></parameter>
+                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
+                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
+                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
+                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
                     </customParameters>
 			</behaviour>
         </behaviours>
@@ -88,7 +140,7 @@
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">200</stat>
+            <stat Name="MaxSpeed">5</stat>
             <stat Name="XPValue">30</stat>
         </stats>
     </ThingDef>
@@ -119,8 +171,9 @@
             <stat Name="ReachDistance">15</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">200</stat>
+            <stat Name="MaxSpeed">6</stat>
             <stat Name="XPValue">30</stat>
+            <stat Name="ShockResistance">0.5</stat>
         </stats>
         <equipments>
             <equipment Name="Bow">
@@ -150,29 +203,29 @@
             <behaviour Name="ChasePlayer"></behaviour>
             <behaviour Name="MeleeAttacker">
                     <customParameters>
-                        <parameter Name="AttackTime"><value>0.5</value></parameter>
-                        <parameter Name="AttackCooldown"><value>1</value></parameter>
-                        <parameter Name="HitboxSize"><value>2</value></parameter>
-                        <parameter Name="HitsInstantly"><value>No</value></parameter>
-                        <parameter Name="RecalculatesHitBox"><value>No</value></parameter>
-                        <parameter Name="HitboxForwardOffset"><value>1.5</value></parameter>
-                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
-                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                        <parameter Name="AttackTime" Value="0.5"></parameter>
+                        <parameter Name="AttackCooldown" Value="1"></parameter>
+                        <parameter Name="HitboxSize" Value="2"></parameter>
+                        <parameter Name="HitsInstantly" Value="No"></parameter>
+                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
+                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
+                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
+                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
                     </customParameters>
 			</behaviour>
             <behaviour Name="DashListenerPlugin">
                     <customParameters>
-                        <parameter Name="Cooldown"><value>1.5</value></parameter>
-                        <parameter Name="Force"><value>1</value></parameter>
-                        <parameter Name="Recovery"><value>0.35</value></parameter>
-                        <parameter Name="Slows"><value>Yes</value></parameter>
+                        <parameter Name="Cooldown" Value="1.5"></parameter>
+                        <parameter Name="Force" Value="1.0"></parameter>
+                        <parameter Name="Recovery" Value="0.35"></parameter>
+                        <parameter Name="Slows" Value="Yes"></parameter>
                     </customParameters>
 			</behaviour>
 			
             <behaviour Name="BlockDamageDash">
                     <customParameters>
-                        <parameter Name="BlockChance"><value>0.45</value></parameter>
-                        <parameter Name="BlockPower"><value>1</value></parameter>
+                        <parameter Name="BlockChance" Value="0.45"></parameter>
+                        <parameter Name="BlockPower" Value="1"></parameter>
                     </customParameters>
 			</behaviour>
         </behaviours>
@@ -187,51 +240,9 @@
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">150</stat>
+            <stat Name="MaxSpeed">6</stat>
             <stat Name="XPValue">30</stat>
-        </stats>
-    </ThingDef>
-	
-
-    <ThingDef ParentName="BaseCreature" Name="Ghost">
-        <description>Description.</description>
-        <textureName>Ghost</textureName>
-        <textureSize>0.8</textureSize>
-        <SoundConfig>
-            <DamageTaken>
-                <sound>paind.mp3</sound>
-            </DamageTaken>
-            <Death>
-                <sound>deathd.mp3</sound>
-            </Death>
-        </SoundConfig>
-        <behaviours>
-            <behaviour Name="MeleeAttacker">
-                    <customParameters>
-                        <parameter Name="AttackTime"><value>0.5</value></parameter>
-                        <parameter Name="AttackCooldown"><value>1</value></parameter>
-                        <parameter Name="HitboxSize"><value>1</value></parameter>
-                        <parameter Name="HitsInstantly"><value>Yes</value></parameter>
-                        <parameter Name="HitboxForwardOffset"><value>1</value></parameter>
-                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
-                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
-                    </customParameters>
-			</behaviour>
-            <behaviour Name="ChasePlayer"></behaviour>
-        </behaviours>
-        <spawnable Type="creature">
-            <faction>Hostile</faction>
-            <level>2</level>
-        </spawnable>
-        <stats>
-            <stat Name="Health">50</stat>
-            <stat Name="MaxHealth">50</stat>
-            <stat Name="AttackSpeed">0.1</stat>
-            <stat Name="ReachDistance">2</stat>
-            <stat Name="Damage">5</stat>
-            <stat Name="AttackCooldown">0.8</stat>
-            <stat Name="MaxSpeed">450</stat>
-            <stat Name="XPValue">60</stat>
+            <stat Name="ShockResistance">1</stat>
         </stats>
     </ThingDef>
 	
@@ -250,21 +261,20 @@
         <behaviours>
             <behaviour Name="HookerBrain">
 				<customParameters>
-					<parameter Name="HookSpeed"><value>5</value></parameter>
-					<parameter Name="HookPower"><value>0.15</value></parameter>
+					<parameter Name="HookSpeed" Value="5"></parameter>
+					<parameter Name="HookPower" Value="0.15"></parameter>
 				</customParameters>
 			</behaviour>
             <behaviour Name="MeleeAttacker">
                     <customParameters>	
-                        <parameter Name="AttackTime"><value>0.5</value></parameter>
-                        <parameter Name="AttackCooldown"><value>1</value></parameter>
-                        <parameter Name="ReachDistance"><value>15</value></parameter>
-                        <parameter Name="HitboxSize"><value>2</value></parameter>
-                        <parameter Name="HitsInstantly"><value>No</value></parameter>
-                        <parameter Name="RecalculatesHitBox"><value>No</value></parameter>
-                        <parameter Name="HitboxForwardOffset"><value>1.5</value></parameter>
-                        <parameter Name="CriticalStrikeChance"><value>0.1</value></parameter>
-                        <parameter Name="CriticalStrikeMultiplier"><value>1.5</value></parameter>
+                        <parameter Name="AttackTime" Value="0.5"></parameter>
+                        <parameter Name="AttackCooldown" Value="1"></parameter>
+                        <parameter Name="HitboxSize" Value="2"></parameter>
+                        <parameter Name="HitsInstantly" Value="No"></parameter>
+                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
+                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
+                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
+                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
                     </customParameters>
 			</behaviour>
         </behaviours>
@@ -279,7 +289,7 @@
             <stat Name="ReachDistance">10</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">200</stat>
+            <stat Name="MaxSpeed">5</stat>
             <stat Name="XPValue">30</stat>
         </stats>
     </ThingDef>

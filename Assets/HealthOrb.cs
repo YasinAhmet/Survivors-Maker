@@ -58,7 +58,7 @@ public class HealthOrb : MonoBehaviour, IBootable
 
     public void HealthChangeConverter(string statName, float newValue, float oldValue)
     {
-        Debug.Log("Health change converter run.. " + statName + " " + newValue + " " + oldValue);
+        //Debug.Log("Health change converter run.. " + statName + " " + newValue + " " + oldValue);
         if (statName == "MaxHealth")
         {
             StopAllCoroutines();
@@ -83,7 +83,7 @@ public class HealthOrb : MonoBehaviour, IBootable
 
     private async Task SyncHealthStatUpdates()
     {
-        Debug.Log("Syncing health updates");
+        //Debug.Log("Syncing health updates");
 
         PlayerController.playerController.onOwnedHealthChange += (UpdateBar);
 
@@ -92,7 +92,7 @@ public class HealthOrb : MonoBehaviour, IBootable
             await Task.Delay(500);
         }
 
-        Debug.Log("Adding stat change callback");
+        //Debug.Log("Adding stat change callback");
         PlayerController.playerController.ownedCreature.GetPossessed().onStatChange += HealthChangeConverter;
     }
 

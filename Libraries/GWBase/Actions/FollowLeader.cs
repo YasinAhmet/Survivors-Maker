@@ -25,7 +25,7 @@ public class FollowLeader : IObjBehaviour
         ownedObject = (GameObj_Creature)parameters[0];
         //objectToFollow = ownedObject.leader;
         InitializeVariables(ownedObject);
-        Debug.Log($"[CHASE] Following Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
+        //Debug.Log($"[CHASE] Following Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
     }
 
     public void InitializeVariables(GameObj_Creature creature){
@@ -33,7 +33,7 @@ public class FollowLeader : IObjBehaviour
     }
     
     public float ConvertStat(GameObj_Creature creature, string statname) {
-        Debug.Log($"[STAT CONVERTION] {statname} conversion..");
+        //Debug.Log($"[STAT CONVERTION] {statname} conversion..");
         string statValue = creature.GetPossessed().FindStatByName(statname).Value;
         float.TryParse(statValue, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float statValueInFloat);
         return statValueInFloat;

@@ -18,6 +18,7 @@ namespace GWBase {
 public class AssetManager : Manager
 {
     public static AssetManager assetLibrary;
+    public static Dictionary<int, int> _masksByLayer;
     [SerializeField] public Dictionary<string, ThingDef> initializedThingDefsDictionary = new();
     [SerializeField] public Dictionary<string, XElement> thingDefsDictionary = new();
     [SerializeField] public Dictionary<string, UpgradeDef> upgradeDefsDictionary = new();
@@ -58,6 +59,7 @@ public class AssetManager : Manager
         public override IEnumerator Kickstart()
     {
         assetLibrary = this;
+        InitMasks();
         projectPath = Application.dataPath;
         LoadingUpdate?.Invoke("Loading Sounds..");
         yield return StartCoroutine(LoadCustomSounds(fullPathToGameDatabase+soundFolder));
@@ -78,14 +80,14 @@ public class AssetManager : Manager
             if (!Path.GetExtension(filePath).Equals(".dll")) continue;
             Assembly assembly = Assembly.LoadFrom(filePath);
             assemblyDictionary.Add(assembly.GetName().Name, assembly);
-            Debug.Log("[LOAD] Assembly Added: " + assembly.GetName().Name);
+            //Debug.Log("[LOAD] Assembly Added: " + assembly.GetName().Name);
             NameOfLoadedAssemblies.Add(assembly.GetName().Name);
         }
     }
 
     IEnumerator LoadCustomSounds(string path)
     {
-        Debug.Log("[LOADING] Sounds : " + path);
+        //Debug.Log("[LOADING] Sounds : " + path);
         var files = Directory.GetFiles(path);
         foreach (var file in files)
         {
@@ -95,11 +97,28 @@ public class AssetManager : Manager
 
         yield return this;
     }
+    
+    public static void InitMasks()
+    {
+        _masksByLayer = new Dictionary<int, int>();
+        for (int i = 0; i < 32; i++)
+        {
+            int mask = 0;
+            for (int j = 0; j < 32; j++)
+            {
+                if(!Physics2D.GetIgnoreLayerCollision(i, j))
+                {
+                    mask |= 1 << j;
+                }
+            }
+            _masksByLayer.Add(i, mask);
+        }
+    }
 
     IEnumerator AddAudioClip(string path, string fileName)
     {
         string uri = $"{uriStart}{path}/{fileName}";
-        Debug.Log("[LOADING] Sound : " + uri);
+        //Debug.Log("[LOADING] Sound : " + uri);
         using (var req = UnityWebRequestMultimedia.GetAudioClip(uri, AudioType.MPEG)) {
             yield return req.SendWebRequest();
             var loadedClip = DownloadHandlerAudioClip.GetContent(req);

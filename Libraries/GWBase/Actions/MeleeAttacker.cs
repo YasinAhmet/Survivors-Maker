@@ -118,7 +118,7 @@ namespace GWBase
             {
                 Vector3 forward = ownedObject.directionLookingAt*closeness;
                 Vector3 targetPos = ownedObject.transform.position + forward;
-                float angle = YKUtility.GetRotationToTargetPoint(ownedObject.transform, targetPos);
+                float angle = YKUtility.GetRotationToTargetPoint(ownedObject.ownedTransform.position, targetPos);
                 return Physics2D.OverlapBoxAll(targetPos, new Vector2(hitboxSize, hitboxSize), angle);
             }
         }

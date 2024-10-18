@@ -28,13 +28,11 @@ namespace GWMisc
             {
                 await Task.Delay(500);
             }
-            Debug.Log("[GAMEOVERSCREEN] loaded up the creature..");
 
             var targetcreature = SettingsManager.settingsManager.playerController.ownedCreature;
             while (!targetcreature.IsHealthDepleted()) {
                 await Task.Delay(250);
             }
-            Debug.Log("[GAMEOVERSCREEN] creature doesn't have health anymore..");
 
             
             GameManager.gameManager.SetGameState(false);

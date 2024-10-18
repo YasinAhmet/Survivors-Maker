@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8798405862068147187}
   - component: {fileID: -7694561828140110065}
   - component: {fileID: 6779016166991369697}
-  - component: {fileID: 3390674161695815670}
   m_Layer: 6
   m_Name: ProjectileTemplate
   m_TagString: Untagged
@@ -102,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownedSpriteRenderer: {fileID: 8798405862068147187}
-  ownedRigidbody: {fileID: 3390674161695815670}
+  ownedRigidbody: {fileID: 0}
   ownedCollider: {fileID: 6779016166991369697}
   possessedThing:
     soundConfig:
@@ -133,6 +132,7 @@ MonoBehaviour:
   isActive: 0
   selfObject: {fileID: 0}
   isKinematicObj: 1
+  ownedTransform: {fileID: 0}
   shooter: {fileID: 0}
   hitEvent:
     m_PersistentCalls:
@@ -177,30 +177,3 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!50 &3390674161695815670
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401052812281107487}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0

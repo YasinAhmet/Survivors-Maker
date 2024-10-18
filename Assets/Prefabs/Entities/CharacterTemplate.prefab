@@ -379,11 +379,11 @@ MonoBehaviour:
   isActive: 0
   selfObject: {fileID: 0}
   isKinematicObj: 0
+  ownedTransform: {fileID: 0}
   maxhealth: 100
   hitColorSpeed: 0.1
   killCount: 0
   currentState: 0
-  ownedTransform: {fileID: 0}
   pickupManager: {fileID: 634461028048459441}
   groupAttached:
     group:

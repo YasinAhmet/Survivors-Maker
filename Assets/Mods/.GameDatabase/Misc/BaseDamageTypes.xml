@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DamageTypes>
+	<DamageType Name="Shock">
+		<behaviours>
+				<behaviour Name="ShockEffect"></behaviour>
+		</behaviours>
+	</DamageType>
+</DamageTypes>

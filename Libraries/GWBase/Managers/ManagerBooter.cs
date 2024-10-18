@@ -25,7 +25,7 @@ namespace GWBase
         {
             foreach (var manager in linkedManagers)
             {
-                Debug.Log($"Kickstarting {manager.name}");
+                //Debug.Log($"Kickstarting {manager.name}");
                 yield return StartCoroutine(manager.Kickstart());
             }
 

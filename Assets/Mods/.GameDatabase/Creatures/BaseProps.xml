@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+
+	<ThingDef ParentName="BaseProp" Name="urn">
+        <description>Description.</description>
+        <textureName>urn</textureName>
+        <textureSize>6</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <stats>
+            <stat Name="Health">1</stat>
+            <stat Name="MaxHealth">1</stat>
+            <stat Name="XPValue">100</stat>
+        </stats>
+    </ThingDef>
+</Defs>

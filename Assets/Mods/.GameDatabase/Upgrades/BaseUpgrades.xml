@@ -11,23 +11,15 @@
         <behaviours>
 		<behaviour Name="IncreaseStat">
                 <customParameters>
-                    <parameter Name="StatName">
-                        <value>MaxHealth</value>
-                    </parameter>
-                    <parameter Name="BonusRate">
-                        <value>25</value>
-                    </parameter>
+                    <parameter Name="StatName" Value="MaxHealth"></parameter>
+                    <parameter Name="BonusRate" Value="25"></parameter>
                 </customParameters>
             </behaviour>
             <behaviour Name="IncreaseStat">
 			
                 <customParameters>
-                    <parameter Name="StatName">
-                        <value>Health</value>
-                    </parameter>
-                    <parameter Name="BonusRate">
-                        <value>24</value>
-                    </parameter>
+                    <parameter Name="StatName" Value="Health"></parameter>
+                    <parameter Name="BonusRate" Value="24"></parameter>
                 </customParameters>
             </behaviour>
             
@@ -43,16 +35,13 @@
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>
-                    <parameter Name="StatName">
-                        <value>Damage</value>
-                    </parameter>
-                    <parameter Name="BonusRate">
-                        <value>10</value>
-                    </parameter>
+                    <parameter Name="StatName" Value="Damage"></parameter>
+                    <parameter Name="BonusRate" Value="10"></parameter>
                 </customParameters>
             </behaviour>
         </behaviours> 
     </UpgradeDef>
+	<!--
 	<UpgradeDef Name="MovementStatIncrease">
         <description>Movement increase for leader.</description>
         <onDrop>Yes</onDrop>
@@ -73,7 +62,7 @@
                 </customParameters>
             </behaviour>
         </behaviours> 
-    </UpgradeDef>
+    </UpgradeDef>-->
 	<UpgradeDef Name="AddCompanionToGroup">
         <description>Add a space marine to the group.</description>
         <onLevel>Yes</onLevel>

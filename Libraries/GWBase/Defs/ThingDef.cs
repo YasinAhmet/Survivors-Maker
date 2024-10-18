@@ -117,7 +117,6 @@ namespace GWBase
             }
             catch
             {
-                Debug.LogWarning($"Tried to find stat {name} but found null. Returning 0 instead.");
                 return 0;
             }
 
@@ -166,7 +165,7 @@ namespace GWBase
                 {
                     float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
                     stats[i].Value = newValue.ToString();
-                    Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
+                    //Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
                     onStatChange?.Invoke(statName, newValue, oldValue);
                     return;
                 }
@@ -183,7 +182,7 @@ namespace GWBase
                 {
                     float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
                     stats[i].Value = newValue.ToString();
-                    Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
+                    //Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
                     if(withoutSignal == false)onStatChange?.Invoke(statName, newValue, oldValue);
                     return;
                 }
@@ -232,7 +231,7 @@ namespace GWBase
     {
         [XmlAttribute("Name")]
         public string parameterName;
-        [XmlElement("value")]
+        [XmlAttribute("Value")]
         public string parameterValue;
     }
 

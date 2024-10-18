@@ -36,6 +36,5 @@ namespace GWBase
         [XmlArray("customParameters")]
         [XmlArrayItem("parameter")]
         public List<CustomParameter> customParameters;
-
     }
 }

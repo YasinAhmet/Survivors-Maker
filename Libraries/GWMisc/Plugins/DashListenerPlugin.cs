@@ -33,13 +33,13 @@ namespace GWMisc
             _ownedCreature = (GameObj_Creature)parameters[0];
 
             _ownedCreature.actionRequested += ProcessSignal;
-            Debug.Log("[DASH] Setupping Dash for " + _ownedCreature.gameObject.name);
+            //Debug.Log("[DASH] Setupping Dash for " + _ownedCreature.gameObject.name);
             return Task.CompletedTask;
         }
 
         private void ProcessSignal(string actionType)
         {
-            Debug.Log("[DASH] Got Signal " + actionType);
+            //Debug.Log("[DASH] Got Signal " + actionType);
             if (actionType == "Dash" && IsDashReady)
             {
                 Dash();
@@ -61,7 +61,7 @@ namespace GWMisc
                 _cachedPossessed.ReplaceStat("MaxSpeed", _cachedLoweredSpeed);
             }
             
-            Debug.Log("[DASH] Dashing.. " + _ownedCreature.directionLookingAt*_force);
+            // Debug.Log("[DASH] Dashing.. " + _ownedCreature.directionLookingAt*_force);
         }
         
         public void Start(XElement possess, object[] parameters){return;}

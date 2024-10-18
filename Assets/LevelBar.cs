@@ -20,7 +20,7 @@ public class LevelBar : MonoBehaviour, IBootable
 
     public void UpdateLevelBar(LevelInfo levelInfo)
     {
-        Debug.Log($"[LEVEL] Updating level bar...");
+        //Debug.Log($"[LEVEL] Updating level bar...");
         targetValue = levelInfo.currentXP / levelInfo.targetXP;
         start = currentValue;
         timeElapsed = 0f;

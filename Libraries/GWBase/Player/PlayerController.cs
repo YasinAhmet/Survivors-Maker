@@ -31,18 +31,18 @@ public class PlayerController
     }
 
     public void ActionInfoProcessor(string key, object value) {
-        Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
+        //Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
         var sessionInformation = GameManager.gameManager.sessionInformation;
         switch (key) {
             case "hitGiven":
-                Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
+                //ebug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
                 HitResult hitResult = (HitResult)value;
                 sessionInformation.totalDamageGiven += (int)hitResult.damage;
                 sessionInformation.totalHitsGiven += 1;
                 if(hitResult.killed) sessionInformation.killCount++;
                 break;
             case "hitTaken":
-                Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
+                //Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
                 sessionInformation.totalHitsTaken += 1;
                 sessionInformation.totalDamageTaken += (int)(float)value;
                 break;
@@ -56,7 +56,7 @@ public class PlayerController
 
     public IEnumerator Start()
     {
-        Debug.Log($"[PC] Player Controller initializing..");
+        //Debug.Log($"[PC] Player Controller initializing..");
         playerController = this;
         currentLevel = new()
         {
@@ -85,7 +85,7 @@ public class PlayerController
 
     public void GainXP(float amount)
     {
-        Debug.Log("Player got level");
+        //Debug.Log("Player got level");
         currentLevel.currentXP += amount;
         GameManager.gameManager.sessionInformation.totalXP += (int)amount;
         TryLevelUp();

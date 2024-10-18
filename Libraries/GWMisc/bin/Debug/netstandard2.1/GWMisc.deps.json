@@ -10,6 +10,7 @@
       "GWMisc/1.0.0": {
         "dependencies": {
           "GWBase": "1.0.0.0",
+          "ProjectilesUtility": "1.0.0.0",
           "UnityEngine.AudioModule": "0.0.0.0",
           "UnityEngine.CoreModule": "0.0.0.0",
           "UnityEngine": "0.0.0.0",
@@ -32,6 +33,14 @@
       "GWBase/1.0.0.0": {
         "runtime": {
           "GWBase.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ProjectilesUtility/1.0.0.0": {
+        "runtime": {
+          "ProjectilesUtility.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -158,6 +167,11 @@
       "sha512": ""
     },
     "GWBase/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ProjectilesUtility/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

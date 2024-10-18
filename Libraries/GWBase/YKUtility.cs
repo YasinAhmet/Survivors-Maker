@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using GWBase;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public static class YKUtility
@@ -34,7 +35,58 @@ public static class YKUtility
         return random.Next(0, list.Count);
     }
     
+    public static GameObject_Area.ClosestObject GetClosestObject(Vector3 location, float range, LayerMask layerMask) {
+        GameObject_Area.ClosestObject closestObject = new GameObject_Area.ClosestObject() {
+            closest = null,
+            distance = 10000
+        };
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(location, range, layerMask);
+        foreach (var collider in colliders)
+        {
+            float distance = (location - collider.transform.position).sqrMagnitude;
+            if(distance < closestObject.distance) {
+                closestObject.closest = collider;
+                closestObject.distance = distance;
+            }
+        }
+
+        return closestObject;
+    }
+
+    public static IObjBehaviour CreateBehaviourInstance(BehaviourInfo behaviour)
+    {
+        ObjBehaviourRef foundBehaviour = AssetManager.assetLibrary.GetBehaviour(behaviour.behaviourName);
+        var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
+        Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
+        IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
+        return newBehaviour;
+    }
+    
+    public static IObjBehaviour CreateBehaviourInstance(BehaviourInfo behaviour, GameObj gameObj)
+    {
+        ObjBehaviourRef foundBehaviour = AssetManager.assetLibrary.GetBehaviour(behaviour.behaviourName);
+        var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
+        Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
+        IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
+        var behaviourHandler = new BehaviourHandler<GameObj>()
+        {
+            ownedThing = gameObj
+        };
+                
+
+        newBehaviour.Start(foundBehaviour.linkedXmlSource, behaviourHandler.GetObjectsByRequests(foundBehaviour.parameterRequests), behaviour.customParameters?.ToArray());
+
+        return newBehaviour;
+    }
+
     public static void SpawnFloatingText(Vector3 position, float damage) {
+        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position, 0, "Player");
+        obj.GetComponent<IBootable>().BootSync();
+        obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
+    }
+    
+    public static void SpawnFloatingText(Vector3 position, float damage, Color color) {
         var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position, 0, "Player");
         obj.GetComponent<IBootable>().BootSync();
         obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
@@ -86,12 +138,12 @@ public static class YKUtility
         return (UnityEngine.Vector2)(pointB - pointA).normalized;
     }
 
-    public static float GetRotationToTargetPoint(Transform ownedTransform, UnityEngine.Vector2 targetPoint)
+    public static float GetRotationToTargetPoint(Vector3 position, Vector3 targetPoint)
     {
-        UnityEngine.Vector2 diff = (UnityEngine.Vector2)ownedTransform.position - targetPoint;
+        UnityEngine.Vector2 diff = position - targetPoint;
         diff.Normalize();
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        return rot_z;
+        return rot_z + 180;
     }
 
 

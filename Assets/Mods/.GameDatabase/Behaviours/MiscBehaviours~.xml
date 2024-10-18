@@ -31,4 +31,13 @@
             <parameterRequest Type="GetPlayerController"></parameterRequest>
         </parameters>
     </behaviour>
+	<behaviour Name="EventSpawnPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
+	<behaviour Name="PropSpawnPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
+	<behaviour Name="VikingRaidEvent" From="GWMisc" Namespace="GWMisc" IsOneTime="Yes"></behaviour>
+	<behaviour Name="ShockEffect" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+	</behaviour>
+	<behaviour Name="DamageTypeModule" From="GWMisc" Namespace="GWMisc"></behaviour>
 </Defs>

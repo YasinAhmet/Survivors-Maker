@@ -22,7 +22,7 @@ namespace GWBase
         public override IEnumerator Kickstart()
         {
             settingsManager = this;
-            Debug.Log($"[SETTINGS] Settings manager initializing..");
+            //Debug.Log($"[SETTINGS] Settings manager initializing..");
             playerController = new();
             LoadSettings();
             yield return StartCoroutine(playerController.Start());
@@ -77,6 +77,8 @@ namespace GWBase
             public string shouldSpawn;
             [XmlElement("rareTickTime")]
             public float rareTickTime;
+            [XmlElement("movementSpeed")]
+            public float movementSpeed;
             [XmlElement("playSoundEffects")]
             public string playSoundEffects;
 

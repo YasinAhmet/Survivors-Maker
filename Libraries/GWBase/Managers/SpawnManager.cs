@@ -15,6 +15,7 @@ namespace GWBase {
 
 public class SpawnManager : Manager
 {
+    public Camera playerCamera;
     public static SpawnManager spawnManager;
     [SerializeField] public Dictionary<string, ThingDef> spawnableThingsDictionary = new();
     [SerializeField] public Dictionary<string, ThingDef> spawnableEnemiesDictionary = new();
@@ -40,6 +41,7 @@ public class SpawnManager : Manager
         currentMap = YKUtility.FromXElement<Map>(defFile.Element("Map"));
         currentMap.Load();
         StartCoroutine(EnemySpawnTick());
+        playerCamera = Camera.main;
         yield return this;
     }
 
@@ -71,6 +73,32 @@ public class SpawnManager : Manager
         }
 
         StartCoroutine(PlayerController.playerController.TryFetchCreature());
+    }
+    
+    public CreatureGroup SpawnGroup(string groupName, Vector2 location)
+    {
+        GroupDef group = spawnableGroupsDictionary.FirstOrDefault(x => x.Key.Equals(groupName)).Value;
+        CreatureGroup groupInstance = new();
+        groupInstance.Possess(group);
+
+        groupInstance.groupFaction = group.spawnableInfo.faction;
+        GameObj_Creature leaderObj = null;
+
+        foreach (var member in group.members)
+        {
+            ThingDef characterDefToAdd = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(member.defName)).Value;
+            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(characterDefToAdd, location, 0, group.spawnableInfo.faction);
+            groupInstance.AttachCreature(creature);
+
+            if(member.isLeaderSTR != null && member.isLeaderSTR.Equals("Yes")) {
+                leaderObj = creature;
+                //creature.pickupManager.autoGrab = true;
+            }
+            
+            if(member.extraBehaviours != null && member.extraBehaviours.Count > 0) creature.PossessBehaviours(member.extraBehaviours.ToArray(), false);
+        }
+
+        return groupInstance;
     }
     
     public IEnumerator EnemySpawnTick()
@@ -122,21 +150,27 @@ public class SpawnManager : Manager
 
     public ThingDef GetRandomEnemy()
     {
-        var entity = currentMap.GetRandomEntity();
-        return spawnableEnemiesDictionary.FirstOrDefault(x => x.Key == entity.defName).Value;
+        var entity = currentMap.GetRandomEntity(currentMap.cachedSpawnablesPack);
+        foreach (var spawnable in spawnableEnemiesDictionary)
+        {
+            if (spawnable.Key == entity.defName) return spawnable.Value;
+        }
+
+        return null;
     }
 
     public Vector3 GetRandomSpawnPosition()
     {
+        var camPos = playerCamera.transform.position;
         if (UnityEngine.Random.Range(0, 2) == 1)
         {
-            if(YKUtility.Random)return Camera.main.ScreenToWorldPoint(GetRandomHorizontalSpawnPosition() + Camera.main.transform.position);
-            else return Camera.main.ScreenToWorldPoint(-GetRandomHorizontalSpawnPosition() + Camera.main.transform.position);
+            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomHorizontalSpawnPosition() + camPos);
+            else return playerCamera.ScreenToWorldPoint(-GetRandomHorizontalSpawnPosition() + camPos);
         }
         else
         {
-            if(YKUtility.Random)return Camera.main.ScreenToWorldPoint(GetRandomVerticalSpawnPosition() + Camera.main.transform.position);
-            else return Camera.main.ScreenToWorldPoint(-GetRandomVerticalSpawnPosition() + Camera.main.transform.position);
+            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomVerticalSpawnPosition() + camPos);
+            else return playerCamera.ScreenToWorldPoint(-GetRandomVerticalSpawnPosition() + camPos);
         }
         
         /*Vector3 randomPoint = new(UnityEngine.Random.Range(RNP_Min, RNP_Max), UnityEngine.Random.Range(RNP_Min, RNP_Max));
@@ -168,6 +202,10 @@ public class SpawnManager : Manager
         return new Vector3(verticalBoundPos, randomHorizontalPos);
     }
 
+    private void FixedUpdate()
+    {
+        if(currentMap != null)currentMap.RareTick(Time.fixedDeltaTime);
+    }
 }
 
 }

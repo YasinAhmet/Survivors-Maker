@@ -30,14 +30,30 @@ namespace GWMisc
         protected AssetManager assetManager;
         protected BaseGrabbable cachedGrabbable;
         protected GameObject cachedSpawned;
+
         public virtual void DropOrb(GameObj_Creature target)
+        {
+            if (!assetManager) assetManager = AssetManager.assetLibrary;
+
+            UIManager uiManager = UIManager.uiManager;
+            GameObject orbPrefab = PrefabManager.prefabManager.GetPrefabOf("orb");
+            cachedSpawned = uiManager.SpawnObjectAtWorldCanvas(orbPrefab);
+            cachedSpawned.transform.position = target.transform.position +
+                                               new Vector3(Random.Range(-locationRandomization, locationRandomization),
+                                                   Random.Range(-locationRandomization, locationRandomization));
+            cachedGrabbable = cachedSpawned.AddComponent<BaseGrabbable>();
+            cachedGrabbable.onGrabEvent += OnGrab;
+
+        }
+
+        public virtual void DropOrbInLocation(Vector3 location)
         {
             if(!assetManager) assetManager = AssetManager.assetLibrary;
             
             UIManager uiManager = UIManager.uiManager;
             GameObject orbPrefab = PrefabManager.prefabManager.GetPrefabOf("orb");
             cachedSpawned = uiManager.SpawnObjectAtWorldCanvas(orbPrefab);
-            cachedSpawned.transform.position = target.transform.position + new Vector3(Random.Range(-locationRandomization,locationRandomization), Random.Range(-locationRandomization,locationRandomization));
+            cachedSpawned.transform.position = location + new Vector3(Random.Range(-locationRandomization,locationRandomization), Random.Range(-locationRandomization,locationRandomization));
             cachedGrabbable = cachedSpawned.AddComponent<BaseGrabbable>();
             cachedGrabbable.onGrabEvent += OnGrab;
         }
@@ -59,9 +75,9 @@ namespace GWMisc
             throw new System.NotImplementedException();
         }
 
-        public string GetName()
+        public virtual string GetName()
         {
-            throw new System.NotImplementedException();
+            return "OrbPlugin";
         }
 
         public ParameterRequest[] GetParameters()

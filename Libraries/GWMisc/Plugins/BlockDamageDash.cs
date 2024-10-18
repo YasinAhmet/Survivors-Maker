@@ -36,7 +36,7 @@ namespace GWMisc
                 
                 ownedObject.StartColorChange(Color.yellow);
                 ownedObject.RequestAction("Dash");
-                Debug.Log("[BLOCK] Dashing in direction.. " + ownedObject.directionLookingAt + ", Damage Taken: "+ ownedObject.lastHealthInfo.damageTaken);
+                //Debug.Log("[BLOCK] Dashing in direction.. " + ownedObject.directionLookingAt + ", Damage Taken: "+ ownedObject.lastHealthInfo.damageTaken);
             }
         }
 

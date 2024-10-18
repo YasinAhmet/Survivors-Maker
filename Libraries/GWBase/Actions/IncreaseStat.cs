@@ -31,7 +31,7 @@ public class IncreaseStat : IObjBehaviour
     {
         ownedObject = (GameObj_Creature)parameters[0];
         string targetStatName = customParameters.FirstOrDefault(x => x.parameterName.Equals("StatName")).parameterValue;
-        Debug.Log($"[STAT INCREASE] Stat Increase setup.." + targetStatName);
+        //Debug.Log($"[STAT INCREASE] Stat Increase setup.." + targetStatName);
         float targetStatIncrease = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("BonusRate")).parameterValue, CultureInfo.InvariantCulture);
         targetStatIncrease = TypeSpecialAction(targetStatName, targetStatIncrease);
         
@@ -39,7 +39,7 @@ public class IncreaseStat : IObjBehaviour
         float newValue = float.Parse(possessed.FindStatByName(targetStatName).Value, CultureInfo.InvariantCulture) + targetStatIncrease;
         
         possessed.ReplaceStat(targetStatName, newValue);
-        Debug.Log($"[STAT INCREASE] Stat Increase over.. {newValue} {targetStatIncrease}");
+        //Debug.Log($"[STAT INCREASE] Stat Increase over.. {newValue} {targetStatIncrease}");
         return Task.CompletedTask;
 
     }

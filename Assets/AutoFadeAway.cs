@@ -40,6 +40,11 @@ public class AutoFadeAway : MonoBehaviour, IBootable, ITextMeshProContact
         textMP.text = text;
     }
 
+    public void SetColor(Color color)
+    {
+        textMP.color = color;
+    }
+
     public IEnumerator Boot()
     {
         throw new System.NotImplementedException();

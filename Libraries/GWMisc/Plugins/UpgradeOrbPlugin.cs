@@ -39,7 +39,7 @@ namespace GWMisc
             renderer.sprite =
                 assetManager.texturesDictionary.FirstOrDefault(x => x.Key == randomUpgradeDef.renderInfo.imageDefName).Value;
             cachedSpawned.transform.localScale *= randomUpgradeDef.renderInfo.renderSize;
-            Debug.Log($"Upgrade render def name: {randomUpgradeDef.renderInfo.imageDefName}, and def itself {randomUpgradeKey}, def found {randomUpgradeDef.upgradeName}");
+            //Debug.Log($"Upgrade render def name: {randomUpgradeDef.renderInfo.imageDefName}, and def itself {randomUpgradeKey}, def found {randomUpgradeDef.upgradeName}");
             cachedSpawned.name = randomUpgradeDef.upgradeName;
             
             CustomParameter xPParameter = new CustomParameter()

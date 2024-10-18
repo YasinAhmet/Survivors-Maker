@@ -6,6 +6,9 @@ namespace GWBase
 {
     public class ItemPickupManager : MonoBehaviour
     {
+        public delegate void ItemInPickup(GameObject item, ItemPickupManager pickupManager);
+        public event ItemInPickup itemInPickup;
+        
         public GameObj owner;
         public bool autoGrab = false;
         public float rangeToGrab;
@@ -21,16 +24,22 @@ namespace GWBase
             setupped = true;
             rangeToGrab = owner.GetPossessed().GetStatValueByName("GrabRange");
             transform.localScale = new Vector3(rangeToGrab, rangeToGrab, 1);
+            if (transform.localScale.x <= 0 || transform.localScale.y <= 0)
+            {
+                Destroy(GetComponent<Rigidbody2D>());
+                Destroy(GetComponent<Collider2D>());
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!setupped) return;
-            
-            IGrabbable grabbable = other.gameObject.GetComponent<IGrabbable>();
-
+            var othergm = other.gameObject;
+            IGrabbable grabbable = othergm.GetComponent<IGrabbable>();
             if (grabbable == null) return;
-            if (autoGrab && rangeToGrab > Vector2.Distance(transform.position, other.gameObject.transform.position))
+            itemInPickup?.Invoke(othergm, this);
+            
+            if (autoGrab && rangeToGrab > Vector2.Distance(transform.position, othergm.transform.position))
             {
                 grabbable.GrabRequest(owner);
             }

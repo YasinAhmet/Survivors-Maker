@@ -8,6 +8,7 @@ public class PlayerCameraFollower : MonoBehaviour, IBootable
 {
     Transform targetTransform;
     public float ViewWidth = -10;
+    public bool instant = false;
 
     public IEnumerator Boot()
     {
@@ -19,6 +20,11 @@ public class PlayerCameraFollower : MonoBehaviour, IBootable
     void FixedUpdate()
     {
         try {
+            if (instant)
+            {
+                transform.position = new Vector3(targetTransform.position.x, targetTransform.position.y, ViewWidth);
+                return;
+            }
             transform.position = Vector3.Lerp(transform.position, new Vector3(targetTransform.position.x, targetTransform.position.y, ViewWidth), Time.fixedDeltaTime);
         } catch {
             if(PlayerController.playerController?.ownedCreature != null)targetTransform = ((Component)PlayerController.playerController.ownedCreature).transform;

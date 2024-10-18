@@ -54,3 +54,5 @@ B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngin
 B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.csproj.Up2Date
 B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.pdb
 B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\GWBase.pdb
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\ProjectilesUtility.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\ProjectilesUtility.pdb

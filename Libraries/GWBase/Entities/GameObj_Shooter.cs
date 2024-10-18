@@ -10,7 +10,7 @@ namespace GWBase
 
     public class GameObj_Shooter : GameObj
     {
-        public delegate void OnProjectileHit(HitResult hitResult, GameObj_Projectile projectile);
+        public delegate void OnProjectileHit(HitResult hitResult);
         public event OnProjectileHit onProjectileHit;
         [SerializeField] private GameObject_Area rangeArea = null;
         [SerializeField] private ThingDef currentProjectileDef;
@@ -71,7 +71,7 @@ namespace GWBase
 
         public void LookAtTarget(Transform target)
         {
-            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(ownedTransform, target.position) + AngleOffset));
+            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(ownedTransform.position, target.position)));
             ownedTransform.rotation = newRotation;
 
             if (ownedTransform.rotation.z > quaternionToFlip)
@@ -84,26 +84,28 @@ namespace GWBase
             }
         }
 
-        public void LaunchNewProjectile(ThingDef type)
+        public GameObj_Projectile LaunchNewProjectile(ThingDef type)
         {
             GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction+"Projectile");
-            slot.ownedRigidbody.velocity = transform.right*slot.cachedMovementSpeed;
             slot.transform.position = transform.position;
             slot.shooter = this;
             slot.stats = stats;
             slot.hitEvent.AddListener(OwnedProjectileHit);
+            return slot;
         }
         
-        public void LaunchNewProjectileCustom(ThingDef type, Vector2 position, float rotation)
+        public GameObj_Projectile LaunchNewProjectileCustom(ThingDef type, Vector2 position, float rotation)
         {
             GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, position, rotation, faction+"Projectile");
             slot.shooter = this;
             slot.stats = stats;
             slot.hitEvent.AddListener(OwnedProjectileHit);
+            return slot;
         }
 
-        public void OwnedProjectileHit(GameObj_Projectile projectile, HitResult result) {
-            onProjectileHit?.Invoke(result, projectile);
+        public void OwnedProjectileHit(HitResult result) {
+            onProjectileHit?.Invoke(result);
+            var projectile = (GameObj_Projectile)result.hitSource;
             projectile.hitEvent.RemoveListener(OwnedProjectileHit);
         }
 

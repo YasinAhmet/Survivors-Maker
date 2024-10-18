@@ -57,7 +57,12 @@ namespace GWBase
 
         public GameObject FindFreeSlot()
         {
-            return pooledObjects.FirstOrDefault(x => x != null && !x.gameObject.activeSelf);
+            foreach (var obj in pooledObjects)
+            {
+                if (!obj.gameObject.activeSelf) return obj;
+            }
+
+            return null;
         }
 
         public void IncreaseSizeOfPool(int by)

@@ -25,7 +25,7 @@ public class Hack : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F6))
         {
-            float xpAmount = 100;
+            float xpAmount = 1000;
             PlayerController.playerController.GainXP(xpAmount);
         }
     }

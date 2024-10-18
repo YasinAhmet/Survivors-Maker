@@ -23,7 +23,8 @@ namespace GWBase
         public List<ObjectPool> cachedObjectPools = new List<ObjectPool>();
         public float movementSpeedToRaycast = 1;
         public bool projectilesRaycast = false;
-
+        public float generalMovementSpeed = 1f;
+        
         public delegate void CreatureEvent(GameObj_Creature creature);
 
         public event CreatureEvent creatureGotKilled;
@@ -49,16 +50,16 @@ namespace GWBase
             enabled = false;
         }
 
-        public void PoolTick(float deltaTime)
+        private void FixedUpdate()
         {
-            
+            var deltaTime = Time.fixedDeltaTime;
             foreach (var objectPool in PoolManager.poolManager.cachedObjectPools)
             {
                 
                 foreach (var gameObj in objectPool.pooledObjects)
                 {
                     if (!gameObj.isActive) continue;
-                    gameObj.MoveObject(gameObj.lastMovementVector,deltaTime, false);
+                    gameObj.MoveObject(gameObj.lastMovementVector,deltaTime*generalMovementSpeed, false);
                     foreach (var behaviour in gameObj.installedBehaviours)
                     {
                         behaviour?.RareTick(null, deltaTime);
@@ -67,11 +68,6 @@ namespace GWBase
                 }
             }
 
-        }
-
-        private void FixedUpdate()
-        {
-            PoolTick(Time.fixedDeltaTime);
         }
 
         public void CheckDeath(HealthInfo healthInfo)
@@ -118,6 +114,7 @@ namespace GWBase
             projectilesPool.parentTransform = newPool.transform;
             projectilesPool.FillList();
             objectPools.Add("Projectiles", projectilesPool);
+            generalMovementSpeed = SettingsManager.playerSettings.movementSpeed;
 
 
             var effectsPool = new LightObjectPool

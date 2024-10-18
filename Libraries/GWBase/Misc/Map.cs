@@ -12,61 +12,130 @@ namespace GWBase
     public class Map
     {
         [XmlElement("tierLvlDistr")] public float tierLvlDistribution;
-        [XmlArray("entities")] [XmlArrayItem("entity")]
-        public EntityRef[] entities;
 
-        public List<EntityRef> entitiesListedByWeight = new List<EntityRef>();
+        [XmlArray("customParameters")] [XmlArrayItem("parameter")]
+        public CustomParameter[] parameters;
+
+        [XmlElement("content")]
+        public Content[] contents;
+        
+        [XmlArray("behaviours")]
+        [XmlArrayItem("behaviour")]
+        public BehaviourInfo[] behaviours;
+        
+        public Content cachedSpawnablesPack;
+        public Content cachedEventsPack;
+        public Content cachedPropsPack;
+        
+        [XmlIgnoreAttribute]
+        public List<IObjBehaviour> installedBehaviours = new List<IObjBehaviour>();
+        
         public int cachedLevel = 0;
-        public float cachedTotalWeight = 0;
 
+        [XmlElement("propSpawnInterval")] public float propSpawnInterval;
+        [XmlElement("eventSpawnInterval")] public float eventSpawnInterval;
+        [XmlElement("eventSpawnChance")] public float eventSpawnChance;
+        [XmlElement("eventSpawnChanceIncrease")] public float eventSpawnChanceIncrease;
+        
+        public Content GetPackByType(string type)
+        {
+            foreach (var pack in contents)
+            {
+                if (pack.type == type) return pack;
+            }
+
+            return new Content();
+        }
+        
         public void Load()
         {
             PlayerController.playerController.onXP += TickLevel;
+            PossessBehaviours(behaviours, true);
             TickLevel(PlayerController.playerController.currentLevel);
         }
-
-        public void TickLevel(PlayerController.LevelInfo levelInfo)
+        
+        public virtual void PossessBehaviours(BehaviourInfo[] behaviourInfo, bool clean)
         {
-            Debug.Log("LEVEL: " + levelInfo.level);
-            if (cachedLevel != levelInfo.level)
+            if (installedBehaviours != null && clean) installedBehaviours.Clear();
+            if (behaviourInfo == null || behaviourInfo == Array.Empty<BehaviourInfo>()) return;
+
+            foreach (var behaviour in behaviourInfo)
             {
-                cachedLevel = levelInfo.level;
-                CacheWeights(cachedLevel);
+                ObjBehaviourRef foundBehaviour = AssetManager.assetLibrary.GetBehaviour(behaviour.behaviourName);
+                var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
+                Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
+                IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
+                
+                newBehaviour.Start(foundBehaviour.linkedXmlSource, null, behaviour.customParameters?.ToArray());
+                if (foundBehaviour.isOneTime == "No") installedBehaviours.Add(newBehaviour);
+            }
+        }
+
+        public void RareTick(float delta)
+        {
+            if (installedBehaviours == null || installedBehaviours.Count == 0) return;
+            
+            foreach (var behaviour in installedBehaviours)
+            {
+                behaviour?.RareTick(null, delta);
             }
         }
         
-        public void CacheWeights(int lvl)
-        {
-            entitiesListedByWeight.Clear();
-            cachedTotalWeight = 0;
 
-            foreach (var entity in entities)
+        public void TickLevel(PlayerController.LevelInfo levelInfo)
+        {
+            //Debug.Log("LEVEL: " + levelInfo.level);
+            if (cachedLevel != levelInfo.level)
             {
-                EntityRef entityRef = entity;
-                float lvlDistance = 1+(Math.Abs((Math.Abs(lvl) - Math.Abs(entityRef.tier))*tierLvlDistribution));
-                float entitysWeight = entityRef.rarity / (lvlDistance);
-                entityRef.cachedWeight = entitysWeight;
-                if(entitysWeight>cachedTotalWeight)cachedTotalWeight = entitysWeight;
-                entitiesListedByWeight.Add(entityRef);
+                cachedLevel = levelInfo.level;
+
+                for (int i = 0; i < contents.Length; i++)
+                {
+                    var content = contents[i];
+                    contents[i] = CacheWeights(cachedLevel, content, content.entities);
+                }
             }
-            
-            entitiesListedByWeight.OrderBy(x => x.cachedWeight);
+
+            cachedSpawnablesPack = GetPackByType("Hostiles");
+            cachedEventsPack = GetPackByType("Events");
+            cachedPropsPack = GetPackByType("Props");
         }
 
-        public EntityRef GetRandomEntity()
+        public Content CacheWeights(int lvl, Content pack, EntityRef[] source)
         {
-            float randomWeight = Random.Range(0, cachedTotalWeight);
-            foreach (var entity in entitiesListedByWeight)
+            if (source == null || source.Length == 0) return new Content();
+            pack.calculatedList?.Clear();
+            pack.weight = 0;
+
+            foreach (var entity in source)
             {
-                if (entity.cachedWeight >= randomWeight) return entity;
-                
+                EntityRef entityRef = entity;
+                float lvlDistance = 1+(Math.Abs(lvl - entityRef.tier)*tierLvlDistribution);
+                float entitysWeight = entityRef.rarity / (lvlDistance);
+                entityRef.cachedWeight = entitysWeight;
+                pack.weight += entitysWeight;
+                pack.calculatedList.Add(entityRef);
             }
             
-            Debug.Log("Haven't found an entity for " + randomWeight+"/"+cachedTotalWeight);
+            pack.calculatedList.OrderBy(x => x.cachedWeight);
+            return pack;
+        }
+
+        public EntityRef GetRandomEntity(Content pack)
+        {
+            float randomWeight = Random.Range(0, pack.weight);
+            foreach (var entity in pack.calculatedList)
+            {
+                if (entity.cachedWeight >= randomWeight) return entity;
+                randomWeight -= entity.cachedWeight;
+            }
+            
+            //Debug.Log("Haven't found an entity for " + randomWeight+"/"+pack.weight);
             return new EntityRef();
         }
     }
 
+    [Serializable]
     [XmlRoot("entity")]
     public struct EntityRef
     {
@@ -74,5 +143,23 @@ namespace GWBase
         [XmlAttribute("Tier")] public int tier;
         [XmlElement("rarity")] public float rarity;
         public float cachedWeight;
+        
+        [XmlArray("customParameters")]
+        [XmlArrayItem("parameter")]
+        public List<CustomParameter> customParameters;
     }
+
+    [Serializable]
+    public struct Content
+    {
+        [XmlElement("entity")]
+        public EntityRef[] entities;
+        
+        public List<EntityRef> calculatedList;
+        public float weight;
+
+        [XmlAttribute("Type")] public string type;
+    }
+
+    
 }
