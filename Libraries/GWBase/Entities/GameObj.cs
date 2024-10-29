@@ -38,8 +38,6 @@ namespace GWBase
 
         [SerializeField] public IObjBehaviour[] installedBehaviours = new IObjBehaviour[5];
 
-        [SerializeField] protected bool stopIfObstacle = true;
-        [SerializeField] protected float antiPushRadius = 0.4f;
         [SerializeField] protected float velocityDropSpeed = 0.5f;
         [SerializeField] public Vector2 lastMovementVector;
         private BehaviourHandler<GameObj> behaviourHandler = null;
@@ -53,6 +51,7 @@ namespace GWBase
         public GameObject selfObject;
         public bool isKinematicObj = false;
         public Transform ownedTransform;
+        public HealthInfo lastHealthInfo;
              
         public delegate void Possessed();
 
@@ -123,7 +122,6 @@ namespace GWBase
 
         public void GainXP(float amount)
         {
-            //Debug.Log("XP Gained!!");
             xp += amount;
             onXpGain.Invoke(amount);
         }
@@ -155,9 +153,10 @@ namespace GWBase
 
         public virtual void Possess<T>(ThingDef entity, string faction)
         {
+            onXpGain = delegate(float f) { };
+            onFacingDirectionChange = delegate(bool direction) {  };
+            
             ownedTransform = transform;
-            onXpGain = null;
-            //Debug.Log("An object possessed thing: " + entity.Name + " Faction is : " + faction);
             this.faction = faction;
             possessedThing = new ThingDef(entity);
             cachedMovementSpeed = possessedThing.GetStatValueByName("MaxSpeed");
@@ -211,6 +210,41 @@ namespace GWBase
                 if (foundBehaviour.isOneTime == "No") AddBehaviour(newBehaviour);
             }
         }
+        
+        
+        public bool DoesHaveBehaviour(string behavioursName, out IObjBehaviour behaviourInstance)
+        {
+            behaviourInstance = null;
+            if (installedBehaviours.Length == 0) return false;
+            foreach (var behaviour in installedBehaviours)
+            {
+                if(behaviour == null) continue;
+                
+                    if (behaviour.GetName() == behavioursName)
+                {
+                    behaviourInstance = behaviour;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        public bool DoesHaveBehaviour(string behavioursName)
+        {
+            if (installedBehaviours.Length == 0) return false;
+            foreach (var behaviour in installedBehaviours)
+            {
+                if(behaviour == null) continue;
+                if (behaviour.GetName() == behavioursName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         public virtual void MoveObject(Vector2 axis, float delta, bool passMax)
         {
@@ -232,6 +266,28 @@ namespace GWBase
             currentSpeed = ownedRigidbody.velocity.magnitude;
             return currentSpeed > maxSpeed;
         }
+        
+        public void StartColorChangeIfDamaged()
+        {
+            if (!isActive) return;
+            if (!lastHealthInfo.gotKilled && lastHealthInfo.damageTaken > 0) StartCoroutine(HitColorChange(Color.red));
+        }
+
+        public void StartColorChange(Color first)
+        {
+            if (!isActive) return;
+            StartCoroutine(HitColorChange(first));
+        }
+
+        [SerializeField] private float hitColorSpeed = 0.1f;
+        public IEnumerator HitColorChange(Color first)
+        {
+            ownedSpriteRenderer.color = first;
+            yield return new WaitForSeconds(hitColorSpeed);
+            ownedSpriteRenderer.color = Color.black;
+            yield return new WaitForSeconds(hitColorSpeed);
+            ownedSpriteRenderer.color = Color.white;
+        }
  
         public ThingDef GetPossessed()
         {
@@ -239,7 +295,7 @@ namespace GWBase
         }
 
         
-        public virtual bool TryDamage(float amount, out HealthInfo healthInfo)
+        public virtual bool TryDamage(float amount, out HealthInfo healthInfo, GameObj_Creature causer)
         {
             healthInfo = new HealthInfo();
             healthInfo.gotKilled = false;
@@ -304,7 +360,7 @@ namespace GWBase
 
     public interface IDamageable
     {
-        public bool TryDamage(float amount, out HealthInfo healthInfo);
+        public bool TryDamage(float amount, out HealthInfo healthInfo, GameObj_Creature causer);
         public bool TryDestroy();
         public float GetHealth();
         public bool IsHealthDepleted();

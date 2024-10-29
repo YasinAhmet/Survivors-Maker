@@ -39,5 +39,17 @@
             <parameterRequest Type="GetOwnedObject"></parameterRequest>
         </parameters>
 	</behaviour>
+	<behaviour Name="ShockUpgrade" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+	</behaviour>
+	<behaviour Name="IncreasePiercingAmount" From="GWMisc" Namespace="GWMisc">
+        <parameters>
+            <parameterRequest Type="GetOwnedObject"></parameterRequest>
+        </parameters>
+	</behaviour>
 	<behaviour Name="DamageTypeModule" From="GWMisc" Namespace="GWMisc"></behaviour>
+	<behaviour Name="FpsLimitPlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
+	<behaviour Name="TensionByTimePlugin" From="GWMisc" Namespace="GWMisc"></behaviour>
 </Defs>

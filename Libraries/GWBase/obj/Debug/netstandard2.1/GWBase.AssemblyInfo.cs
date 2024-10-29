@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GWBase")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5bc2f262ad61042d872cc2123b6334a5e537f947")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e443e0325d3d5a4fd18899636a992ad64e367778")]
 [assembly: System.Reflection.AssemblyProductAttribute("GWBase")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GWBase")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

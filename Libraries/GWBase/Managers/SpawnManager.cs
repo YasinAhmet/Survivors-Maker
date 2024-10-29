@@ -13,7 +13,7 @@ using Random = System.Random;
 
 namespace GWBase {
 
-public class SpawnManager : Manager
+    public class SpawnManager : Manager
 {
     public Camera playerCamera;
     public static SpawnManager spawnManager;
@@ -25,7 +25,6 @@ public class SpawnManager : Manager
     public float RNP_Max = 1.25f;
     public float RNP_Min = 1f;
     public bool SPW_Activated = true;
-    public float SPW_DelayBetweenSpawns = 0.7f;
     public float SPW_FirstDelay = 2f;
     public Map currentMap;
 
@@ -38,7 +37,7 @@ public class SpawnManager : Manager
         SpawnPlayerGroup();
         
         var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "Maps.xml");
-        currentMap = YKUtility.FromXElement<Map>(defFile.Element("Map"));
+        currentMap = YKUtility.FromXElement<Map>(defFile.Elements("Map").FirstOrDefault(x => x.Attribute("Name").Value == SettingsManager.settingsManager.playerSettings.mapName));
         currentMap.Load();
         StartCoroutine(EnemySpawnTick());
         playerCamera = Camera.main;
@@ -47,7 +46,7 @@ public class SpawnManager : Manager
 
     public void SpawnPlayerGroup()
     {
-        string playerGroupName = SettingsManager.playerSettings.playerGroup;
+        string playerGroupName = SettingsManager.settingsManager.playerSettings.playerGroup;
         GroupDef playerGroup = spawnableGroupsDictionary.FirstOrDefault(x => x.Key.Equals(playerGroupName)).Value;
         CreatureGroup groupInstance = new();
         groupInstance.Possess(playerGroup);
@@ -105,11 +104,12 @@ public class SpawnManager : Manager
     {
         yield return new WaitForSeconds(SPW_FirstDelay);
 
-        while (SPW_Activated && SettingsManager.playerSettings.shouldSpawn == "Yes")
+        while (SPW_Activated && SettingsManager.settingsManager.playerSettings.shouldSpawn == "Yes")
         {
             GameObj slot = PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
             UIManager.uiManager.AttachObjectToWorldCanvas(slot.gameObject);
-            yield return new WaitForSeconds(SPW_DelayBetweenSpawns);
+            slot.SetRigidbodyMode("Dynamic");
+            yield return new WaitForSeconds(currentMap.spawnSpeed);
         }
     }
 
@@ -159,18 +159,21 @@ public class SpawnManager : Manager
         return null;
     }
 
+    [SerializeField] public float xSpawnOffset = 0;
+    [SerializeField] public float ySpawnOffset = 0;
     public Vector3 GetRandomSpawnPosition()
     {
+        var offset = new Vector3(xSpawnOffset, ySpawnOffset);
         var camPos = playerCamera.transform.position;
         if (UnityEngine.Random.Range(0, 2) == 1)
         {
-            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomHorizontalSpawnPosition() + camPos);
-            else return playerCamera.ScreenToWorldPoint(-GetRandomHorizontalSpawnPosition() + camPos);
+            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomHorizontalSpawnPosition() + camPos) + offset;
+            else return playerCamera.ScreenToWorldPoint(-GetRandomHorizontalSpawnPosition() + camPos) + offset;
         }
         else
         {
-            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomVerticalSpawnPosition() + camPos);
-            else return playerCamera.ScreenToWorldPoint(-GetRandomVerticalSpawnPosition() + camPos);
+            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomVerticalSpawnPosition() + camPos) + offset;
+            else return playerCamera.ScreenToWorldPoint(-GetRandomVerticalSpawnPosition() + camPos) + offset;
         }
         
         /*Vector3 randomPoint = new(UnityEngine.Random.Range(RNP_Min, RNP_Max), UnityEngine.Random.Range(RNP_Min, RNP_Max));

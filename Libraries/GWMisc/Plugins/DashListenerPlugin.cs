@@ -23,7 +23,7 @@ namespace GWMisc
         private ThingDef _cachedPossessed;
         private bool IsDashReady => _dashCooldownCounter >= _dashCooldown;
 
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             _dashCooldown = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Cooldown")).parameterValue, CultureInfo.InvariantCulture);
             _force = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Force")).parameterValue, CultureInfo.InvariantCulture);
@@ -33,13 +33,10 @@ namespace GWMisc
             _ownedCreature = (GameObj_Creature)parameters[0];
 
             _ownedCreature.actionRequested += ProcessSignal;
-            //Debug.Log("[DASH] Setupping Dash for " + _ownedCreature.gameObject.name);
-            return Task.CompletedTask;
         }
 
         private void ProcessSignal(string actionType)
         {
-            //Debug.Log("[DASH] Got Signal " + actionType);
             if (actionType == "Dash" && IsDashReady)
             {
                 Dash();
@@ -61,7 +58,6 @@ namespace GWMisc
                 _cachedPossessed.ReplaceStat("MaxSpeed", _cachedLoweredSpeed);
             }
             
-            // Debug.Log("[DASH] Dashing.. " + _ownedCreature.directionLookingAt*_force);
         }
         
         public void Start(XElement possess, object[] parameters){return;}
@@ -79,7 +75,6 @@ namespace GWMisc
             float total = _cachedLoweredSpeed + (_cachedDifference * progress);
             _cachedPossessed.ReplaceStat("MaxSpeed", total);
             _ownedCreature.cachedMovementSpeed = total;
-            //Debug.Log($"Dash Tick: {remainingTime}: {dashCooldownCounter}, {dashCooldown}. {cachedSpeed}, {cachedLoweredSpeed}, {cachedDifference}. {progress} Total:{total}");
         }
         
         private float EaseInBack(float x) {
@@ -89,7 +84,11 @@ namespace GWMisc
             return (float)(c3 * x * x * x - c1 * x * x);
         }
 
-        public void Suspend(object[] parameters){return;}
+        public void Suspend(object[] parameters)
+        {
+            _ownedCreature.actionRequested -= ProcessSignal;
+            return;
+        }
 
         public void Tick(object[] parameters, float deltaTime){return;}
 

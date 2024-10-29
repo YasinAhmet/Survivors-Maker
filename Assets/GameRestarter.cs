@@ -14,7 +14,7 @@ public class GameRestarter : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            RestartIt();
         }
         if (Input.GetKeyDown(KeyCode.F2))
         {
@@ -26,7 +26,29 @@ public class GameRestarter : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            PlayerController.playerController.ownedCreature.TryDamage(25, out HealthInfo info);
+            PlayerController.playerController.ownedCreature.TryDamage(25, out HealthInfo info, null);
         }
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            PlayerController.playerController.ownedCreature.GainXP(100);
+         }
+    }
+
+    public void RestartIt()
+    {
+        PlayerController.playerController = null;
+        PoolManager.poolManager = null;
+        GameManager.gameManager = null;
+        SpawnManager.spawnManager = null;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    public void LoadToScene(string scene)
+    {
+        PlayerController.playerController = null;
+        PoolManager.poolManager = null;
+        GameManager.gameManager = null;
+        SpawnManager.spawnManager = null;
+        SceneManager.LoadScene(scene);
     }
 }

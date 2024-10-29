@@ -28,7 +28,7 @@ namespace GWBase
         public event AttackPreparing preparing;
         public event AttackHappened happened;
         
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             attackTime = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("AttackTime")).parameterValue, CultureInfo.InvariantCulture);
             attackCooldown = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("AttackCooldown")).parameterValue, CultureInfo.InvariantCulture);
@@ -39,18 +39,6 @@ namespace GWBase
             ownedObject = (GameObj_Creature)parameters[0];
             ownedObject.actionRequested += OwnedObjectOnactionRequested;
 
-            /*try
-            {
-                recalculatesHitBox = 
-                    customParameters.FirstOrDefault(x => x.parameterName.Equals("RecalculatesHitBox")).parameterValue == 
-                    "Yes";
-            }
-            catch
-            {
-                //Debug.Log("Haven't found 'RecalculatesHitBox' field for MeleeAttacker. Returning false.");
-                recalculatesHitBox = false;
-            }*/
-            
             try
             {
                 doesHitInstant =
@@ -59,11 +47,8 @@ namespace GWBase
             }
             catch
             {
-                //Debug.Log("Haven't found 'HitsInstantly' field for MeleeAttacker. Returning false.");
                 doesHitInstant = false;
             }
-
-            return Task.CompletedTask;
         }
 
         private void OwnedObjectOnactionRequested(string actionname)
@@ -77,7 +62,6 @@ namespace GWBase
             ownedObject.UpdateCharacterMovement(Vector2.zero);
             ownedObject.currentState = GameObj_Creature.CreatureState.OnAction;
             iniatingAttack = true;
-            //if(recalculatesHitBox)ToggleAttackImg(true);
             if (doesHitInstant)
             {
                 Attack();
@@ -98,18 +82,16 @@ namespace GWBase
                     float dmg = ownedObject.GetPossessed().GetStatValueByName("Damage");
                     if (Random.Range(0f, 1.0f) < criticalStrikeChance) dmg *= criticalStrikeMultiplier;
 
-                    obj.TryDamage(dmg, out HealthInfo healthInfo);
-                    YKUtility.SpawnFloatingText(((Component)obj).transform.position, dmg);
+                    obj.TryDamage(dmg, out HealthInfo healthInfo, ownedObject);
                     
                     happened?.Invoke(healthInfo.gotKilled, dmg, ownedObject, obj);
+                    obj.StartColorChange(Color.green);
                 }
             }
             
             cooldownCounter = 0;
             iniatingAttack = false;
-            //if(recalculatesHitBox)ToggleAttackImg(false);
             ownedObject.currentState = GameObj_Creature.CreatureState.Idle;
-            //GameObject.Destroy(collisionChecker);
         }
 
         public Collider2D[]  GetHits
@@ -124,31 +106,6 @@ namespace GWBase
         }
 
         public GameObject collisionChecker;
-        // HIT BOX VISUALIZATION
-        /*public void ToggleAttackImg(bool enable)
-        {
-            if (enable)
-            {
-                Vector3 forward = ownedObject.directionLookingAt*closeness;
-                Vector3 position = ownedObject.ownedTransform.position;
-                Vector3 targetPos = position + forward;
-                
-                collisionChecker = GameObject.Instantiate(new GameObject());
-                var collider = collisionChecker.AddComponent<CircleCollider2D>();
-                var renderer = collisionChecker.AddComponent<SpriteRenderer>();
-                collider.isTrigger = true;
-                Sprite circleSprite = Resources.Load<Sprite>("Circle");
-                renderer.sprite = circleSprite;
-                collisionChecker.transform.localScale *= hitboxSize/2;
-                collisionChecker.transform.position = targetPos;
-                
-            }
-        }*/
-        public void Start(XElement possess, object[] parameters)
-        {
-            return;
-        }
-
         public void Tick(object[] parameters, float deltaTime)
         {
             return;

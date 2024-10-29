@@ -8,17 +8,14 @@ namespace GWMisc
 {
     public class VikingRaidEvent : IObjBehaviour
     {
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
-            //Debug.Log("[EVENT] Viking Raid!!");
             var groupSpawned = SpawnManager.spawnManager.SpawnGroup("VikingGroup", SpawnManager.spawnManager.GetRandomSpawnPosition());
             foreach (var creature in groupSpawned.attachedCreatures)
             {
                 if(groupSpawned.groupLeader == creature) continue;
                 creature.RemoveBehaviour("ChasePlayer");
             }
-            
-            return Task.CompletedTask;
         }
 
         public void Start(XElement possess, object[] parameters)

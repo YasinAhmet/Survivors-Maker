@@ -13,21 +13,14 @@ namespace GWBase
     {
 
         public GameObject inputSpeaker;
-        public static PlayerSettings playerSettings;
-        public PlayerController playerController;
+        public PlayerSettings playerSettings;
         public static SettingsManager settingsManager;
         public List<Plugin> loadedUpPlugins = new List<Plugin>();
         public List<IObjBehaviour> loadedUpBehaviours = new List<IObjBehaviour>();
-        public bool loaded;
         public override IEnumerator Kickstart()
         {
             settingsManager = this;
-            //Debug.Log($"[SETTINGS] Settings manager initializing..");
-            playerController = new();
             LoadSettings();
-            yield return StartCoroutine(playerController.Start());
-
-            loaded = true;
             yield return this;
         }
 
@@ -59,10 +52,11 @@ namespace GWBase
             var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
             Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
             IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
-            await newBehaviour.Start(null, null, behaviourDef.customParameters.ToArray());
+            newBehaviour.Start(null, null, behaviourDef.customParameters.ToArray());
             loadedUpBehaviours.Add(newBehaviour);
         }
 
+        [Serializable]
         [XmlRoot("PlayerSettings")]
         public struct PlayerSettings
         {
@@ -83,8 +77,11 @@ namespace GWBase
             public string playSoundEffects;
 
             public bool shouldPlaySoundEffects;
+            [XmlElement("map")]
+            public string mapName;
         }
 
+        [Serializable]
         [XmlRoot("plugin")]
         public struct Plugin {
             [XmlAttribute("Name")]

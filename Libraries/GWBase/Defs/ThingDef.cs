@@ -129,7 +129,18 @@ namespace GWBase
             list.Add(new Stat()
             {
                 Name = statName,
-                Value = statValue.ToString()
+                Value = statValue.ToString(CultureInfo.InvariantCulture)
+            });
+            stats = list.ToArray();
+        }
+        
+        public void AddNewStat(string statName, string statValue)
+        {
+            var list = stats.ToList();
+            list.Add(new Stat()
+            {
+                Name = statName,
+                Value = statValue
             });
             stats = list.ToArray();
         }
@@ -140,7 +151,7 @@ namespace GWBase
             {
                 if (stats[i].Name == statName)
                 {
-                    stats[i].Value = (float.Parse(stats[i].Value) + newBonus).ToString();
+                    stats[i].Value = (float.Parse(stats[i].Value) + newBonus).ToString(CultureInfo.InvariantCulture);
                     return;
                 }
             }
@@ -151,7 +162,7 @@ namespace GWBase
             {
                 if (stats[i].Name == statName)
                 {
-                    stats[i].Value = (float.Parse(stats[i].Value) - newMinus).ToString();
+                    stats[i].Value = (float.Parse(stats[i].Value) - newMinus).ToString(CultureInfo.InvariantCulture);
                     return;
                 }
             }
@@ -159,14 +170,36 @@ namespace GWBase
 
         public void ReplaceStat(string statName, float newValue)
         {
+            var maxValue = GetStatValueByName("Max" + statName);
             for (int i = 0; i < stats.Count(); i++)
             {
                 if (stats[i].Name == statName)
                 {
                     float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
-                    stats[i].Value = newValue.ToString();
-                    //Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
+
+                    if (maxValue != 0 && newValue > maxValue)
+                    {
+                        stats[i].Value = maxValue.ToString(CultureInfo.InvariantCulture);
+                        onStatChange?.Invoke(statName, maxValue, oldValue);
+                        return;
+                    }
+                        
+                    stats[i].Value = newValue.ToString(CultureInfo.InvariantCulture);
                     onStatChange?.Invoke(statName, newValue, oldValue);
+                    return;
+                }
+            }
+
+            AddNewStat(statName, newValue);
+        }
+        
+        public void ReplaceStat(string statName, string newValue)
+        {
+            for (int i = 0; i < stats.Count(); i++)
+            {
+                if (stats[i].Name == statName)
+                {
+                    stats[i].Value = newValue;
                     return;
                 }
             }
@@ -181,8 +214,7 @@ namespace GWBase
                 if (stats[i].Name == statName)
                 {
                     float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
-                    stats[i].Value = newValue.ToString();
-                    //Debug.Log($"Trying to call stat change.. {onStatChange?.GetInvocationList()}");
+                    stats[i].Value = newValue.ToString(CultureInfo.InvariantCulture);
                     if(withoutSignal == false)onStatChange?.Invoke(statName, newValue, oldValue);
                     return;
                 }

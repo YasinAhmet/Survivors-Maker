@@ -23,6 +23,12 @@ public static class YKUtility
             return RandomBool();
         }
     }
+
+    public static Vector3 GetRandomPosition(float range)
+    {
+        return new Vector3(UnityEngine.Random.Range(-range, range), UnityEngine.Random.Range(-range, range), 1);
+    }
+    
     public static bool RandomBool()
     {
         return UnityEngine.Random.Range(0, 2) == 1;
@@ -80,16 +86,19 @@ public static class YKUtility
         return newBehaviour;
     }
 
-    public static void SpawnFloatingText(Vector3 position, float damage) {
-        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position, 0, "Player");
+    public static void SpawnFloatingText(Vector3 position, string text) {
+        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position+GetRandomPosition(0.5f), 0, "Player");
         obj.GetComponent<IBootable>().BootSync();
-        obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
+        obj.GetComponent<ITextMeshProContact>().SetText($"{text}");
     }
     
-    public static void SpawnFloatingText(Vector3 position, float damage, Color color) {
-        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position, 0, "Player");
+    public static void SpawnFloatingText(Vector3 position, string text, Color color) {
+        var obj = PoolManager.poolManager.GetUIObjectPool("UI").ObtainSlotForType(null, position+GetRandomPosition(0.5f), 0, "Player");
         obj.GetComponent<IBootable>().BootSync();
-        obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
+        ITextMeshProContact contact = obj.GetComponent<ITextMeshProContact>();
+        contact.SetText($"{text}");
+        contact.SetColor(color);
+        
     }
     
     public static float ConvertStat(GameObj creature, string statname) {

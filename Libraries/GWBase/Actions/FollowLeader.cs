@@ -20,20 +20,11 @@ public class FollowLeader : IObjBehaviour
     public float reachDistance = 2f;
     public float cooldownCounter;
 
-    public void Start(XElement possess, object[] parameters)
-    {
-        ownedObject = (GameObj_Creature)parameters[0];
-        //objectToFollow = ownedObject.leader;
-        InitializeVariables(ownedObject);
-        //Debug.Log($"[CHASE] Following Behaviour setup.. {ownedObject} {objectToFollow} validity: {ownedObject != null} {objectToFollow != null}");
-    }
-
     public void InitializeVariables(GameObj_Creature creature){
         reachDistance = ConvertStat(creature, "ReachDistance");
     }
     
     public float ConvertStat(GameObj_Creature creature, string statname) {
-        //Debug.Log($"[STAT CONVERTION] {statname} conversion..");
         string statValue = creature.GetPossessed().FindStatByName(statname).Value;
         float.TryParse(statValue, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out float statValueInFloat);
         return statValueInFloat;
@@ -76,10 +67,10 @@ public class FollowLeader : IObjBehaviour
         public string GetName(){ return null; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
-    {
-        Start(possess, parameters);
-        return Task.CompletedTask;
+    public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    { 
+        ownedObject = (GameObj_Creature)parameters[0];
+        InitializeVariables(ownedObject);
     }
 }
 

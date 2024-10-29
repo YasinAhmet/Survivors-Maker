@@ -15,7 +15,7 @@
         <textureName>crystalstaff</textureName>
         <textureSize>6</textureSize>
         <stats>
-            <stat Name="Range">15</stat>
+            <stat Name="Range">4</stat>
             <stat Name="AttackPerSecond">1</stat>
             <stat Name="Action">Soul</stat>
         </stats>
@@ -25,7 +25,7 @@
         <textureName>bow</textureName>
         <textureSize>4</textureSize>
         <stats>
-            <stat Name="Range">20</stat>
+            <stat Name="Range">5</stat>
             <stat Name="AttackPerSecond">1</stat>
             <stat Name="Action">Arrow</stat>
         </stats>

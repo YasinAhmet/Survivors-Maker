@@ -14,6 +14,14 @@ namespace GWBase
         public List<GroupPositionData> emptyPositions = new();
         public GroupPositionData lastUsedPosition;
 
+        public void FreePositionIfDied(HealthInfo info)
+        {
+            if(!info.gotKilled) {return;}
+
+            var obj = (GameObj_Creature)info.infoOf;
+            emptyPositions.Add(obj.possessedPosition);
+        }
+        
         public void Possess(GroupDef groupDef) {
             this.groupDef = groupDef;
             groupFaction = groupDef.spawnableInfo.faction;
@@ -33,6 +41,8 @@ namespace GWBase
                     group = this,
                     position = new Vector3(lastUsedPosition.x, lastUsedPosition.y, 0)
                 };
+                creature.possessedPosition = lastUsedPosition;
+                creature.onHealthChange += FreePositionIfDied;
             } else {
                 groupLeader = creature;
                 creature.GroupAttached = new GroupMemberReference() {

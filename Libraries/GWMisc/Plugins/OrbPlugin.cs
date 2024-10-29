@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -10,14 +12,25 @@ namespace GWMisc
     public class OrbPlugin : IObjBehaviour
     {
         public float locationRandomization;
-        public virtual async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public virtual void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             assetManager = AssetManager.assetLibrary;
             locationRandomization = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("LocationRandomization")).parameterValue, CultureInfo.InvariantCulture);
 
+            PlayerManager.newSessionStarted += StartOrbs;
+        }
+
+        public void StartOrbs(PlayerManager playerManager)
+        {
+            GameManager.gameManager.Execute(SubscribeGotKilled());
+        }
+
+        public IEnumerator SubscribeGotKilled()
+        {
+            
             while (PoolManager.poolManager == null)
             {
-                await Task.Delay(500);
+                yield return new WaitForSecondsRealtime(0.25f); 
             }
             PoolManager.poolManager.creatureGotKilled += DropOrb;
         }

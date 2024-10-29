@@ -9,8 +9,13 @@ namespace GWBase {
 public class PlayerController
 {
     public delegate void XpGainedUpdate(LevelInfo levelInfo);
+    public delegate void NewCharacter(GameObj_Creature creature);
+    public delegate void LeveledUp(LevelInfo levelInfo);
+    public event LeveledUp onPreLevelUp = delegate(LevelInfo level) {  }; 
+    public event LeveledUp onLevelUp = delegate(LevelInfo level) {  }; 
     public event XpGainedUpdate onXP = delegate(LevelInfo info) {  };
     public event GameObj.HealthChangeEvent onOwnedHealthChange = delegate(HealthInfo info) {  };
+    public event NewCharacter gotNewChar = delegate(GameObj_Creature creature) {  };
 
     public static PlayerController playerController;
     public GameObj_Creature ownedCreature;
@@ -28,26 +33,23 @@ public class PlayerController
         ownedCreature.onXpGain += (GainXP);
         ownedCreature.onActionHappen += (ActionInfoProcessor);
         ownedCreature.onHealthChange += (onOwnedHealthChange.Invoke);
+        gotNewChar?.Invoke(ownedCreature);
     }
 
     public void ActionInfoProcessor(string key, object value) {
-        //Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
         var sessionInformation = GameManager.gameManager.sessionInformation;
         switch (key) {
             case "hitGiven":
-                //ebug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
                 HitResult hitResult = (HitResult)value;
                 sessionInformation.totalDamageGiven += (int)hitResult.damage;
                 sessionInformation.totalHitsGiven += 1;
                 if(hitResult.killed) sessionInformation.killCount++;
                 break;
             case "hitTaken":
-                //Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
                 sessionInformation.totalHitsTaken += 1;
                 sessionInformation.totalDamageTaken += (int)(float)value;
                 break;
             default:
-                //Debug.Log($"[PC] Unknown action: {key}");
                 break;
         }
 
@@ -56,7 +58,6 @@ public class PlayerController
 
     public IEnumerator Start()
     {
-        //Debug.Log($"[PC] Player Controller initializing..");
         playerController = this;
         currentLevel = new()
         {
@@ -75,17 +76,19 @@ public class PlayerController
     {
         if (currentLevel.currentXP >= currentLevel.targetXP)
         {
-            currentLevel.targetXP *= XPRequirementMultiplier;
+            currentLevel.targetXP += (50*((float)(currentLevel.level/10f)));
+            currentLevel.currentXP = 0;
             LevelUpEvent levelUpEvent = new LevelUpEvent();
             await levelUpEvent.StartPopup();
+            onPreLevelUp.Invoke(currentLevel);
             await levelUpEvent.WaitForDone();
             currentLevel.level++;
+            onLevelUp.Invoke(currentLevel);
         }
     }
 
     public void GainXP(float amount)
     {
-        //Debug.Log("Player got level");
         currentLevel.currentXP += amount;
         GameManager.gameManager.sessionInformation.totalXP += (int)amount;
         TryLevelUp();

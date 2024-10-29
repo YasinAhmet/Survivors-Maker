@@ -22,6 +22,9 @@ namespace GWBase
         [XmlArray("behaviours")]
         [XmlArrayItem("behaviour")]
         public BehaviourInfo[] behaviours;
+
+        [XmlElement("background")] public string backgroundID;
+        [XmlElement("backgroundSize")] public float backgroundSize;
         
         public Content cachedSpawnablesPack;
         public Content cachedEventsPack;
@@ -32,6 +35,7 @@ namespace GWBase
         
         public int cachedLevel = 0;
 
+        [XmlElement("spawnSpeed")] public float spawnSpeed;
         [XmlElement("propSpawnInterval")] public float propSpawnInterval;
         [XmlElement("eventSpawnInterval")] public float eventSpawnInterval;
         [XmlElement("eventSpawnChance")] public float eventSpawnChance;
@@ -84,7 +88,6 @@ namespace GWBase
 
         public void TickLevel(PlayerController.LevelInfo levelInfo)
         {
-            //Debug.Log("LEVEL: " + levelInfo.level);
             if (cachedLevel != levelInfo.level)
             {
                 cachedLevel = levelInfo.level;
@@ -130,7 +133,6 @@ namespace GWBase
                 randomWeight -= entity.cachedWeight;
             }
             
-            //Debug.Log("Haven't found an entity for " + randomWeight+"/"+pack.weight);
             return new EntityRef();
         }
     }

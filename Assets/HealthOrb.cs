@@ -26,7 +26,14 @@ public class HealthOrb : MonoBehaviour, IBootable
         timeElapsed = 0f;
         targetValue = (healthInfo.currentHealth) / maxHealth;
         if(!alreadyLerping)StartCoroutine(EaseToTarget(easingSpeed));
-
+    }
+    
+    public void UpdateBar(float current, float target)
+    {
+        start = current / maxHealth;
+        timeElapsed = 0f;
+        targetValue = target / maxHealth;
+        if(!alreadyLerping)StartCoroutine(EaseToTarget(easingSpeed));
     }
 
     public static float easeOutCirc(double x)
@@ -40,17 +47,15 @@ public class HealthOrb : MonoBehaviour, IBootable
 
         while (timeElapsed < duration)
         {
-            timeElapsed += Time.deltaTime;
+            timeElapsed += Time.fixedDeltaTime;
             float t = timeElapsed / duration;
-            // Use easeOutQuart for smoothing
             float easedValue = easeOutCirc(t);
             currentValue = Mathf.Lerp(start, targetValue, easedValue);
             slider.value = currentValue;
 
-            yield return null; // Wait for the next frame
+            yield return new WaitForFixedUpdate();
         }
 
-        // Ensure the final value is exactly the target
         currentValue = targetValue;
         slider.value = currentValue;
         alreadyLerping = false;
@@ -58,42 +63,38 @@ public class HealthOrb : MonoBehaviour, IBootable
 
     public void HealthChangeConverter(string statName, float newValue, float oldValue)
     {
-        //Debug.Log("Health change converter run.. " + statName + " " + newValue + " " + oldValue);
+        
+        
         if (statName == "MaxHealth")
         {
-            StopAllCoroutines();
             maxHealth = newValue;
             alreadyLerping = false;
+            UpdateBar(oldValue, newValue);
         }
         
         if (statName == "Health")
         {
-            start = (oldValue) / maxHealth;
-            timeElapsed = 0f;
-            targetValue = (newValue) / maxHealth;
-            if(!alreadyLerping)StartCoroutine(EaseToTarget(easingSpeed));
+            UpdateBar(oldValue, newValue);
         }
     }
 
     
     public void BootSync()
     {
-        _ = Task.Run(SyncHealthStatUpdates);
+        StartCoroutine(SyncHealthStatUpdates());
     }
 
-    private async Task SyncHealthStatUpdates()
+    private IEnumerator SyncHealthStatUpdates()
     {
-        //Debug.Log("Syncing health updates");
-
         PlayerController.playerController.onOwnedHealthChange += (UpdateBar);
 
         while (PlayerController.playerController.ownedCreature == null || !PlayerController.playerController.ownedCreature.isActive)
         {
-            await Task.Delay(500);
+            yield return new WaitForSecondsRealtime(0.5f);
         }
-
-        //Debug.Log("Adding stat change callback");
+        
         PlayerController.playerController.ownedCreature.GetPossessed().onStatChange += HealthChangeConverter;
+        maxHealth = playerController.ownedCreature.GetPossessed().GetStatValueByName("MaxHealth");
     }
 
     public IEnumerator Boot()

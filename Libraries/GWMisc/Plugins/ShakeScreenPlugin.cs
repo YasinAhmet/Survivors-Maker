@@ -29,31 +29,28 @@ namespace GWMisc
             return;
         }
 
-        public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             shakePower = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Power")).parameterValue, CultureInfo.InvariantCulture);
             duration = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Duration")).parameterValue, CultureInfo.InvariantCulture);
             randomness = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("Randomness")).parameterValue, CultureInfo.InvariantCulture);
             waitTimeMultiplier = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("WaitTimeMultiplier")).parameterValue, CultureInfo.InvariantCulture);
             targettedCamera = Camera.main;
-            SetupShaking();
+
+            PlayerManager.newSessionStarted += SetupShaking;
         }
 
         public void Start(XElement possess, object[] parameters)
         {
             return;
         }
-
-        public async Task SetupShaking()
+        
+        public void SetupShaking(PlayerManager playerManager)
         {
-            while (!SettingsManager.settingsManager.loaded || !SettingsManager.settingsManager.playerController.ownedCreature)
-            {
-                await Task.Delay(500);
-            }
-
-            attachedObj = SettingsManager.settingsManager.playerController.ownedCreature;
-            attachedObj.onHealthChange += (TryShake);
+            playerManager.playerController.onOwnedHealthChange  += (TryShake);
+            targettedCamera = Camera.main;
         }
+
 
         public async void TryShake(HealthInfo healthInfo)
         {
@@ -65,6 +62,7 @@ namespace GWMisc
 
         public async Task Shake(float power, float duration)
         {
+            attachedObj = PlayerController.playerController.ownedCreature;
             zPos = targettedCamera.transform.position.z;
             float timePassed = 0;
 

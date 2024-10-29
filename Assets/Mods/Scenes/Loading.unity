@@ -530,6 +530,7 @@ GameObject:
   - component: {fileID: 1736317615}
   - component: {fileID: 1736317616}
   - component: {fileID: 1736317617}
+  - component: {fileID: 1736317618}
   m_Layer: 0
   m_Name: Boot
   m_TagString: Untagged
@@ -625,6 +626,7 @@ MonoBehaviour:
   linkedManagers:
   - {fileID: 1736317615}
   - {fileID: 1736317611}
+  - {fileID: 1736317618}
   linkedBootable: []
   bootOnStartup: 1
   dontDestroy: 1
@@ -705,6 +707,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14f1e880606f89d46a4626113e0cd34a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1736317618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736317609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1618750376, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputSpeaker: {fileID: 6187621314025665081, guid: ae88b5fb196d916569d20a1ef3a85a1c, type: 3}
+  playerSettings:
+    playerGroup: 
+    playerCharacter: 
+    shouldSpawn: 
+    rareTickTime: 0
+    movementSpeed: 0
+    playSoundEffects: 
+    shouldPlaySoundEffects: 0
+  loadedUpPlugins: []
 --- !u!1 &2112626856
 GameObject:
   m_ObjectHideFlags: 0

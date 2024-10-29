@@ -12,6 +12,9 @@ public class UpgradeDef
     [XmlAttribute("Name")]
     public string upgradeName;
     
+    [XmlElement("displayName")]
+    public string displayName;
+    
     [XmlElement("description")]
     public string description;
     

@@ -13,13 +13,12 @@ namespace GWMisc
         public float blockChance;
         public float blockDmgRate;
         
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             blockChance = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("BlockChance")).parameterValue, CultureInfo.InvariantCulture);
             blockDmgRate = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("BlockPower")).parameterValue, CultureInfo.InvariantCulture);
             ownedObject = (GameObj_Creature)parameters[0];
             ownedObject.pre_onHealthChange += TryBlock;
-            return Task.CompletedTask;
         }
 
         public void TryBlock(HealthInfo healthInfo)
@@ -36,7 +35,6 @@ namespace GWMisc
                 
                 ownedObject.StartColorChange(Color.yellow);
                 ownedObject.RequestAction("Dash");
-                //Debug.Log("[BLOCK] Dashing in direction.. " + ownedObject.directionLookingAt + ", Damage Taken: "+ ownedObject.lastHealthInfo.damageTaken);
             }
         }
 
@@ -49,13 +47,17 @@ namespace GWMisc
             return;
         }
 
-        public void Suspend(object[] parameters){return;}
+        public void Suspend(object[] parameters)
+        {
+            ownedObject.pre_onHealthChange -= TryBlock;
+            return;
+        }
 
         public void Tick(object[] parameters, float deltaTime){return;}
 
         ParameterRequest[] IObjBehaviour.GetParameters(){return null;}
 
-        public string GetName(){return "BlockDmg";}
+        public string GetName(){return "BlockDamageDash";}
         
     }
 }

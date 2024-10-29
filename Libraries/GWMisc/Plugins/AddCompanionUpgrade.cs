@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -9,17 +10,17 @@ namespace GWMisc
 {
     public class AddCompanionUpgrade : IObjBehaviour
     {
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             GameObj_Creature owned = (GameObj_Creature)parameters[0];
             CreatureGroup group = owned.groupAttached.group;
 
+            var CompanionID = customParameters.FirstOrDefault(x => x.parameterName.Equals("CompanionID")).parameterValue;
             var characterDefToAdd =
-                SpawnManager.spawnManager.spawnableThingsDictionary.FirstOrDefault(x => x.Key == "SpaceMarine").Value;
+                AssetManager.assetLibrary.initializedThingDefsDictionary.FirstOrDefault(x => x.Key == CompanionID).Value;
             GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(characterDefToAdd, UnityEngine.Vector2.zero, 0, group.groupFaction);
             group.AttachCreature(creature);
             creature.transform.localPosition = new UnityEngine.Vector3(group.lastUsedPosition.x,group.lastUsedPosition.y, 0);
-            return Task.CompletedTask;
         }
 
         
@@ -37,6 +38,6 @@ namespace GWMisc
 
         ParameterRequest[] IObjBehaviour.GetParameters(){return null;}
 
-        public string GetName(){return "AddCompanion";}
+        public string GetName(){return "AddCompanionUpgrade";}
     }
 }

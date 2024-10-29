@@ -13,8 +13,9 @@ namespace GWBase
         public delegate void OnProjectileHit(HitResult hitResult);
         public event OnProjectileHit onProjectileHit;
         [SerializeField] private GameObject_Area rangeArea = null;
-        [SerializeField] private ThingDef currentProjectileDef;
+        [SerializeField] public ThingDef currentProjectileDef;
         [SerializeField] private float attackPerSecond = 1.1f;
+        public GameObj_Creature owner;
         private float AttackCooldown
         {
             get
@@ -31,6 +32,19 @@ namespace GWBase
         public GameObject target;
         public Stat[] stats = { };
 
+        public void Possess<GameObj_Shooter>(ThingDef entity, string faction, GameObj_Creature owner)
+        {
+            this.owner = owner;
+            base.Possess<GameObj_Shooter>(entity, faction);          
+            gameObject.layer = LayerMask.NameToLayer(faction+"Projectile");
+            SetupRangeArea(entity);
+
+            attackPerSecond = float.Parse(entity.FindStatByName("AttackPerSecond").Value, CultureInfo.InvariantCulture);
+            var projectileName = entity.FindStatByName("Action");
+            var projectileDef = AssetManager.assetLibrary.actionsDictionary.FirstOrDefault(x => x.Key.Equals(projectileName.Value)).Value;
+            AttachNewProjectileDef(projectileDef);
+        }
+        
         public override void Possess<GameObj_Shooter>(ThingDef entity, string faction)
         {
             base.Possess<GameObj_Shooter>(entity, faction);          
@@ -69,9 +83,10 @@ namespace GWBase
             return false;
         }
 
-        public void LookAtTarget(Transform target)
+        public void LookAtTarget(GameObject target)
         {
-            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(ownedTransform.position, target.position)));
+            var velocity = target.GetComponent<Rigidbody2D>().velocity;
+            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(ownedTransform.position, target.transform.position + (Vector3)velocity)));
             ownedTransform.rotation = newRotation;
 
             if (ownedTransform.rotation.z > quaternionToFlip)
@@ -119,7 +134,7 @@ namespace GWBase
             {
                 rotationUpdateCounter = 0;
                 target = rangeArea.GetClosestObject().closest?.gameObject;
-                if (target != null) LookAtTarget(target.transform);
+                if (target != null) LookAtTarget(target);
             }
 
             if (cooldownCounter >= AttackCooldown)

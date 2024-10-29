@@ -15,7 +15,6 @@ namespace GWMisc
 
         public void HitReaction(HitResult hitResult)
         {
-            Debug.Log("Hit Reaction DTM");
             var damageTypeStat = hitResult.hitSource.GetPossessed().FindStatByName("DamageType");
 
             foreach (var damageType in DamageTypes)
@@ -23,20 +22,18 @@ namespace GWMisc
                 if(damageType.name != damageTypeStat.Value) continue;
                 foreach (var hitBehaviour in damageType.onHit)
                 {
-                    Debug.Log("Adding BEHAVIOUR Reaction DTM");
                     var instantiatedBehaviour = YKUtility.CreateBehaviourInstance(hitBehaviour, hitResult.hitTarget);
                     hitResult.hitTarget.AddBehaviour(instantiatedBehaviour);
                 }
             }
         }
 
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             ReloadDamageTypes();
             var pool = PoolManager.poolManager.GetObjectPool("Projectiles");
             SubscribeToDamageCallbacks(pool);
             pool.newObjectsInitiated += SubscribeToDamageCallbacks;
-            return Task.CompletedTask;
         }
         public void Start(XElement possess, object[] parameters) { }
         public void Tick(object[] parameters, float deltaTime) { }
@@ -56,7 +53,6 @@ namespace GWMisc
             for (int i = 0; i < damageTypeAmount; i++)
             {
                 DamageTypes[i] = damageTypes[i].FromXElement<DamageTypeRef>();
-                Debug.Log("Adding DT DTM " + DamageTypes[i].name);
             }
         }
         

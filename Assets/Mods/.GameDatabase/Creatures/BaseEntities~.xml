@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
-    <ThingDef ParentName="BaseCreature" Name="SpaceMarine">
+    <!--<ThingDef ParentName="BaseCreature" Name="SpaceMarine">
         <description>Description.</description>
         <textureName>SpaceMarine</textureName>
         <textureSize>4</textureSize>
@@ -48,20 +48,13 @@
                 </offset>
             </equipment>
         </equipments>
-    </ThingDef>
+    </ThingDef>-->
 	<ThingDef ParentName="BaseCreature" Name="Wizard">
         <description>Description.</description>
         <textureName>sorcerer</textureName>
         <textureSize>6</textureSize>
         <mass>20</mass>
-        <SoundConfig>
-            <DamageTaken>
-                <sound>paine.mp3</sound>
-            </DamageTaken>
-            <Death>
-                <sound>deathe.mp3</sound>
-            </Death>
-        </SoundConfig>
+		
         <spawnable Type="creature">
             <faction>Player</faction>
             <level>1</level>
@@ -75,16 +68,10 @@
                         <parameter Name="Slows" Value="Yes"></parameter>
                     </customParameters>
 			</behaviour>
-            <behaviour Name="ProjectileForkingUpgrade">
-				<customParameters>
-					<parameter Name="ForkChance" Value="0.4"></parameter>
-					<parameter Name="ForkRange" Value="3"></parameter>
-				</customParameters>
-			</behaviour>
         </behaviours>
         <stats>
-            <stat Name="Health">180</stat>
-            <stat Name="MaxHealth">180</stat>
+            <stat Name="Health">200</stat>
+            <stat Name="MaxHealth">200</stat>
             <stat Name="Damage">10</stat>
             <stat Name="MaxSpeed">10</stat>
             <stat Name="XPValue">40</stat>
@@ -134,8 +121,8 @@
             <level>1</level>
         </spawnable>
         <stats>
-            <stat Name="Health">100</stat>
-            <stat Name="MaxHealth">100</stat>
+            <stat Name="Health">60</stat>
+            <stat Name="MaxHealth">60</stat>
             <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
@@ -165,15 +152,14 @@
             <level>1</level>
         </spawnable>
         <stats>
-            <stat Name="Health">100</stat>
-            <stat Name="MaxHealth">100</stat>
+            <stat Name="Health">60</stat>
+            <stat Name="MaxHealth">60</stat>
             <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">15</stat>
-            <stat Name="Damage">10</stat>
+            <stat Name="Damage">5</stat>
             <stat Name="AttackCooldown">0.7</stat>
             <stat Name="MaxSpeed">6</stat>
-            <stat Name="XPValue">30</stat>
-            <stat Name="ShockResistance">0.5</stat>
+            <stat Name="XPValue">50</stat>
         </stats>
         <equipments>
             <equipment Name="Bow">
@@ -224,8 +210,8 @@
 			
             <behaviour Name="BlockDamageDash">
                     <customParameters>
-                        <parameter Name="BlockChance" Value="0.45"></parameter>
-                        <parameter Name="BlockPower" Value="1"></parameter>
+                        <parameter Name="BlockChance" Value="0.50"></parameter>
+                        <parameter Name="BlockPower" Value="0.8"></parameter>
                     </customParameters>
 			</behaviour>
         </behaviours>
@@ -234,15 +220,17 @@
             <level>1</level>
         </spawnable>
         <stats>
-            <stat Name="Health">250</stat>
-            <stat Name="MaxHealth">250</stat>
+            <stat Name="Health">150</stat>
+            <stat Name="MaxHealth">150</stat>
             <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">2</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
             <stat Name="MaxSpeed">6</stat>
-            <stat Name="XPValue">30</stat>
-            <stat Name="ShockResistance">1</stat>
+            <stat Name="XPValue">100</stat>
+            <stat Name="ShockResistance">-0.36</stat>
+            <stat Name="MagicResistance">0.16</stat>
+            <stat Name="PhysicalResistance">0.16</stat>
         </stats>
     </ThingDef>
 	
@@ -261,21 +249,10 @@
         <behaviours>
             <behaviour Name="HookerBrain">
 				<customParameters>
-					<parameter Name="HookSpeed" Value="5"></parameter>
-					<parameter Name="HookPower" Value="0.15"></parameter>
+					<parameter Name="HookSpeed" Value="7"></parameter>
+					<parameter Name="HookPower" Value="0.0075"></parameter>
+					<parameter Name="HookLifetime" Value="2.5"></parameter>
 				</customParameters>
-			</behaviour>
-            <behaviour Name="MeleeAttacker">
-                    <customParameters>	
-                        <parameter Name="AttackTime" Value="0.5"></parameter>
-                        <parameter Name="AttackCooldown" Value="1"></parameter>
-                        <parameter Name="HitboxSize" Value="2"></parameter>
-                        <parameter Name="HitsInstantly" Value="No"></parameter>
-                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
-                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
-                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
-                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
-                    </customParameters>
 			</behaviour>
         </behaviours>
         <spawnable Type="creature">
@@ -283,14 +260,14 @@
             <level>1</level>
         </spawnable>
         <stats>
-            <stat Name="Health">100</stat>
-            <stat Name="MaxHealth">100</stat>
+            <stat Name="Health">75</stat>
+            <stat Name="MaxHealth">75</stat>
             <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">10</stat>
             <stat Name="Damage">10</stat>
             <stat Name="AttackCooldown">0.7</stat>
             <stat Name="MaxSpeed">5</stat>
-            <stat Name="XPValue">30</stat>
+            <stat Name="XPValue">50</stat>
         </stats>
     </ThingDef>
 </Defs>

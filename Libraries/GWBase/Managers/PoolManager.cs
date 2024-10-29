@@ -58,13 +58,20 @@ namespace GWBase
                 
                 foreach (var gameObj in objectPool.pooledObjects)
                 {
-                    if (!gameObj.isActive) continue;
-                    gameObj.MoveObject(gameObj.lastMovementVector,deltaTime*generalMovementSpeed, false);
-                    foreach (var behaviour in gameObj.installedBehaviours)
+                    try
                     {
-                        behaviour?.RareTick(null, deltaTime);
+                        if (!gameObj.isActive) continue;
+                        gameObj.MoveObject(gameObj.lastMovementVector, deltaTime * generalMovementSpeed, false);
+                        foreach (var behaviour in gameObj.installedBehaviours)
+                        {
+                            behaviour?.RareTick(null, deltaTime);
+                        }
                     }
-                    
+                    catch
+                    {
+                        
+                    }
+
                 }
             }
 
@@ -114,7 +121,7 @@ namespace GWBase
             projectilesPool.parentTransform = newPool.transform;
             projectilesPool.FillList();
             objectPools.Add("Projectiles", projectilesPool);
-            generalMovementSpeed = SettingsManager.playerSettings.movementSpeed;
+            generalMovementSpeed = SettingsManager.settingsManager.playerSettings.movementSpeed;
 
 
             var effectsPool = new LightObjectPool
@@ -137,7 +144,7 @@ namespace GWBase
 
             OnPoolManagerInitiated?.Invoke(this);
             enabled = true;
-            Time.fixedDeltaTime = SettingsManager.playerSettings.rareTickTime;
+            Time.fixedDeltaTime = SettingsManager.settingsManager.playerSettings.rareTickTime;
             yield return this;
         }
         

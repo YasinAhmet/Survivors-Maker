@@ -7,7 +7,8 @@
 		<playSoundEffects>No</playSoundEffects>
 		<rareTickTime>0.05</rareTickTime>
 		<movementSpeed>0.8</movementSpeed>
-        <statMultipliers>
+		<map>DefaultMap</map>
+		<statMultipliers>
             <damage>1.5</damage>
             <travelSpeed>2</travelSpeed>
         </statMultipliers>
@@ -43,17 +44,27 @@
 				</behaviour>
             </behaviours>
         </plugin>
-        <!--<plugin Name="UpgradeOrbs">
+        <plugin Name="UpgradeOrbs">
             <description>Chad orbs that make you even more chadder</description>
             <behaviours>
                 <behaviour Name="UpgradeOrbPlugin">
                     <customParameters>
-                        <parameter Name="DropChance"><value>0.1</value></parameter>
-                        <parameter Name="DropChancePerLevel"><value>0.05</value></parameter>
-                        <parameter Name="LocationRandomization"><value>1</value></parameter>
+                        <parameter Name="DropChance" Value="0.13"></parameter>
+                        <parameter Name="DropChancePerLevel" Value="0.04"></parameter>
+                        <parameter Name="LocationRandomization" Value="1"></parameter>
                     </customParameters>
 				</behaviour>
             </behaviours>
-        </plugin>-->
+        </plugin>
+		<plugin Name="FpsLimitPlugin">
+			<description>Limit FPS! (Doesn't work for some reason bruh)</description>
+			<behaviours>
+				<behaviour Name="LimitFpsPlugin">
+					<customParameters>
+						<parameter Name="TargetFPS" Value="144"></parameter>
+					</customParameters>
+				</behaviour>
+			</behaviours>
+		</plugin>
     </GamePlugins>
 </Defs>

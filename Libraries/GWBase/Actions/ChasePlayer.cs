@@ -21,12 +21,6 @@ public class ChasePlayer : IObjBehaviour
     public GameObj_Creature ownedObject;
     public float reachDistance = 2f;
 
-    public virtual void Start(XElement possess, object[] parameters)
-    {
-        ownedObject = (GameObj_Creature)parameters[0];
-        objectToFollow = ((PlayerController)parameters[1]).ownedCreature;
-        InitializeVariables(ownedObject);
-    }
 
     public virtual void InitializeVariables(GameObj_Creature creature){
         reachDistance = YKUtility.ConvertStat(creature, "ReachDistance");
@@ -79,10 +73,11 @@ public class ChasePlayer : IObjBehaviour
         public string GetName(){ return "ChasePlayer"; }
         public ParameterRequest[] GetParameters(){return null;}
 
-    public virtual Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+    public virtual void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
-        Start(possess, parameters);
-        return Task.CompletedTask;
+        ownedObject = (GameObj_Creature)parameters[0];
+        objectToFollow = ((PlayerController)parameters[1]).ownedCreature;
+        InitializeVariables(ownedObject);
     }
 }
 

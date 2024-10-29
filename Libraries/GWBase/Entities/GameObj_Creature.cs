@@ -13,15 +13,15 @@ namespace GWBase
     public class GameObj_Creature : GameObj, IDamageable, IAnimatable
     {
 
+        public List<GameObj_Shooter> possessedWeapons;
         public event GameObj_Shooter.OnProjectileHit onHit;
         public delegate void ActionHappened(string actionType, object typeObj);
         public event ActionHappened onActionHappen = delegate(string type, object obj) {  };
         [SerializeField] private float maxhealth = 100;
-        [SerializeField] private float hitColorSpeed = 0.1f;
         public int killCount = 0;
         public CreatureState currentState;
         public ItemPickupManager pickupManager;
-public GroupMemberReference groupAttached = new GroupMemberReference();
+        public GroupMemberReference groupAttached = new GroupMemberReference();
         public GroupMemberReference GroupAttached {
             set {
                 groupAttached.group = value.group;
@@ -34,6 +34,8 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
         }
 
+        public GroupPositionData possessedPosition;
+
         bool isPlayingAnimation = false;
         string currentAnimationPlaying = "null";
         float animationPlayingSpeed = 1;
@@ -44,6 +46,27 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public override void Possess<GameObj_Creature>(ThingDef entity, string faction)
         {
+            lastHealthInfo = new HealthInfo();
+            lastDamagedBy = null;
+            directionLookingAt = Vector2.zero;
+            currentState = CreatureState.Idle;
+            cachedMovementSpeed = 0;
+            lastMovementVector = Vector2.zero;
+            animationPlayingSpeed = 1;
+            animationLooping = false;
+            isPlayingAnimation = false;
+            killCount = 0;
+            
+            if (possessedWeapons != null)
+            {
+                foreach (var weapon in possessedWeapons)
+                {
+                    GameObject.Destroy(weapon.gameObject);
+                }
+            }
+            
+            possessedWeapons = new List<GameObj_Shooter>();
+            
             base.Possess<GameObj_Creature>(entity, faction);            
             gameObject.layer = LayerMask.NameToLayer(faction);
             PossessEquipments(entity, faction);
@@ -71,7 +94,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
             catch (Exception ex)
             {
-                //Debug.LogWarning("[Error] initializing animation: " + ex.Message);
             }
         }
 
@@ -110,6 +132,7 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public override void FixedUpdate()
         {
+            soundEffectCooldown -= Time.fixedDeltaTime;
             base.FixedUpdate();
             if (currentState == CreatureState.Moving && movementAnimationSheet != null && movementAnimationSheet.info.frameCount > 0 && !isPlayingAnimation)
             {
@@ -136,14 +159,14 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 ((Component)spawnedObj).transform.parent = ((Component)this).transform;
                 ((Component)spawnedObj).transform.localPosition = new Vector3(equipment.offset.x, equipment.offset.y, equipment.offset.z);
                 GameObj_Shooter shooter = (GameObj_Shooter)spawnedObj;
-                spawnedObj.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction);
+                shooter.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction, this);
                 shooter.onProjectileHit += OnHitToEnemy;
                 shooter.stats = possessedThing.stats;
+                possessedWeapons.Add(shooter);
 
                 if(equipment.offset.flipOffset == "Yes") {
                     spawnedObj.doesMirrorPosOnFacing = true;
                     onFacingDirectionChange += (spawnedObj.FlipLocalPos);
-
                 }
             }
         }
@@ -174,15 +197,23 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             });
         }
 
-        public HealthInfo lastHealthInfo;
-        public override bool TryDamage(float amount, out HealthInfo healthInfo)
+        public float soundEffectCooldown = 1;
+        public GameObj_Creature lastDamagedBy;
+        public override bool TryDamage(float amount, out HealthInfo healthInfo, GameObj_Creature causer)
         {
+            lastDamagedBy = causer;
             onActionHappen.Invoke("hitTaken", amount);
             possessedThing.RemoveFromStat("Health", amount);
-
-            var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
-            AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
-
+            
+            if (possessedThing.soundConfig.onDamageTakenSounds != null)
+            {
+                if (soundEffectCooldown < 0)
+                {
+                    var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
+                    AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+                    soundEffectCooldown = 0.5f;
+                }
+            }
             lastHealthInfo = new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
@@ -192,45 +223,26 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 infoOf = this
             };
             
+            healthInfo = lastHealthInfo;
             CallPreHealthEvent(lastHealthInfo);
             lastHealthInfo.gotKilled = IsHealthDepleted();
-            healthInfo.gotKilled = lastHealthInfo.gotKilled;
-            if (!healthInfo.gotKilled && lastHealthInfo.damageTaken > 0) StartCoroutine(HitColorChange());
+            healthInfo = lastHealthInfo;
             
             CallHealthEvent(lastHealthInfo);
             healthInfo = lastHealthInfo;
             return true;
         }
 
-        public void StartColorChange(Color first)
-        {
-            StartCoroutine(HitColorChange(first));
-        }
-
-        public IEnumerator HitColorChange(Color first)
-        {
-            ownedSpriteRenderer.color = first;
-            yield return new WaitForSeconds(hitColorSpeed);
-            ownedSpriteRenderer.color = Color.black;
-            yield return new WaitForSeconds(hitColorSpeed);
-            ownedSpriteRenderer.color = Color.white;
-        }
-
-        public IEnumerator HitColorChange()
-        {
-            ownedSpriteRenderer.color = Color.red;
-            yield return new WaitForSeconds(hitColorSpeed);
-            ownedSpriteRenderer.color = Color.black;
-            yield return new WaitForSeconds(hitColorSpeed);
-            ownedSpriteRenderer.color = Color.white;
-        }
 
         public bool TryDestroy()
         {
             if (IsHealthDepleted())
             {
-                var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDeathSounds);
-                AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+                if (possessedThing.soundConfig.onDeathSounds != null)
+                {
+                    var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDeathSounds);
+                    AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+                }
 
                 selfObject.SetActive(false);
                 isActive = false;
@@ -257,7 +269,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public IEnumerator PlayAnimation(AnimationSheet animationDef)
         {
             {
-                //Debug.Log("Animation playing");
                 isPlayingAnimation = true;
                 currentAnimationPlaying = animationDef.info.typeName;
                 bool haventExecutedOnce = true;
@@ -284,7 +295,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public void StopCurrentAnimation()
         {
-            //Debug.Log("Animation stopped");
             isPlayingAnimation = false;
             StopCoroutine(movementCoroutine);
             movementCoroutine = null;

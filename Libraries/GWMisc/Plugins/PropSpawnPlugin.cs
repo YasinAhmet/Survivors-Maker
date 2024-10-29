@@ -12,7 +12,7 @@ namespace GWMisc
         public float timePasssed;
         public AssetManager assetLibrary;
         public LightObjectPool pool;
-        public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
             var effectsPool = new LightObjectPool
             {
@@ -23,7 +23,6 @@ namespace GWMisc
             PoolManager.poolManager.lightObjectPools.Add("Props", effectsPool);
             pool = PoolManager.poolManager.GetLightObjectPool("Props"); 
             assetLibrary = AssetManager.assetLibrary;
-            return Task.CompletedTask;
         }
 
         public void Start(XElement possess, object[] parameters)

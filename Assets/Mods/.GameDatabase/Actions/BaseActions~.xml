@@ -12,7 +12,8 @@
             <stat Name="Damage">20</stat>
             <stat Name="DamageVariety">1.25</stat>
             <stat Name="Lifetime">3</stat>
-            <stat Name="HitLifetime">0.15</stat>
+            <stat Name="HitLifetime">0.15</stat>    
+			<stat Name="ChainAmount">3</stat>
             <stat Name="MaxSpeed">10</stat>
         </stats>
     </ThingDef>
@@ -31,9 +32,8 @@
             <stat Name="Lifetime">3</stat>
             <stat Name="HitLifetime">0.15</stat>
             <stat Name="MaxSpeed">10</stat>
-            <stat Name="Piercing">1</stat>
-            <stat Name="ChainAmount">1</stat>
-            <stat Name="DamageType">Shock</stat>
+            <stat Name="ChainAmount">3</stat>
+            <stat Name="DamageType">Magic</stat>
         </stats>
     </ThingDef>
 	<ThingDef ParentName="BaseAttack" Name="Arrow">
@@ -46,9 +46,10 @@
         </behaviours>
         <stats>
             <stat Name="Damage">10</stat>
-            <stat Name="DamageVariety">1.75</stat>
+            <stat Name="DamageVariety">1.15</stat>
             <stat Name="Lifetime">5</stat>
             <stat Name="HitLifetime">0.25</stat>
+			<stat Name="ChainAmount">3</stat>
             <stat Name="MaxSpeed">6</stat>
         </stats>
     </ThingDef>

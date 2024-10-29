@@ -25,7 +25,7 @@ public class UnityUpgradeTaker : MonoBehaviour, IUpgradeTaker
     public void PossessUpgrade(UpgradeDef upgradeDef) {
         possessedUpgrade = upgradeDef;
         descriptionField.text = upgradeDef.description;
-        headerField.text = upgradeDef.upgradeName;
+        headerField.text = upgradeDef.displayName;
     }
 
     public async Task WaitForPickComplete()

@@ -7,8 +7,7 @@ namespace GWBase {
 
 public interface IObjBehaviour
 {
-    public Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters);
-    public void Start(XElement possess, object[] parameters);
+    public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters);
     public void Tick(object[] parameters, float deltaTime);
     public void RareTick(object[] parameters, float deltaTime);
     public void Suspend(object[] parameters);

@@ -80,14 +80,12 @@ public class AssetManager : Manager
             if (!Path.GetExtension(filePath).Equals(".dll")) continue;
             Assembly assembly = Assembly.LoadFrom(filePath);
             assemblyDictionary.Add(assembly.GetName().Name, assembly);
-            //Debug.Log("[LOAD] Assembly Added: " + assembly.GetName().Name);
             NameOfLoadedAssemblies.Add(assembly.GetName().Name);
         }
     }
 
     IEnumerator LoadCustomSounds(string path)
     {
-        //Debug.Log("[LOADING] Sounds : " + path);
         var files = Directory.GetFiles(path);
         foreach (var file in files)
         {
@@ -118,7 +116,6 @@ public class AssetManager : Manager
     IEnumerator AddAudioClip(string path, string fileName)
     {
         string uri = $"{uriStart}{path}/{fileName}";
-        //Debug.Log("[LOADING] Sound : " + uri);
         using (var req = UnityWebRequestMultimedia.GetAudioClip(uri, AudioType.MPEG)) {
             yield return req.SendWebRequest();
             var loadedClip = DownloadHandlerAudioClip.GetContent(req);
@@ -204,7 +201,6 @@ public class AssetManager : Manager
             newBehaviour.linkedXmlSource = behaviour;
             behaviourDictionary.Add(newBehaviour.Name, newBehaviour);
             NameOfLoadedBehaviours.Add(newBehaviour.Name);
-            Debug.Log($"[LOAD] Behaviour Added From [{fileName}]: {newBehaviour.Name}. The behaviour's target dll is {newBehaviour.DllName}");
         }
     }
 
@@ -220,7 +216,6 @@ public class AssetManager : Manager
             initializedThingDefsDictionary.Add(converted.Name, converted);
 
             NameOfLoadedThings.Add(converted.Name);
-            Debug.Log("[LOAD] Thing Def Added From [" + fileName + "]: " + converted.Name);
         }
     }
 
@@ -243,7 +238,6 @@ public class AssetManager : Manager
         var files = Directory.GetFiles(path);
         foreach (var filePath in files)
         {
-            //Debug.Log(Path.GetExtension(filePath) + " " + validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath))));
             foreach (var pair in validTextureExtensions)
             {
                 if(pair == Path.GetExtension(filePath)) goto ValidExtension;
@@ -255,7 +249,6 @@ public class AssetManager : Manager
             Sprite sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
             texturesDictionary.Add(Path.GetFileNameWithoutExtension(filePath), sprite);
             NameOfLoadedTextures.Add(Path.GetFileNameWithoutExtension(filePath));
-            Debug.Log("[LOAD] Texture Added From [" + filePath + "]: " + Path.GetFileNameWithoutExtension(filePath));
             
         }
     }
@@ -278,7 +271,6 @@ public class AssetManager : Manager
             animationSheet.Initiate(correspondingAnimationSheet, animationSheet.info.frameCount);
             animationSheetsDictionary.Add(animationSheet.info.sheetName, animationSheet);
             SheetOfLoadedAnims.Add(animationSheet);
-            Debug.Log("[LOAD] Animation Def Added From [" + path + "]: " + fileName);
         }
     }
 
@@ -294,12 +286,9 @@ public class AssetManager : Manager
 
             
             ValidExtension:
-            //if (!validTextureExtensions.Any(x => x.Equals(Path.GetExtension(filePath)))) continue;
-
             var texture2D = LoadPNG(filePath);
             rawAnimationSheetsDictionary.Add(Path.GetFileNameWithoutExtension(filePath), texture2D);
             SheetOfLoadedRawAnims.Add(texture2D);
-            Debug.Log($"[LOAD] Animation Raw Added From [{filePath }] in the name of { Path.GetFileNameWithoutExtension(filePath) }");
         }
     }
 

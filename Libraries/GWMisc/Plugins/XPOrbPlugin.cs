@@ -10,9 +10,9 @@ namespace GWMisc
     public class XPOrbPlugin : OrbPlugin
     {
         public float orbSize;
-        public override async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public override void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
         {
-            await base.Start(possess, parameters, customParameters);
+            base.Start(possess, parameters, customParameters);
             orbSize = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("OrbSize")).parameterValue, CultureInfo.InvariantCulture);
 
         }

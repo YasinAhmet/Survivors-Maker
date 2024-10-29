@@ -13,16 +13,8 @@ namespace GWMisc
         public Sprite HookSprite;
         public float hookSpeed;
         public float hookPower;
-
-        public override void Start(XElement possess, object[] parameters)
-        {
-            ownedObject = (GameObj_Creature)parameters[0];
-            objectToFollow = ((PlayerController)parameters[1]).ownedCreature;
-            InitializeVariables(ownedObject);
-            HookSprite = AssetManager.assetLibrary.texturesDictionary.FirstOrDefault(x => x.Key == "Hook").Value;
-
-            ownedObject.onHealthChange += IfDeadRemoveHooks;
-        }
+        public float hookLifetime;
+        public Collider2D targettedCollider;
 
         public void IfDeadRemoveHooks(HealthInfo info)
         {
@@ -32,73 +24,107 @@ namespace GWMisc
             }
         }
 
-        Transform ownedtransform;
-        public override Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        public void Suspend()
         {
-            Start(possess, parameters);
+            ownedObject.onHealthChange -= IfDeadRemoveHooks;
+        }
+
+        Transform ownedtransform;
+        public override void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
+        {
+            
+            ownedObject = (GameObj_Creature)parameters[0];
+            objectToFollow = ((PlayerController)parameters[1]).ownedCreature;
+            InitializeVariables(ownedObject);
+            HookSprite = AssetManager.assetLibrary.texturesDictionary.FirstOrDefault(x => x.Key == "Hook").Value;
+            targettedCollider = objectToFollow.GetComponent<Collider2D>();
+
+            ownedObject.onHealthChange += IfDeadRemoveHooks;
             hookSpeed = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("HookSpeed")).parameterValue, CultureInfo.InvariantCulture);
             hookPower = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("HookPower")).parameterValue, CultureInfo.InvariantCulture);
+            hookLifetime = float.Parse(customParameters.FirstOrDefault(x => x.parameterName.Equals("HookLifetime")).parameterValue, CultureInfo.InvariantCulture);
             ownedtransform = ownedObject.transform;
-            return Task.CompletedTask;
+            
         }
 
         public override void RareTick(object[] parameters, float deltaTime)
         {
+            TickHook(deltaTime);
+            
+            if (!HookEvent.Ongoing)
+            {
+                InIdleCase();
+            }
+            
+            if (HookEvent.Ongoing && !HookEvent.Entangled)
+            {
+                InThrowingCase(deltaTime);
+            }
+            
+            if (HookEvent.Ongoing && HookEvent.Entangled)
+            {
+                InPullingCase(deltaTime);
+            }
+            
+        }
+
+        public void TickHook(float deltaTime)
+        {
             HookEvent.RemainingLifeTime -= deltaTime;
             if (HookEvent.RemainingLifeTime < 0 && HookEvent.Ongoing)
             {
-                //Debug.Log("[HOOKER] Hook Gone");
                 HookEvent.ObjReference.transform.localScale = new Vector3(1, 1, 1);
                 HookEvent.ObjReference.SetActive(false);
                 HookEvent.Ongoing = false;
                 ownedObject.currentState = GameObj_Creature.CreatureState.Idle;
             }
-            if (HookEvent.Ongoing && !HookEvent.Entangled)
-            {
-                //Debug.Log("[HOOKER] GOING," + HookEvent.ObjReference.name);
-                var objTransform = this.HookEvent.ObjReference.transform;
-                objTransform.position += (objTransform.right*hookSpeed)*deltaTime;
+        }
 
-                var objectsOverlapped = Physics2D.OverlapCircleAll(objTransform.position, 1);
-                foreach (var overlapped in objectsOverlapped)
-                {
-                    if (overlapped.TryGetComponent<IDamageable>(out IDamageable damageable) && damageable.GetTeam() == objectToFollow.faction)
-                    {
-                        HookEvent.Entangled = true;
-                        HookEvent.EntangledThing = overlapped.GetComponent<GameObj>();
-                        HookEvent.ObjReference.transform.position = HookEvent.EntangledThing.transform.position;
-                    }
-                }
-            }
-            else if (HookEvent.Ongoing && HookEvent.Entangled)
+        public void InThrowingCase(float deltaTime)
+        {
+            var objTransform = this.HookEvent.ObjReference.transform;
+            var right = objTransform.right;
+            var position = objTransform.position;
+            var change = (right * hookSpeed) * deltaTime;
+            var raycast = Physics2D.Raycast(position, change, change.sqrMagnitude, LayerMask.NameToLayer(objectToFollow.faction));
+            objTransform.position += change;
+            
+            if (raycast.collider)
             {
-                Vector3 entangledTransformPos = HookEvent.EntangledThing.transform.position;
-                //Debug.Log("[HOOKER] PULLING");
-                var axisTowardsHooker = YKUtility.GetDirection(entangledTransformPos,
-                    ownedtransform.position);
-                HookEvent.EntangledThing.MoveObject(axisTowardsHooker, deltaTime*hookPower, false);
-                HookEvent.ObjReference.transform.position = entangledTransformPos;
+                Collider2D result = raycast.collider;
+                HookEvent.Entangled = true;
+                HookEvent.EntangledThing = objectToFollow;
+                HookEvent.ObjReference.transform.position = HookEvent.EntangledThing.transform.position;
+                
             }
-            else if (!HookEvent.Ongoing)
-            {
-                Vector3 objectToFollowPos = objectToFollow.transform.position;
-                ownedObject.directionLookingAt = YKUtility.GetDirection(ownedObject.transform.position,
-                    objectToFollowPos);
-                TargetInRange(ownedtransform.position, objectToFollowPos,
-                    out Vector3 direction, out float distance);
+        }
 
-                if (distance < reachDistance) ThrowHook();
-                else TryMove(direction);
-            }
+        public void InPullingCase(float deltaTime)
+        {
+            Vector3 entangledTransformPos = HookEvent.EntangledThing.transform.position;
+            var axisTowardsHooker = YKUtility.GetDirection(entangledTransformPos,
+                ownedtransform.position);
+            HookEvent.EntangledThing.MoveObject(axisTowardsHooker, deltaTime*hookPower, false);
+            HookEvent.ObjReference.transform.position = entangledTransformPos;
+        }
+        public void InIdleCase()
+        {
+            Vector3 objectToFollowPos = objectToFollow.ownedTransform.position;
+            ownedObject.directionLookingAt = YKUtility.GetDirection(ownedObject.transform.position,
+                objectToFollowPos + (Vector3)objectToFollow.ownedRigidbody.velocity);
+            TargetInRange(ownedtransform.position, objectToFollowPos,
+                out Vector3 direction, out float distance);
+
+            if (distance < reachDistance) ThrowHook();
+            else TryMove(direction);
         }
 
         public void ThrowHook()
         {
-            // Debug.Log("[HOOKER] Throwing Hook");
             var pool = PoolManager.poolManager.GetLightObjectPool("Effects");
             var ownedTransform = ownedObject.ownedTransform;
             var position = ownedTransform.position;
-            var rotation = YKUtility.GetRotationToTargetPoint(position, position + (Vector3)objectToFollow.ownedRigidbody.velocity);
+            var rotation = YKUtility.GetRotationToTargetPoint(position, objectToFollow.ownedTransform.position);
             var obj = pool.ObtainSlotForType(position, rotation);
             obj.name = "Hook";
             obj.GetComponent<SpriteRenderer>().sprite = HookSprite;
@@ -106,9 +132,7 @@ namespace GWMisc
             {
                 ObjReference = obj,
                 Ongoing = true,
-
-                rb = obj.AddComponent<Rigidbody2D>(),
-                RemainingLifeTime = 5f
+                RemainingLifeTime = hookLifetime
             };
 
             HookEvent.ObjReference.transform.localScale = new Vector3(8, 8, 1);

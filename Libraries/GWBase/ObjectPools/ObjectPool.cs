@@ -38,7 +38,6 @@ namespace GWBase
         public GameObj ObtainSlotForType(ThingDef creature, Vector2 location, float rotation, string faction)
         {
             var slot = FindOrCreateSlot();
-            //Debug.Log($"Obtaining Object Pool slot for type {creature.Name}.. Location:  {location}", slot.gameObject);
             slot.transform.position = location;
             slot.transform.eulerAngles = new Vector3(0, 0, rotation);
             slot.Possess<GameObj>(creature, faction);
@@ -97,7 +96,11 @@ namespace GWBase
 
         private void NewGameObjectOnactivityChange(GameObj obj, bool active)
         {
-            if(!active) freeObjects.Add(obj);
+            if (!active)
+            {
+                freeObjects.Add(obj);
+                obj.transform.SetParent(parentTransform);
+            }
         }
 
         public GameObj CreateSlot()
