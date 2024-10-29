@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
-    <ThingDef ParentName="BaseCreature" Name="SpaceMarine">
+    <!--<ThingDef ParentName="BaseCreature" Name="SpaceMarine">
         <description>Description.</description>
-        <textureName>Cursed armor</textureName>
-        <textureSize>0.35</textureSize>
+        <textureName>SpaceMarine</textureName>
+        <textureSize>4</textureSize>
+        <mass>20</mass>
         <animations>
             <animation Name="Movement" SheetName="Marine1_Walking"></animation>
         </animations>
@@ -19,17 +20,68 @@
             <faction>Player</faction>
             <level>1</level>
         </spawnable>
+        <behaviours>
+            <behaviour Name="DashListenerPlugin">
+                    <customParameters>
+                        <parameter Name="Cooldown" Value="1.5"></parameter>
+                        <parameter Name="Force" Value="1"></parameter>
+                        <parameter Name="Recovery" Value="0.35"></parameter>
+                        <parameter Name="Slows" Value="Yes"></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
         <stats>
-            <stat Name="Health">150</stat>
-            <stat Name="Damage">20</stat>
-            <stat Name="MovementSpeed">1500</stat>
-            <stat Name="MaxSpeed">5</stat>
+            <stat Name="Health">180</stat>
+            <stat Name="MaxHealth">180</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="MaxSpeed">80</stat>
+            <stat Name="XPValue">40</stat>
+            <stat Name="GrabRange">5</stat>
         </stats>
         <equipments>
             <equipment Name="Gun">
                 <offset>
-                    <x>0.1</x>
-                    <y>-0.35</y>
+                    <x>0.2</x>
+                    <y>-0.5</y>
+                    <z>0</z>
+                    <flipOffset>Yes</flipOffset>
+                </offset>
+            </equipment>
+        </equipments>
+    </ThingDef>-->
+	<ThingDef ParentName="BaseCreature" Name="Wizard">
+        <description>Description.</description>
+        <textureName>sorcerer</textureName>
+        <textureSize>6</textureSize>
+        <mass>20</mass>
+		
+        <spawnable Type="creature">
+            <faction>Player</faction>
+            <level>1</level>
+        </spawnable>
+        <behaviours>
+            <behaviour Name="DashListenerPlugin">
+                    <customParameters>
+                        <parameter Name="Cooldown" Value="1.5"></parameter>
+                        <parameter Name="Force" Value="1"></parameter>
+                        <parameter Name="Recovery" Value="0.35"></parameter>
+                        <parameter Name="Slows" Value="Yes"></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
+        <stats>
+            <stat Name="Health">200</stat>
+            <stat Name="MaxHealth">200</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="MaxSpeed">10</stat>
+            <stat Name="XPValue">40</stat>
+            <stat Name="GrabRange">3</stat>
+        </stats>
+        <equipments>
+            <equipment Name="Staff">
+                <offset>
+                    <x>0</x>
+                    <y>-0.2</y>
                     <z>0</z>
                     <flipOffset>Yes</flipOffset>
                 </offset>
@@ -40,7 +92,50 @@
     <ThingDef ParentName="BaseCreature" Name="Orc">
         <description>Description.</description>
         <textureName>Monster</textureName>
-        <textureSize>0.5</textureSize>
+        <textureSize>0.8</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour Name="ChasePlayer"></behaviour>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>
+                        <parameter Name="AttackTime" Value="0.5"></parameter>
+                        <parameter Name="AttackCooldown" Value="1"></parameter>
+                        <parameter Name="HitboxSize" Value="2"></parameter>
+                        <parameter Name="HitsInstantly" Value="No"></parameter>
+                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
+                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
+                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
+                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">60</stat>
+            <stat Name="MaxHealth">60</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">2</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">5</stat>
+            <stat Name="XPValue">30</stat>
+        </stats>
+    </ThingDef>
+	
+	<ThingDef ParentName="BaseCreature" Name="Archer">
+        <description>Description.</description>
+        <textureName>normalguy</textureName>
+        <textureSize>4</textureSize>
         <SoundConfig>
             <DamageTaken>
                 <sound>paine.mp3</sound>
@@ -57,43 +152,122 @@
             <level>1</level>
         </spawnable>
         <stats>
-            <stat Name="Health">100</stat>
-            <stat Name="MovementSpeed">800</stat>
-            <stat Name="AttackSpeed">1</stat>
-            <stat Name="ReachDistance">2</stat>
-            <stat Name="Damage">10</stat>
+            <stat Name="Health">60</stat>
+            <stat Name="MaxHealth">60</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">15</stat>
+            <stat Name="Damage">5</stat>
             <stat Name="AttackCooldown">0.7</stat>
-            <stat Name="MaxSpeed">5</stat>
+            <stat Name="MaxSpeed">6</stat>
+            <stat Name="XPValue">50</stat>
         </stats>
+        <equipments>
+            <equipment Name="Bow">
+                <offset>
+                    <x>0.2</x>
+                    <y>0</y>
+                    <z>0</z>
+                    <flipOffset>Yes</flipOffset>
+                </offset>
+            </equipment>
+        </equipments>
     </ThingDef>
-
-    <ThingDef ParentName="BaseCreature" Name="Ghost">
+	
+	<ThingDef ParentName="BaseCreature" Name="TowerGuy">
         <description>Description.</description>
-        <textureName>Ghost</textureName>
-        <textureSize>0.45</textureSize>
+        <textureName>towerguy</textureName>
+        <textureSize>4</textureSize>
         <SoundConfig>
             <DamageTaken>
-                <sound>paind.mp3</sound>
+                <sound>paine.mp3</sound>
             </DamageTaken>
             <Death>
-                <sound>deathd.mp3</sound>
+                <sound>deathe.mp3</sound>
             </Death>
         </SoundConfig>
         <behaviours>
             <behaviour Name="ChasePlayer"></behaviour>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>
+                        <parameter Name="AttackTime" Value="0.5"></parameter>
+                        <parameter Name="AttackCooldown" Value="1"></parameter>
+                        <parameter Name="HitboxSize" Value="2"></parameter>
+                        <parameter Name="HitsInstantly" Value="No"></parameter>
+                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
+                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
+                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
+                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
+                    </customParameters>
+			</behaviour>
+            <behaviour Name="DashListenerPlugin">
+                    <customParameters>
+                        <parameter Name="Cooldown" Value="1.5"></parameter>
+                        <parameter Name="Force" Value="1.0"></parameter>
+                        <parameter Name="Recovery" Value="0.35"></parameter>
+                        <parameter Name="Slows" Value="Yes"></parameter>
+                    </customParameters>
+			</behaviour>
+			
+            <behaviour Name="BlockDamageDash">
+                    <customParameters>
+                        <parameter Name="BlockChance" Value="0.50"></parameter>
+                        <parameter Name="BlockPower" Value="0.8"></parameter>
+                    </customParameters>
+			</behaviour>
         </behaviours>
         <spawnable Type="creature">
             <faction>Hostile</faction>
             <level>1</level>
         </spawnable>
         <stats>
-            <stat Name="Health">50</stat>
-            <stat Name="MovementSpeed">1200</stat>
-            <stat Name="AttackSpeed">0.5</stat>
+            <stat Name="Health">150</stat>
+            <stat Name="MaxHealth">150</stat>
+            <stat Name="AttackSpeed">0.1</stat>
             <stat Name="ReachDistance">2</stat>
-            <stat Name="Damage">5</stat>
-            <stat Name="AttackCooldown">0.8</stat>
-            <stat Name="MaxSpeed">7</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">6</stat>
+            <stat Name="XPValue">100</stat>
+            <stat Name="ShockResistance">-0.36</stat>
+            <stat Name="MagicResistance">0.16</stat>
+            <stat Name="PhysicalResistance">0.16</stat>
+        </stats>
+    </ThingDef>
+	
+	<ThingDef ParentName="BaseCreature" Name="Hooker">
+        <description>Description.</description>
+        <textureName>hooker</textureName>
+        <textureSize>4</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour Name="HookerBrain">
+				<customParameters>
+					<parameter Name="HookSpeed" Value="7"></parameter>
+					<parameter Name="HookPower" Value="0.0075"></parameter>
+					<parameter Name="HookLifetime" Value="2.5"></parameter>
+				</customParameters>
+			</behaviour>
+        </behaviours>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">75</stat>
+            <stat Name="MaxHealth">75</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">10</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">5</stat>
+            <stat Name="XPValue">50</stat>
         </stats>
     </ThingDef>
 </Defs>

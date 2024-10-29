@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
     <PlayerSettings>
-        <playerGroup>SpaceMarineGroup</playerGroup>
-        <playerCharacter>SpaceMarine</playerCharacter>
-        <statMultipliers>
+        <playerGroup>SimpleGuy</playerGroup>
+        <playerCharacter>Wizard</playerCharacter>
+		<spawnEnemies>Yes</spawnEnemies>
+		<playSoundEffects>No</playSoundEffects>
+		<rareTickTime>0.05</rareTickTime>
+		<movementSpeed>0.8</movementSpeed>
+		<map>DefaultMap</map>
+		<statMultipliers>
             <damage>1.5</damage>
             <travelSpeed>2</travelSpeed>
         </statMultipliers>
@@ -14,10 +19,10 @@
             <behaviours>
                 <behaviour Name="ShakeScreenPlugin">
                     <customParameters>
-                        <parameter Name="Power"><value>0.10</value></parameter>
-                        <parameter Name="Duration"><value>0.3</value></parameter>
-                        <parameter Name="Randomness"><value>0.15</value></parameter>
-                        <parameter Name="WaitTimeMultiplier"><value>1000</value></parameter>
+                        <parameter Name="Power" Value="0.03"></parameter>
+                        <parameter Name="Duration" Value="0.2"></parameter>
+                        <parameter Name="Randomness" Value="0.15"></parameter>
+                        <parameter Name="WaitTimeMultiplier" Value="1000"></parameter>
                     </customParameters>
                 </behaviour>
             </behaviours>
@@ -28,5 +33,38 @@
                 <behaviour Name="GameOverScreenPlugin"></behaviour>
             </behaviours>
         </plugin>
+        <plugin Name="XPOrb">
+            <description>Sexy xp orbs -_-</description>
+            <behaviours>
+                <behaviour Name="XPOrbPlugin">
+                    <customParameters>
+                        <parameter Name="OrbSize" Value="0.6"></parameter>
+                        <parameter Name="LocationRandomization" Value="1"></parameter>
+                    </customParameters>
+				</behaviour>
+            </behaviours>
+        </plugin>
+        <plugin Name="UpgradeOrbs">
+            <description>Chad orbs that make you even more chadder</description>
+            <behaviours>
+                <behaviour Name="UpgradeOrbPlugin">
+                    <customParameters>
+                        <parameter Name="DropChance" Value="0.13"></parameter>
+                        <parameter Name="DropChancePerLevel" Value="0.04"></parameter>
+                        <parameter Name="LocationRandomization" Value="1"></parameter>
+                    </customParameters>
+				</behaviour>
+            </behaviours>
+        </plugin>
+		<plugin Name="FpsLimitPlugin">
+			<description>Limit FPS! (Doesn't work for some reason bruh)</description>
+			<behaviours>
+				<behaviour Name="LimitFpsPlugin">
+					<customParameters>
+						<parameter Name="TargetFPS" Value="144"></parameter>
+					</customParameters>
+				</behaviour>
+			</behaviours>
+		</plugin>
     </GamePlugins>
 </Defs>

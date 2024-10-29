@@ -13,10 +13,10 @@ TagManager:
   - UI
   - Hostile
   - Player
-  - 
-  - 
-  - 
-  - 
+  - Projectile
+  - HostileProjectile
+  - PlayerProjectile
+  - Wall
   - 
   - 
   - 

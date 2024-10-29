@@ -13,14 +13,14 @@ public class SessionInfoShowdown : MonoBehaviour
     void Start()
     {
         textField = GetComponent<TextMeshProUGUI>();
-        var sessionInformation = GameManager.sessionInformation;
+        var sessionInformation = GameManager.gameManager.sessionInformation;
         textField.text = $"Scores: \n  Kill Count: {sessionInformation.killCount}, Total Damage: {sessionInformation.totalDamageGiven}, Total Hits: {sessionInformation.totalHitsGiven} \n Total Damage Taken: {sessionInformation.totalDamageTaken}, Total Hits Taken: {sessionInformation.totalHitsTaken}, Total XP: {sessionInformation.totalXP}";
         UpdateStat();
     }
 
     public async Task UpdateStat() {
         while (shouldUpdateStats) {
-            var sessionInformation = GameManager.sessionInformation;
+            var sessionInformation = GameManager.gameManager.sessionInformation;
             textField.text = $"Scores: \n  Kill Count: {sessionInformation.killCount}, Total Damage: {sessionInformation.totalDamageGiven}, Total Hits: {sessionInformation.totalHitsGiven} \n Total Damage Taken: {sessionInformation.totalDamageTaken}, Total Hits Taken: {sessionInformation.totalHitsTaken}, Total XP: {sessionInformation.totalXP}";
             await Task.Delay(500);
         }

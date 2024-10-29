@@ -9,6 +9,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
+
 namespace GWBase
 {
 
@@ -17,6 +19,10 @@ namespace GWBase
     [XmlRoot("ThingDef")]
     public class ThingDef
     {
+        public delegate void StatChanged(string statName, float newValue, float oldValue);
+
+        public event StatChanged onStatChange;
+        
         [XmlElement("SoundConfig")]
         public SoundConfig soundConfig;
 
@@ -36,6 +42,9 @@ namespace GWBase
 
         [XmlElement("textureSize")]
         public float TextureSize = 1f;
+        
+        [XmlElement("mass")]
+        public float mass = 1f;
 
         [XmlElement("spawnable")]
         public SpawnableInfo spawnable;
@@ -50,12 +59,68 @@ namespace GWBase
 
         public Stat FindStatByName(string name)
         {
-            return stats.FirstOrDefault(x => x.Name.Equals(name));
+            foreach (var stat in stats)
+            {
+                if (stat.Name == name)
+                {
+                    return stat;
+                }
+            }
+
+            return new Stat();
+        }
+
+        public ThingDef()
+        {
+            
+        }
+
+        public ThingDef(ThingDef toPossess)
+        {
+            soundConfig = toPossess.soundConfig;
+            behaviours = toPossess.behaviours;
+            Name = toPossess.Name;
+
+            List<Stat> stats = new List<Stat>();
+            foreach (var stat in toPossess.stats)
+            {
+                Stat newStat = new()
+                {
+                    Name = stat.Name,
+                    Value = stat.Value
+                };
+                stats.Add(newStat);
+            }
+
+            this.stats = stats.ToArray();
+            TexturePath = toPossess.TexturePath;
+            TextureSize = toPossess.TextureSize;
+            mass = toPossess.mass;
+            spawnable = toPossess.spawnable;
+            animations = toPossess.animations;
+            equipmentNames = toPossess.equipmentNames;
+
         }
 
         public float GetStatValueByName(string name)
         {
-            return float.Parse(stats.FirstOrDefault(x => x.Name.Equals(name)).Value, CultureInfo.InvariantCulture);
+            float value = 0;
+            try
+            {
+                foreach (var stat in stats)
+                {
+                    if (stat.Name == name)
+                    {
+                        value = float.Parse(stat.Value,CultureInfo.InvariantCulture);
+                    }
+                }
+            }
+            catch
+            {
+                return 0;
+            }
+
+            return value;
         }
 
         public void AddNewStat(string statName, float statValue)
@@ -64,7 +129,18 @@ namespace GWBase
             list.Add(new Stat()
             {
                 Name = statName,
-                Value = statValue.ToString()
+                Value = statValue.ToString(CultureInfo.InvariantCulture)
+            });
+            stats = list.ToArray();
+        }
+        
+        public void AddNewStat(string statName, string statValue)
+        {
+            var list = stats.ToList();
+            list.Add(new Stat()
+            {
+                Name = statName,
+                Value = statValue
             });
             stats = list.ToArray();
         }
@@ -75,7 +151,7 @@ namespace GWBase
             {
                 if (stats[i].Name == statName)
                 {
-                    stats[i].Value = (float.Parse(stats[i].Value) + newBonus).ToString();
+                    stats[i].Value = (float.Parse(stats[i].Value) + newBonus).ToString(CultureInfo.InvariantCulture);
                     return;
                 }
             }
@@ -86,7 +162,7 @@ namespace GWBase
             {
                 if (stats[i].Name == statName)
                 {
-                    stats[i].Value = (float.Parse(stats[i].Value) - newMinus).ToString();
+                    stats[i].Value = (float.Parse(stats[i].Value) - newMinus).ToString(CultureInfo.InvariantCulture);
                     return;
                 }
             }
@@ -94,11 +170,52 @@ namespace GWBase
 
         public void ReplaceStat(string statName, float newValue)
         {
+            var maxValue = GetStatValueByName("Max" + statName);
             for (int i = 0; i < stats.Count(); i++)
             {
                 if (stats[i].Name == statName)
                 {
-                    stats[i].Value = newValue.ToString();
+                    float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
+
+                    if (maxValue != 0 && newValue > maxValue)
+                    {
+                        stats[i].Value = maxValue.ToString(CultureInfo.InvariantCulture);
+                        onStatChange?.Invoke(statName, maxValue, oldValue);
+                        return;
+                    }
+                        
+                    stats[i].Value = newValue.ToString(CultureInfo.InvariantCulture);
+                    onStatChange?.Invoke(statName, newValue, oldValue);
+                    return;
+                }
+            }
+
+            AddNewStat(statName, newValue);
+        }
+        
+        public void ReplaceStat(string statName, string newValue)
+        {
+            for (int i = 0; i < stats.Count(); i++)
+            {
+                if (stats[i].Name == statName)
+                {
+                    stats[i].Value = newValue;
+                    return;
+                }
+            }
+
+            AddNewStat(statName, newValue);
+        }
+        
+        public void ReplaceStat(string statName, float newValue, bool withoutSignal)
+        {
+            for (int i = 0; i < stats.Count(); i++)
+            {
+                if (stats[i].Name == statName)
+                {
+                    float oldValue = float.Parse(stats[i].Value, CultureInfo.InvariantCulture);
+                    stats[i].Value = newValue.ToString(CultureInfo.InvariantCulture);
+                    if(withoutSignal == false)onStatChange?.Invoke(statName, newValue, oldValue);
                     return;
                 }
             }
@@ -146,7 +263,7 @@ namespace GWBase
     {
         [XmlAttribute("Name")]
         public string parameterName;
-        [XmlElement("value")]
+        [XmlAttribute("Value")]
         public string parameterValue;
     }
 

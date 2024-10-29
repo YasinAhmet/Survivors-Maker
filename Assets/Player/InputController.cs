@@ -14,6 +14,11 @@ public class InputController : MonoBehaviour
         ownedCreature.UpdateCharacterMovement(context.ReadValue<Vector2>());
     }
 
+    public void DashRequest(InputAction.CallbackContext context)
+    {
+        ownedCreature.RequestAction("Dash");
+    }
+
     void Awake() {
         controls = new MainControls();
         inputController = this;
@@ -26,6 +31,8 @@ public class InputController : MonoBehaviour
         controls.PlayerControls.Movement.started += MovementTick;
         controls.PlayerControls.Movement.performed += MovementTick;
         controls.PlayerControls.Movement.canceled += MovementTick;
+
+        controls.PlayerControls.Dash.started += DashRequest;
     }
 
     private void OnEnable()

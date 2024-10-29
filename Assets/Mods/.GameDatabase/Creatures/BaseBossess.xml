@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThingDef ParentName="BaseCreature" Name="BigGuy">
+        <description>Description.</description>
+        <textureName>bigguy</textureName>
+        <textureSize>6</textureSize>
+        <SoundConfig>
+            <DamageTaken>
+                <sound>paine.mp3</sound>
+            </DamageTaken>
+            <Death>
+                <sound>deathe.mp3</sound>
+            </Death>
+        </SoundConfig>
+        <behaviours>
+            <behaviour Name="ChasePlayer"></behaviour>
+            <behaviour Name="MeleeAttacker">
+                    <customParameters>
+                        <parameter Name="AttackTime" Value="0.5"></parameter>
+                        <parameter Name="AttackCooldown" Value="1"></parameter>
+                        <parameter Name="HitboxSize" Value="2"></parameter>
+                        <parameter Name="HitsInstantly" Value="No"></parameter>
+                        <parameter Name="RecalculatesHitBox" Value="No"></parameter>
+                        <parameter Name="HitboxForwardOffset" Value="1.5"></parameter>
+                        <parameter Name="CriticalStrikeChance" Value="0.1"></parameter>
+                        <parameter Name="CriticalStrikeMultiplier" Value="1.5"></parameter>
+                    </customParameters>
+			</behaviour>
+        </behaviours>
+        <spawnable Type="creature">
+            <faction>Hostile</faction>
+            <level>1</level>
+        </spawnable>
+        <stats>
+            <stat Name="Health">600</stat>
+            <stat Name="MaxHealth">600</stat>
+            <stat Name="AttackSpeed">0.1</stat>
+            <stat Name="ReachDistance">2</stat>
+            <stat Name="Damage">10</stat>
+            <stat Name="AttackCooldown">0.7</stat>
+            <stat Name="MaxSpeed">6</stat>
+            <stat Name="XPValue">30</stat>
+        </stats>
+    </ThingDef>
+</Defs>

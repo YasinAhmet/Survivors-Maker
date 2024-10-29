@@ -1,33 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Defs>
-    <UpgradeDef Name="RandomStatIncrease">
-        <description>Random stat increase for leader. %25 bonus to a random stat that you don't know until you pick the upgrade...</description>
+    <UpgradeDef Name="HealthRecovery">
+        <displayName>Health Recovery</displayName>
+        <description>Health recovery.</description>
+        <onDrop>Yes</onDrop>
+		<RenderInfo>
+			<imageDef>healthOrb</imageDef>
+			<renderSize>0.8</renderSize>
+		</RenderInfo>
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>
-                    <parameter Name="StatName">
-                        <value>Damage</value>
-                    </parameter>
-                    <parameter Name="BonusRate">
-                        <value>1.25</value>
-                    </parameter>
+                    <parameter Name="StatName" Value="Health"></parameter>
+                    <parameter Name="BonusRate" Value="25"></parameter>
                 </customParameters>
             </behaviour>
         </behaviours> 
     </UpgradeDef>
-    <UpgradeDef Name="HealthStatIncrease">
-        <description>Health increase for leader. %25 bonus to Health stat.</description>
+	
+	<UpgradeDef Name="HealthIncrease">
+        <displayName>Health Increase</displayName>
+        <description>Increase your max and current health by 50.</description>
+        <onLevel>Yes</onLevel>
         <behaviours>
             <behaviour Name="IncreaseStat">
                 <customParameters>
-                    <parameter Name="StatName">
-                        <value>Health</value>
-                    </parameter>
-                    <parameter Name="BonusRate">
-                        <value>1.55</value>
-                    </parameter>
+                    <parameter Name="StatName" Value="MaxHealth"></parameter>
+                    <parameter Name="BonusRate" Value="50"></parameter>
                 </customParameters>
             </behaviour>
+            <behaviour Name="IncreaseStat">
+                <customParameters>
+                    <parameter Name="StatName" Value="Health"></parameter>
+                    <parameter Name="BonusRate" Value="50"></parameter>
+                </customParameters>
+            </behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	
+	<UpgradeDef Name="DamageStatIncrease">">
+        <displayName>Damage Increase</displayName>
+        <description>Damage increase for leader.</description>
+        <onLevel>Yes</onLevel>
+		<RenderInfo>
+			<imageDef>damageOrb</imageDef>
+			<renderSize>0.8</renderSize>
+		</RenderInfo>
+        <behaviours>
+            <behaviour Name="IncreaseStat">
+                <customParameters>
+                    <parameter Name="StatName" Value="Damage"></parameter>
+                    <parameter Name="BonusRate" Value="10"></parameter>
+                </customParameters>
+            </behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	
+	<UpgradeDef Name="ProjectileForkingUpgrade">
+        <displayName>Projectile Chaining</displayName>
+        <description>Your projectiles chain by %20 chance. Increases the chance %10 per stack.</description>
+        <onLevel>Yes</onLevel>
+        <behaviours>
+            <behaviour Name="ProjectileForkingUpgrade">
+				<customParameters>
+					<parameter Name="ForkChancePerUpgrade" Value="0.1"></parameter>
+					<parameter Name="ForkChance" Value="0.2"></parameter>
+					<parameter Name="ForkRange" Value="3"></parameter>
+				</customParameters>
+			</behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	
+	<UpgradeDef Name="AddCompanionToGroupArcher">
+        <displayName>Add Companion</displayName>
+        <description>Add an archer to the group.</description>
+        <onLevel>Yes</onLevel>        
+		<behaviours>
+            <behaviour Name="AddCompanionUpgrade">               
+				<customParameters>
+					<parameter Name="CompanionID" Value="Archer"></parameter>
+				</customParameters>
+			</behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	
+	<UpgradeDef Name="AddCompanionToGroupTower">
+        <displayName>Add Companion</displayName>
+        <description>Add a tower guy to the group.</description>
+        <onLevel>Yes</onLevel>        
+		<behaviours>
+            <behaviour Name="AddCompanionUpgrade">               
+				<customParameters>
+					<parameter Name="CompanionID" Value="TowerGuy"></parameter>
+				</customParameters>
+			</behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	
+	<UpgradeDef Name="ShockUpgrade">
+        <displayName>Zap Em!</displayName>
+        <description>Add a zap effect to your hits, dealing extra damage over time. Each stack increases the damage.</description>
+        <onLevel>Yes</onLevel>   
+        <behaviours>
+            <behaviour Name="ShockUpgrade"></behaviour>
+        </behaviours> 
+    </UpgradeDef>
+	
+	<UpgradeDef Name="IncreasePiercingAmount">
+        <displayName>Pierce Them!</displayName>
+        <description>Your projectiles pierce one more time!</description>
+        <onLevel>Yes</onLevel>   
+        <behaviours>
+            <behaviour Name="IncreasePiercingAmount"></behaviour>
         </behaviours> 
     </UpgradeDef>
 </Defs>

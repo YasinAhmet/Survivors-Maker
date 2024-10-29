@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <Map Name="DefaultMap">
+		<tierLvlDistr>1</tierLvlDistr>
+		<propSpawnInterval>2</propSpawnInterval>
+		<spawnSpeed>1</spawnSpeed>
+		<eventSpawnInterval>60</eventSpawnInterval>
+		<eventSpawnChance>0.015</eventSpawnChance>
+		<eventSpawnChanceIncrease>0.025</eventSpawnChanceIncrease>
+		<content Type="Hostiles">
+			<entity DefName="Orc" Tier="1"><rarity>1.5</rarity></entity>
+			<entity DefName="TowerGuy" Tier="2"><rarity>0.5</rarity></entity>
+			<entity DefName="Archer" Tier="7"><rarity>0.1</rarity></entity>
+			<entity DefName="Hooker" Tier="4"><rarity>0.2</rarity></entity>
+		</content>
+		<content Type="Events">
+			<entity DefName="VikingRaidEvent" Tier="3"><rarity>1</rarity></entity>
+		</content>
+		<content Type="Props">
+			<entity DefName="urn" Tier="1"><rarity>1</rarity></entity>
+		</content>
+		<behaviours>
+            <behaviour Name="PropSpawnPlugin"></behaviour>
+            <behaviour Name="DamageTypeModule"></behaviour>
+            <behaviour Name="EventSpawnPlugin"></behaviour>
+            <behaviour Name="TensionByTimePlugin">
+				<customParameters>
+					<parameter Name="PerLevelIncrease" Value="0.04"></parameter>
+				</customParameters>
+			</behaviour>
+        </behaviours>
+    </Map>
+	
+    <Map Name="Hookers">
+		<tierLvlDistr>1</tierLvlDistr>
+		<propSpawnInterval>2</propSpawnInterval>
+		<spawnSpeed>1</spawnSpeed>
+		<eventSpawnInterval>60</eventSpawnInterval>
+		<eventSpawnChance>0.015</eventSpawnChance>
+		<eventSpawnChanceIncrease>0.025</eventSpawnChanceIncrease>
+		<content Type="Hostiles">
+			<entity DefName="Hooker" Tier="4"><rarity>0.2</rarity></entity>
+		</content>
+    </Map>
+</Defs>

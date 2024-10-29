@@ -8,24 +8,26 @@
     ".NETStandard,Version=v2.1": []
   },
   "packageFolders": {
-    "/home/yakhmet/.nuget/packages/": {}
+    "C:\\Users\\yasin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/media/yakhmet/2.SSD/Projects/Age of Darkness/Libraries/GWMisc/GWMisc.csproj",
+      "projectUniqueName": "B:\\Projects\\Age-of-Darkness\\Libraries\\GWMisc\\GWMisc.csproj",
       "projectName": "GWMisc",
-      "projectPath": "/media/yakhmet/2.SSD/Projects/Age of Darkness/Libraries/GWMisc/GWMisc.csproj",
-      "packagesPath": "/home/yakhmet/.nuget/packages/",
-      "outputPath": "/media/yakhmet/2.SSD/Projects/Age of Darkness/Libraries/GWMisc/obj/",
+      "projectPath": "B:\\Projects\\Age-of-Darkness\\Libraries\\GWMisc\\GWMisc.csproj",
+      "packagesPath": "C:\\Users\\yasin\\.nuget\\packages\\",
+      "outputPath": "B:\\Projects\\Age-of-Darkness\\Libraries\\GWMisc\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/yakhmet/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\yasin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -38,6 +40,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -59,7 +66,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.108/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

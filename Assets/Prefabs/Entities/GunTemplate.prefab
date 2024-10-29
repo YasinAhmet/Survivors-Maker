@@ -10,10 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6245685015804203595}
   - component: {fileID: 8798405862068147187}
-  - component: {fileID: 4237529476727276486}
-  - component: {fileID: 3274028523609382099}
   - component: {fileID: 4024399637338698608}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: GunTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,69 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &4237529476727276486
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401052812281107487}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.75
---- !u!50 &3274028523609382099
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401052812281107487}
-  m_BodyType: 1
-  m_Simulated: 0
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 5
-  m_AngularDrag: 5
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!114 &4024399637338698608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,15 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 642365573, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onActivationChange:
-    m_PersistentCalls:
-      m_Calls: []
-  onHealthChange:
-    m_PersistentCalls:
-      m_Calls: []
   ownedSpriteRenderer: {fileID: 8798405862068147187}
-  ownedRigidbody: {fileID: 3274028523609382099}
-  ownedCollider: {fileID: 4237529476727276486}
+  ownedRigidbody: {fileID: 0}
+  ownedCollider: {fileID: 0}
   possessedThing:
     soundConfig:
       onDamageTakenSounds: []
@@ -183,15 +112,27 @@ MonoBehaviour:
     stats: []
     TexturePath: 
     TextureSize: 1
+    mass: 1
     spawnable:
       type: 
       faction: 
       level: 0
+    animations: []
     equipmentNames: []
-  rareUpdateTickTime: 0.5
   stopIfObstacle: 1
   antiPushRadius: 0.4
+  velocityDropSpeed: 0.5
+  lastMovementVector: {x: 0, y: 0}
   faction: null
+  xp: 40
+  doesMirrorPosOnFacing: 0
+  lookingAtRight: 1
+  dontPassMaxSpeed: 1
+  cachedMovementSpeed: 0
+  isActive: 0
+  selfObject: {fileID: 2401052812281107487}
+  isKinematicObj: 0
+  ownedTransform: {fileID: 0}
   rangeArea: {fileID: 842263774409209493}
   currentProjectileDef:
     soundConfig:
@@ -202,15 +143,21 @@ MonoBehaviour:
     stats: []
     TexturePath: 
     TextureSize: 1
+    mass: 1
     spawnable:
       type: 
       faction: 
       level: 0
+    animations: []
     equipmentNames: []
   attackPerSecond: 1.1
   range: 1
   cooldownCounter: 0
+  rotationUpdateTime: 0.2
+  rotationUpdateCounter: 0
   AngleOffset: 180
+  quaternionToFlip: 0.7
+  target: {fileID: 0}
   stats: []
 --- !u!1 &4939428410325355661
 GameObject:
@@ -222,7 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4760360168156678772}
   - component: {fileID: 6895073905734748272}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6487242899171425909}
   - component: {fileID: 5735801643497723682}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -398,7 +345,7 @@ GameObject:
   - component: {fileID: 7311245161432805638}
   - component: {fileID: 3101927819988113630}
   - component: {fileID: 842263774409209493}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: RangeDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +497,6 @@ MonoBehaviour:
   m_Script: {fileID: 612715979, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedRigidbody2D: {fileID: 3101927819988113630}
-  ownedCollider2D: {fileID: 7311245161432805638}
   collidersInside: []
   faction: 
+  ownedTransform: {fileID: 0}

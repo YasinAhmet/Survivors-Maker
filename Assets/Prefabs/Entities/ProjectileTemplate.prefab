@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6245685015804203595}
   - component: {fileID: 8798405862068147187}
-  - component: {fileID: 4237529476727276486}
-  - component: {fileID: 3274028523609382099}
   - component: {fileID: -7694561828140110065}
+  - component: {fileID: 6779016166991369697}
   m_Layer: 6
   m_Name: ProjectileTemplate
   m_TagString: Untagged
@@ -89,7 +88,60 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &4237529476727276486
+--- !u!114 &-7694561828140110065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2401052812281107487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -432422262, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownedSpriteRenderer: {fileID: 8798405862068147187}
+  ownedRigidbody: {fileID: 0}
+  ownedCollider: {fileID: 6779016166991369697}
+  possessedThing:
+    soundConfig:
+      onDamageTakenSounds: []
+      onDeathSounds: []
+    behaviours: []
+    Name: 
+    stats: []
+    TexturePath: 
+    TextureSize: 1
+    mass: 1
+    spawnable:
+      type: 
+      faction: 
+      level: 0
+    animations: []
+    equipmentNames: []
+  stopIfObstacle: 0
+  antiPushRadius: 0.4
+  velocityDropSpeed: 0
+  lastMovementVector: {x: 0, y: 0}
+  faction: null
+  xp: 40
+  doesMirrorPosOnFacing: 0
+  lookingAtRight: 1
+  dontPassMaxSpeed: 0
+  cachedMovementSpeed: 0
+  isActive: 0
+  selfObject: {fileID: 0}
+  isKinematicObj: 1
+  ownedTransform: {fileID: 0}
+  shooter: {fileID: 0}
+  hitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  stats: []
+--- !u!58 &6779016166991369697
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,7 +157,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -115,94 +167,13 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_ContactCaptureLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 192
   m_CallbackLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 192
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.75
---- !u!50 &3274028523609382099
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401052812281107487}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &-7694561828140110065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401052812281107487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -432422262, guid: 91a166728f5c5071f88c02092ac145c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onFacingDirectionChange:
-    m_PersistentCalls:
-      m_Calls: []
-  onActivationChange:
-    m_PersistentCalls:
-      m_Calls: []
-  onHealthChange:
-    m_PersistentCalls:
-      m_Calls: []
-  ownedSpriteRenderer: {fileID: 8798405862068147187}
-  ownedRigidbody: {fileID: 3274028523609382099}
-  ownedCollider: {fileID: 4237529476727276486}
-  possessedThing:
-    soundConfig:
-      onDamageTakenSounds: []
-      onDeathSounds: []
-    behaviours: []
-    Name: 
-    stats: []
-    TexturePath: 
-    TextureSize: 1
-    spawnable:
-      type: 
-      faction: 
-      level: 0
-    animations: []
-    equipmentNames: []
-  stopIfObstacle: 0
-  antiPushRadius: 0.4
-  velocityDropSpeed: 0
-  lastMovementVector: {x: 0, y: 0}
-  faction: null
-  doesMirrorPosOnFacing: 0
-  lookingAtRight: 1
-  dontPassMaxSpeed: 0
-  hitEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  onHit:
-    m_PersistentCalls:
-      m_Calls: []
-  stats: []
+  m_Radius: 0.5

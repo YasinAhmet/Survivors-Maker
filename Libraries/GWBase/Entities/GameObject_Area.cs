@@ -8,21 +8,23 @@ using UnityEngine;
 namespace GWBase {
 
 public class GameObject_Area : MonoBehaviour {
-    [SerializeField] private Rigidbody2D ownedRigidbody2D;
-    [SerializeField] private CircleCollider2D ownedCollider2D;
     public List<Collider2D> collidersInside = new();
     public string faction;
-
+    public Transform ownedTransform;
 
     public struct ClosestObject {
         public Collider2D closest;
         public float distance;
     }
 
-    
+    private void Start()
+    {
+        ownedTransform = transform;
+    }
+
+
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.TryGetComponent<GameObj>(out GameObj gameObj)) {
-            if(gameObj.faction == faction) return;
             collidersInside.Add(other);
         }
     }
@@ -39,7 +41,7 @@ public class GameObject_Area : MonoBehaviour {
 
         foreach (var collider in collidersInside)
         {
-            float distance = Vector2.Distance(transform.position, collider.gameObject.transform.position);
+            float distance = Vector2.Distance(ownedTransform.position, collider.transform.position);
             if(distance < closestObject.distance) {
                 closestObject.closest = collider;
                 closestObject.distance = distance;

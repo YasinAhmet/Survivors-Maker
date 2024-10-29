@@ -26,3 +26,33 @@
 /media/yakhmet/2.SSD/Projects/Age of Darkness/Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.csproj.CopyComplete
 /media/yakhmet/2.SSD/Projects/Age of Darkness/Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.dll
 /media/yakhmet/2.SSD/Projects/Age of Darkness/Libraries/GWMisc/obj/Debug/netstandard2.1/GWMisc.pdb
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.csproj.AssemblyReference.cache
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.GeneratedMSBuildEditorConfig.editorconfig
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.AssemblyInfoInputs.cache
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.AssemblyInfo.cs
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.csproj.CoreCompileInputs.cache
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.sourcelink.json
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\GWMisc.deps.json
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\GWMisc.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\GWMisc.pdb
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\GWBase.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.AudioModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.CoreModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.ImageConversionModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.JSONSerializeModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.Physics2DModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UI.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UIElementsModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UIModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UnityWebRequestAssetBundleModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UnityWebRequestAudioModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UnityWebRequestModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UnityWebRequestTextureModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\UnityEngine.UnityWebRequestWWWModule.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.csproj.Up2Date
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\obj\Debug\netstandard2.1\GWMisc.pdb
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\GWBase.pdb
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\ProjectilesUtility.dll
+B:\Projects\Age-of-Darkness\Libraries\GWMisc\bin\Debug\netstandard2.1\ProjectilesUtility.pdb

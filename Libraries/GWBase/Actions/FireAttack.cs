@@ -20,14 +20,70 @@ public class FireAttack : IObjBehaviour
 
     private float lifetimeCounter = 0;
     private ThingDef possessed;
+    
 
     public string GetName(){return null;}
     public ParameterRequest[] GetParameters(){return null;}
-    public void RareTick(object[] parameters, float deltaTime){
+    public void RareTick(object[] parameters, float deltaTime)
+    {
+        lifetimeCounter += deltaTime;
+
+        if(lifetimeCounter > lifetime) {
+            ownedProjectile.CallActivationChange(false);
+        }
     }
     public void Suspend(object[] parameters){}
 
-    public void Start(XElement possess, object[] parameters)
+
+    public void Tick(object[] parameters, float deltaTime){
+        lifetimeCounter += deltaTime;
+
+        if(lifetimeCounter > lifetime) {
+            ownedProjectile.CallActivationChange(false);
+        }
+    }
+
+    public void HitHostileObject(Collider2D collider) {
+        if(!ownedProjectile.gameObject.activeSelf) return;
+        if(!collider.TryGetComponent(out GameObj gameObj)) return;
+        
+        var piercingLevel = possessed.GetStatValueByName("Piercing");
+        if (piercingLevel <= 0)
+        {
+            ownedProjectile.CallActivationChange(false);
+        }
+        else
+        {
+            possessed.ReplaceStat("Piercing", piercingLevel - 1);
+        }
+        
+
+        var closestPoint = gameObj.ownedTransform.position;
+        PoolManager.poolManager.GetLightObjectPool("Effects").ObtainSlotForType(closestPoint, ownedProjectile.transform.eulerAngles.z, hitlifetime);
+        float totalDamage = float.Parse(ownedProjectile.stats.FirstOrDefault(x => x.Name.Equals("Damage")).Value, CultureInfo.InvariantCulture) + possessed.GetStatValueByName("Damage");
+        
+        float randomDamage = (float)Math.Floor(UnityEngine.Random.Range(totalDamage, totalDamage*possessed.GetStatValueByName("DamageVariety")));
+        var damageType = possessed.FindStatByName("DamageType").Value;
+        float resistance = gameObj.GetPossessed().GetStatValueByName(damageType+"Resistance");
+        float processedDamage = Math.Abs(Math.Max(randomDamage - randomDamage * resistance, 0));
+        bool didHit = gameObj.TryDamage(processedDamage, out HealthInfo healthInfo, ownedProjectile.shooter.owner);
+
+        if(didHit) {
+            HitResult newHit = new(){
+                hitTarget = gameObj,
+                damage = randomDamage,
+                killed = healthInfo.gotKilled,
+                hitPosition = closestPoint,
+                hitSource = ownedProjectile 
+            };
+            ownedProjectile.ProcessHit(newHit);
+            YKUtility.SpawnFloatingText(closestPoint, Math.Round(healthInfo.damageTaken, 1).ToString(CultureInfo.InvariantCulture), Color.red);
+            gameObj.StartColorChangeIfDamaged();
+        }
+        
+    }
+
+    public void Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
     {
         lifetimeCounter = 0;
         ownedProjectile = (GameObj_Projectile)parameters[0];
@@ -35,51 +91,8 @@ public class FireAttack : IObjBehaviour
         lifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("Lifetime").Value, CultureInfo.InvariantCulture);
         hitlifetime = float.Parse(ownedProjectile.GetPossessed().FindStatByName("HitLifetime").Value, CultureInfo.InvariantCulture);
         ownedProjectile.onHit.AddListener(HitHostileObject);
-    }
-
-    public void Tick(object[] parameters, float deltaTime){
-        ownedProjectile.MoveObject(ownedProjectile.transform.right, deltaTime);
-        lifetimeCounter += deltaTime;
-
-        if(lifetimeCounter > lifetime) {
-            ownedProjectile.gameObject.SetActive(false);
-        }
-    }
-
-    public void HitHostileObject(Collider2D collider) {
-        if(!ownedProjectile.gameObject.activeSelf) return;
-        ownedProjectile.gameObject.SetActive(false);
-
-        var closestPoint = collider.ClosestPoint(ownedProjectile.GetComponent<Collider2D>().bounds.center);
-        PoolManager.poolManager.effectsPool.ObtainSlotForType(null, closestPoint, ownedProjectile.transform.eulerAngles.z, ownedProjectile.faction, hitlifetime);
-        float totalDamage = float.Parse(ownedProjectile.stats.FirstOrDefault(x => x.Name.Equals("Damage")).Value, CultureInfo.InvariantCulture) + possessed.GetStatValueByName("Damage");
-
-        if(collider.TryGetComponent<IDamageable>(out IDamageable damageable)) {
-            float randomDamage = (float)Math.Floor(UnityEngine.Random.Range(totalDamage, totalDamage*possessed.GetStatValueByName("DamageVariety")));
-            bool didHit = damageable.TryDamage(randomDamage, out bool didKill);
-
-            if(didHit) {
-                HitResult newHit = new(){
-                    hitTarget = collider.gameObject,
-                    damage = randomDamage,
-                    killed = didKill,
-                    hitPosition = closestPoint
-                };
-                ownedProjectile.ProcessHit(newHit);
-                SpawnFloatingText(closestPoint, randomDamage);
-            }
-        }
-    }
-
-    public void SpawnFloatingText(Vector3 position, float damage) {
-        var obj = PoolManager.poolManager.floatingTextPool.ObtainSlotForType(null, position, 0, ownedProjectile.faction);
-        obj.GetComponent<IBootable>().BootSync();
-        obj.GetComponent<ITextMeshProContact>().SetText($"{damage}");
-    }
-
-    public async Task Start(XElement possess, object[] parameters, CustomParameter[] customParameters)
-    {
-        Start(possess, parameters);
+        ownedProjectile.lastMovementVector = ownedProjectile.ownedTransform.right;
+        return;
     }
 }
 

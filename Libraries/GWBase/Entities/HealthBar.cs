@@ -1,46 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 namespace GWBase {
 
-public class HealthBar : MonoBehaviour, IBootable
+public class HealthBar : MonoBehaviour
 {
-    [SerializeField] private Slider slider;
-    [SerializeField] private float maxHealth = 0;
-    [SerializeField] private Vector3 spawnOffset;
-    private GameObject attachedObject;
-
+    [SerializeField] private Slider slider = null;
+    
     public void UpdateHealthBar(HealthInfo healthInfo) {
-        if(healthInfo.changeMax) maxHealth = healthInfo.currentHealth;
-        var newSliderValue = healthInfo.currentHealth/maxHealth;
+        var newSliderValue = healthInfo.currentHealth/healthInfo.maxHealth;
         slider.value = newSliderValue;
     }
 
-    public void FixedUpdate()
+    private void Start()
     {
-        if(attachedObject) transform.position = attachedObject.transform.position + spawnOffset;
-    }
-
-    public void AttachObj(GameObj attachedObj) {
-        attachedObj.onHealthChange.AddListener(UpdateHealthBar);
-        attachedObject = attachedObj.gameObject;
-        attachedObj.onActivationChange.AddListener(Toggle);
-    }
-
-    public void Toggle(bool toggle) {
-        if(attachedObject) transform.position = attachedObject.transform.position + spawnOffset;
-        gameObject.SetActive(toggle);
-    }
-
-    public IEnumerator Boot()
-    {
-        yield return this;
-    }
-
-    public void BootSync()
-    {
-        throw new System.NotImplementedException();
+        GameObj owned = transform.parent.GetComponent<GameObj>();
+        UpdateHealthBar(new HealthInfo()
+        {
+            currentHealth = owned.GetPossessed().GetStatValueByName("Health"),
+            maxHealth = owned.GetPossessed().GetStatValueByName("MaxHealth")
+        });
+        owned.onHealthChange += UpdateHealthBar;
     }
 }
 

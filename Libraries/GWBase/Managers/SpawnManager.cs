@@ -9,10 +9,13 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Unity.Collections;
 using UnityEngine;
+using Random = System.Random;
+
 namespace GWBase {
 
-public class SpawnManager : Manager
+    public class SpawnManager : Manager
 {
+    public Camera playerCamera;
     public static SpawnManager spawnManager;
     [SerializeField] public Dictionary<string, ThingDef> spawnableThingsDictionary = new();
     [SerializeField] public Dictionary<string, ThingDef> spawnableEnemiesDictionary = new();
@@ -22,8 +25,8 @@ public class SpawnManager : Manager
     public float RNP_Max = 1.25f;
     public float RNP_Min = 1f;
     public bool SPW_Activated = true;
-    public float SPW_DelayBetweenSpawns = 0.7f;
     public float SPW_FirstDelay = 2f;
+    public Map currentMap;
 
     [SerializeField] private string EnemyTeamName = "Hostile";
 
@@ -32,13 +35,18 @@ public class SpawnManager : Manager
         spawnManager = this;
         InitializeSpawnables(AssetManager.assetLibrary.thingDefsDictionary);
         SpawnPlayerGroup();
+        
+        var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "Maps.xml");
+        currentMap = YKUtility.FromXElement<Map>(defFile.Elements("Map").FirstOrDefault(x => x.Attribute("Name").Value == SettingsManager.settingsManager.playerSettings.mapName));
+        currentMap.Load();
         StartCoroutine(EnemySpawnTick());
+        playerCamera = Camera.main;
         yield return this;
     }
 
     public void SpawnPlayerGroup()
     {
-        string playerGroupName = SettingsManager.playerSettings.playerGroup;
+        string playerGroupName = SettingsManager.settingsManager.playerSettings.playerGroup;
         GroupDef playerGroup = spawnableGroupsDictionary.FirstOrDefault(x => x.Key.Equals(playerGroupName)).Value;
         CreatureGroup groupInstance = new();
         groupInstance.Possess(playerGroup);
@@ -50,13 +58,14 @@ public class SpawnManager : Manager
         foreach (var member in playerGroup.members)
         {
             ThingDef characterDefToAdd = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(member.defName)).Value;
-            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.creaturesPool.ObtainSlotForType(characterDefToAdd, Vector2.zero, 0, playerGroup.spawnableInfo.faction);
+            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(characterDefToAdd, Vector2.zero, 0, playerGroup.spawnableInfo.faction);
             groupInstance.AttachCreature(creature);
 
             if(member.isLeaderSTR != null && member.isLeaderSTR.Equals("Yes")) {
-                GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, creature.transform);
+                GameObject spawnedInputControllerObject = Instantiate(SettingsManager.settingsManager.inputSpeaker, ((Component)creature).transform);
                 PlayerController.playerController.ownedCreature = creature;
                 leaderObj = creature;
+                creature.pickupManager.autoGrab = true;
             }
             
             if(member.extraBehaviours != null && member.extraBehaviours.Count > 0) creature.PossessBehaviours(member.extraBehaviours.ToArray(), false);
@@ -64,29 +73,43 @@ public class SpawnManager : Manager
 
         StartCoroutine(PlayerController.playerController.TryFetchCreature());
     }
-
-    /*public void BreakdownNameToThingDef(string defName, out ThingDef thingDef)
+    
+    public CreatureGroup SpawnGroup(string groupName, Vector2 location)
     {
-        thingDef = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(defName)).Value;
-        Debug.Log("BREAKDOWN: " + defName);
+        GroupDef group = spawnableGroupsDictionary.FirstOrDefault(x => x.Key.Equals(groupName)).Value;
+        CreatureGroup groupInstance = new();
+        groupInstance.Possess(group);
+
+        groupInstance.groupFaction = group.spawnableInfo.faction;
+        GameObj_Creature leaderObj = null;
+
+        foreach (var member in group.members)
+        {
+            ThingDef characterDefToAdd = spawnableThingsDictionary.FirstOrDefault(x => x.Key.Equals(member.defName)).Value;
+            GameObj_Creature creature = (GameObj_Creature)PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(characterDefToAdd, location, 0, group.spawnableInfo.faction);
+            groupInstance.AttachCreature(creature);
+
+            if(member.isLeaderSTR != null && member.isLeaderSTR.Equals("Yes")) {
+                leaderObj = creature;
+                //creature.pickupManager.autoGrab = true;
+            }
+            
+            if(member.extraBehaviours != null && member.extraBehaviours.Count > 0) creature.PossessBehaviours(member.extraBehaviours.ToArray(), false);
+        }
+
+        return groupInstance;
     }
-
-    /*public void SpawnPlayer(string byChar)
-    {
-        BreakdownNameToThingDef(byChar, out ThingDef playerCharDef);
-        var player = (GameObj_Creature)PoolManager.poolManager.creaturesPool.HardSet(PrefabManager.prefabManager.GetPrefabOf("player"), playerCharDef, Vector2.zero, 0, PlayerTeamName);
-        PlayerController.playerController.ownedCreature = player;
-        StartCoroutine(PlayerController.playerController.TryFetchCreature());
-    }*/
-
+    
     public IEnumerator EnemySpawnTick()
     {
         yield return new WaitForSeconds(SPW_FirstDelay);
 
-        while (SPW_Activated)
+        while (SPW_Activated && SettingsManager.settingsManager.playerSettings.shouldSpawn == "Yes")
         {
-            PoolManager.poolManager.creaturesPool.ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
-            yield return new WaitForSeconds(SPW_DelayBetweenSpawns);
+            GameObj slot = PoolManager.poolManager.GetObjectPool("Creatures").ObtainSlotForType(GetRandomEnemy(), (Vector2)GetRandomSpawnPosition(), 0, EnemyTeamName);
+            UIManager.uiManager.AttachObjectToWorldCanvas(slot.gameObject);
+            slot.SetRigidbodyMode("Dynamic");
+            yield return new WaitForSeconds(currentMap.spawnSpeed);
         }
     }
 
@@ -127,18 +150,65 @@ public class SpawnManager : Manager
 
     public ThingDef GetRandomEnemy()
     {
-        return spawnableEnemiesDictionary[YKUtility.GetRandomIndex<ThingDef>(spawnableEnemiesDictionary)];
+        var entity = currentMap.GetRandomEntity(currentMap.cachedSpawnablesPack);
+        foreach (var spawnable in spawnableEnemiesDictionary)
+        {
+            if (spawnable.Key == entity.defName) return spawnable.Value;
+        }
+
+        return null;
     }
 
+    [SerializeField] public float xSpawnOffset = 0;
+    [SerializeField] public float ySpawnOffset = 0;
     public Vector3 GetRandomSpawnPosition()
     {
-        Vector3 randomPoint = new(UnityEngine.Random.Range(RNP_Min, RNP_Max), UnityEngine.Random.Range(RNP_Min, RNP_Max));
+        var offset = new Vector3(xSpawnOffset, ySpawnOffset);
+        var camPos = playerCamera.transform.position;
+        if (UnityEngine.Random.Range(0, 2) == 1)
+        {
+            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomHorizontalSpawnPosition() + camPos) + offset;
+            else return playerCamera.ScreenToWorldPoint(-GetRandomHorizontalSpawnPosition() + camPos) + offset;
+        }
+        else
+        {
+            if(YKUtility.Random)return playerCamera.ScreenToWorldPoint(GetRandomVerticalSpawnPosition() + camPos) + offset;
+            else return playerCamera.ScreenToWorldPoint(-GetRandomVerticalSpawnPosition() + camPos) + offset;
+        }
+        
+        /*Vector3 randomPoint = new(UnityEngine.Random.Range(RNP_Min, RNP_Max), UnityEngine.Random.Range(RNP_Min, RNP_Max));
         if (UnityEngine.Random.value > 0.5f) randomPoint = randomPoint * -1;
         randomPoint.z = RNP_PointDistance;
         Vector3 worldPoint = Camera.main.ViewportToWorldPoint(randomPoint);
-        return worldPoint;
+        return worldPoint;*/
     }
 
+    public Vector3 GetRandomVerticalSpawnPosition()
+    {
+        float verticalBoundPos = Screen.width*1.5f;
+        float randomHorizontalPos = UnityEngine.Random.Range(0, Screen.height);
+
+        if (YKUtility.Random) randomHorizontalPos = -randomHorizontalPos;
+        if (YKUtility.Random) verticalBoundPos = -verticalBoundPos;
+
+        return new Vector3(verticalBoundPos, randomHorizontalPos);
+    }
+    
+    public Vector3 GetRandomHorizontalSpawnPosition()
+    {
+        float verticalBoundPos = UnityEngine.Random.Range(0, Screen.width);
+        float randomHorizontalPos = Screen.height*1.5f;
+
+        if (YKUtility.Random) randomHorizontalPos = -randomHorizontalPos;
+        if (YKUtility.Random) verticalBoundPos = -verticalBoundPos;
+
+        return new Vector3(verticalBoundPos, randomHorizontalPos);
+    }
+
+    private void FixedUpdate()
+    {
+        if(currentMap != null)currentMap.RareTick(Time.fixedDeltaTime);
+    }
 }
 
 }

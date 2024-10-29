@@ -8,7 +8,14 @@ namespace GWBase {
 [Serializable]
 public class PlayerController
 {
-    public XpGainedUpdate onXP = new();
+    public delegate void XpGainedUpdate(LevelInfo levelInfo);
+    public delegate void NewCharacter(GameObj_Creature creature);
+    public delegate void LeveledUp(LevelInfo levelInfo);
+    public event LeveledUp onPreLevelUp = delegate(LevelInfo level) {  }; 
+    public event LeveledUp onLevelUp = delegate(LevelInfo level) {  }; 
+    public event XpGainedUpdate onXP = delegate(LevelInfo info) {  };
+    public event GameObj.HealthChangeEvent onOwnedHealthChange = delegate(HealthInfo info) {  };
+    public event NewCharacter gotNewChar = delegate(GameObj_Creature creature) {  };
 
     public static PlayerController playerController;
     public GameObj_Creature ownedCreature;
@@ -23,38 +30,34 @@ public class PlayerController
             yield return new WaitForSeconds(0.25f);
         }
 
-        ownedCreature.onXpGain.AddListener(GainXP);
-        ownedCreature.onActionHappen.AddListener(ActionInfoProcessor);
-        Debug.Log($"[PLAYER] XP Listener Fetched..");
+        ownedCreature.onXpGain += (GainXP);
+        ownedCreature.onActionHappen += (ActionInfoProcessor);
+        ownedCreature.onHealthChange += (onOwnedHealthChange.Invoke);
+        gotNewChar?.Invoke(ownedCreature);
     }
 
     public void ActionInfoProcessor(string key, object value) {
-        Debug.Log($"[ACTION INFO PROCESSOR] Key: {key} Value: {value}");
-        var sessionInformation = GameManager.sessionInformation;
+        var sessionInformation = GameManager.gameManager.sessionInformation;
         switch (key) {
             case "hitGiven":
-                Debug.Log($"[HITGIVEN INFO PROCESSOR] Key: {key} Value: {(HitResult)value}");
                 HitResult hitResult = (HitResult)value;
                 sessionInformation.totalDamageGiven += (int)hitResult.damage;
                 sessionInformation.totalHitsGiven += 1;
                 if(hitResult.killed) sessionInformation.killCount++;
                 break;
             case "hitTaken":
-                Debug.Log($"[HITTAKEN INFO PROCESSOR] Key: {key} Value: {(int)(float)value}");
                 sessionInformation.totalHitsTaken += 1;
                 sessionInformation.totalDamageTaken += (int)(float)value;
                 break;
             default:
-                Debug.Log($"[PC] Unknown action: {key}");
                 break;
         }
 
-        GameManager.sessionInformation = sessionInformation;
+        GameManager.gameManager.sessionInformation = sessionInformation;
     }
 
     public IEnumerator Start()
     {
-        Debug.Log($"[PC] Player Controller initializing..");
         playerController = this;
         currentLevel = new()
         {
@@ -63,6 +66,9 @@ public class PlayerController
             level = 1
         };
 
+        GameObject orb = UIManager.uiManager.SpawnComponentAtUI(PrefabManager.prefabManager.GetPrefabOf("healthOrb"));
+        orb.GetComponent<IBootable>().BootSync();
+
         yield return this;
     }
 
@@ -70,28 +76,28 @@ public class PlayerController
     {
         if (currentLevel.currentXP >= currentLevel.targetXP)
         {
-            currentLevel.targetXP *= XPRequirementMultiplier;
+            currentLevel.targetXP += (50*((float)(currentLevel.level/10f)));
+            currentLevel.currentXP = 0;
             LevelUpEvent levelUpEvent = new LevelUpEvent();
             await levelUpEvent.StartPopup();
+            onPreLevelUp.Invoke(currentLevel);
             await levelUpEvent.WaitForDone();
+            currentLevel.level++;
+            onLevelUp.Invoke(currentLevel);
         }
     }
 
     public void GainXP(float amount)
     {
         currentLevel.currentXP += amount;
-        GameManager.sessionInformation.totalXP += (int)amount;
+        GameManager.gameManager.sessionInformation.totalXP += (int)amount;
         TryLevelUp();
 
         onXP?.Invoke(currentLevel);
     }
+    
 
-
-    [System.Serializable]
-    public class XpGainedUpdate : UnityEvent<LevelInfo>
-    {
-    }
-
+    [Serializable]
     public struct LevelInfo
     {
         public float currentXP;

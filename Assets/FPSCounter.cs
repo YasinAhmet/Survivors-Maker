@@ -1,22 +1,34 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class FPSCounter : MonoBehaviour
 {
-    private float count;
-    
-    private IEnumerator Start()
+
+    private float fpsCounterTimer = 0;
+    private float fpsCounter = 0;
+    private void Start()
     {
         GUI.depth = 2;
-        while (true)
-        {
-            count = 1f / Time.unscaledDeltaTime;
-            yield return new WaitForSeconds(0.1f);
-        }
     }
     
     private void OnGUI()
     {
-        GUI.Label(new Rect(5, 40, 100, 25), "FPS: " + Mathf.Round(count));
+        GUI.Label(new Rect(5, 10, 200, 50), "FPS: " + Mathf.Round(avgFrameRate));
     }
+    
+     public int avgFrameRate = 0;
+    
+     public void Update ()
+     {
+         fpsCounterTimer += Time.deltaTime;
+         fpsCounter++;
+
+         if (fpsCounterTimer > 1) 
+         {
+             avgFrameRate = (int)fpsCounter;
+             fpsCounter = 0;
+             fpsCounterTimer = 0;
+         }
+     }
 }

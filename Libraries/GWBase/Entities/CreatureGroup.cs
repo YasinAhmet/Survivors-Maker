@@ -12,7 +12,16 @@ namespace GWBase
         public List<GameObj_Creature> attachedCreatures = new List<GameObj_Creature>();
         public string groupFaction = "";
         public List<GroupPositionData> emptyPositions = new();
+        public GroupPositionData lastUsedPosition;
 
+        public void FreePositionIfDied(HealthInfo info)
+        {
+            if(!info.gotKilled) {return;}
+
+            var obj = (GameObj_Creature)info.infoOf;
+            emptyPositions.Add(obj.possessedPosition);
+        }
+        
         public void Possess(GroupDef groupDef) {
             this.groupDef = groupDef;
             groupFaction = groupDef.spawnableInfo.faction;
@@ -24,14 +33,16 @@ namespace GWBase
 
             if(groupLeader != null) {
                 int randomIndex = UnityEngine.Random.Range(0, emptyPositions.Count);
-                var position = emptyPositions[randomIndex];
-                emptyPositions.Remove(position);
-                creature.transform.SetParent(groupLeader.transform);
+                lastUsedPosition = emptyPositions[randomIndex];
+                emptyPositions.Remove(lastUsedPosition);
+                ((Component)creature).transform.SetParent(((Component)groupLeader).transform);
                 creature.SetRigidbodyMode("Kinematic");
                 creature.GroupAttached = new GroupMemberReference() {
-                group = this,
-                position = new Vector3(position.x, position.y, 0)
-            };
+                    group = this,
+                    position = new Vector3(lastUsedPosition.x, lastUsedPosition.y, 0)
+                };
+                creature.possessedPosition = lastUsedPosition;
+                creature.onHealthChange += FreePositionIfDied;
             } else {
                 groupLeader = creature;
                 creature.GroupAttached = new GroupMemberReference() {

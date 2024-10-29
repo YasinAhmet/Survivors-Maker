@@ -12,9 +12,10 @@ namespace GWBase
     {
         public delegate void OnProjectileHit(HitResult hitResult);
         public event OnProjectileHit onProjectileHit;
-        [SerializeField] private GameObject_Area rangeArea;
-        [SerializeField] private ThingDef currentProjectileDef;
+        [SerializeField] private GameObject_Area rangeArea = null;
+        [SerializeField] public ThingDef currentProjectileDef;
         [SerializeField] private float attackPerSecond = 1.1f;
+        public GameObj_Creature owner;
         private float AttackCooldown
         {
             get
@@ -31,9 +32,23 @@ namespace GWBase
         public GameObject target;
         public Stat[] stats = { };
 
+        public void Possess<GameObj_Shooter>(ThingDef entity, string faction, GameObj_Creature owner)
+        {
+            this.owner = owner;
+            base.Possess<GameObj_Shooter>(entity, faction);          
+            gameObject.layer = LayerMask.NameToLayer(faction+"Projectile");
+            SetupRangeArea(entity);
+
+            attackPerSecond = float.Parse(entity.FindStatByName("AttackPerSecond").Value, CultureInfo.InvariantCulture);
+            var projectileName = entity.FindStatByName("Action");
+            var projectileDef = AssetManager.assetLibrary.actionsDictionary.FirstOrDefault(x => x.Key.Equals(projectileName.Value)).Value;
+            AttachNewProjectileDef(projectileDef);
+        }
+        
         public override void Possess<GameObj_Shooter>(ThingDef entity, string faction)
         {
-            base.Possess<GameObj_Shooter>(entity, faction);
+            base.Possess<GameObj_Shooter>(entity, faction);          
+            gameObject.layer = LayerMask.NameToLayer(faction+"Projectile");
             SetupRangeArea(entity);
 
             attackPerSecond = float.Parse(entity.FindStatByName("AttackPerSecond").Value, CultureInfo.InvariantCulture);
@@ -47,8 +62,8 @@ namespace GWBase
             if (rangeArea == null) return;
 
             range = float.Parse(entity.FindStatByName("Range").Value);
-            rangeArea.faction = faction;
-            rangeArea.gameObject.layer = gameObject.layer;
+            rangeArea.faction = faction;          
+            rangeArea.gameObject.layer = LayerMask.NameToLayer(faction+"Projectile");
             rangeArea.transform.localScale = new Vector3(range, range, 1);
             rangeArea.gameObject.SetActive(true);
         }
@@ -68,12 +83,13 @@ namespace GWBase
             return false;
         }
 
-        public void LookAtTarget(Transform target)
+        public void LookAtTarget(GameObject target)
         {
-            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(transform, target.transform.position) + AngleOffset));
-            transform.rotation = newRotation;
+            var velocity = target.GetComponent<Rigidbody2D>().velocity;
+            var newRotation =  Quaternion.Euler(new Vector3(0, 0, YKUtility.GetRotationToTargetPoint(ownedTransform.position, target.transform.position + (Vector3)velocity)));
+            ownedTransform.rotation = newRotation;
 
-            if (transform.rotation.z > quaternionToFlip)
+            if (ownedTransform.rotation.z > quaternionToFlip)
             {
                 ownedSpriteRenderer.flipY = true;
             }
@@ -83,29 +99,42 @@ namespace GWBase
             }
         }
 
-        public void LaunchNewProjectile(ThingDef type)
+        public GameObj_Projectile LaunchNewProjectile(ThingDef type)
         {
-            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.projectilesPool.ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction);
+            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, transform.position, transform.eulerAngles.z, faction+"Projectile");
+            slot.transform.position = transform.position;
+            slot.shooter = this;
             slot.stats = stats;
             slot.hitEvent.AddListener(OwnedProjectileHit);
+            return slot;
+        }
+        
+        public GameObj_Projectile LaunchNewProjectileCustom(ThingDef type, Vector2 position, float rotation)
+        {
+            GameObj_Projectile slot = (GameObj_Projectile)PoolManager.poolManager.GetObjectPool("Projectiles").ObtainSlotForType(type, position, rotation, faction+"Projectile");
+            slot.shooter = this;
+            slot.stats = stats;
+            slot.hitEvent.AddListener(OwnedProjectileHit);
+            return slot;
         }
 
-        public void OwnedProjectileHit(GameObj_Projectile projectile, HitResult result) {
+        public void OwnedProjectileHit(HitResult result) {
             onProjectileHit?.Invoke(result);
+            var projectile = (GameObj_Projectile)result.hitSource;
             projectile.hitEvent.RemoveListener(OwnedProjectileHit);
         }
 
 
-        public override void Update()
+        public override void FixedUpdate()
         {
-            cooldownCounter += Time.deltaTime;
-            rotationUpdateCounter += Time.deltaTime;
+            cooldownCounter += Time.fixedDeltaTime;
+            rotationUpdateCounter += Time.fixedDeltaTime;
 
             if (rotationUpdateCounter > rotationUpdateTime)
             {
                 rotationUpdateCounter = 0;
                 target = rangeArea.GetClosestObject().closest?.gameObject;
-                if (target != null) LookAtTarget(target.transform);
+                if (target != null) LookAtTarget(target);
             }
 
             if (cooldownCounter >= AttackCooldown)
@@ -116,7 +145,7 @@ namespace GWBase
 
             foreach (var behaviour in installedBehaviours)
             {
-                behaviour?.Tick(null, Time.deltaTime);
+                behaviour?.Tick(null, Time.fixedDeltaTime);
             }
         }
 

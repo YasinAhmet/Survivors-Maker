@@ -12,50 +12,76 @@ namespace GWBase
 
     public class GameObj_Creature : GameObj, IDamageable, IAnimatable
     {
-        public ActionHappened onActionHappen;
-        public XpGained onXpGain;
 
-        private BehaviourHandler<GameObj_Creature> behaviourHandler = null;
+        public List<GameObj_Shooter> possessedWeapons;
+        public event GameObj_Shooter.OnProjectileHit onHit;
+        public delegate void ActionHappened(string actionType, object typeObj);
+        public event ActionHappened onActionHappen = delegate(string type, object obj) {  };
         [SerializeField] private float maxhealth = 100;
-        [SerializeField] private float hitColorSpeed = 0.1f;
-        [SerializeField] private float xp = 40;
-        [SerializeField] private GameObject healthBar;
         public int killCount = 0;
         public CreatureState currentState;
-public GroupMemberReference groupAttached = new GroupMemberReference();
+        public ItemPickupManager pickupManager;
+        public GroupMemberReference groupAttached = new GroupMemberReference();
         public GroupMemberReference GroupAttached {
             set {
                 groupAttached.group = value.group;
                 groupAttached.position = value.position;
-                if(groupAttached.group.groupLeader)transform.position = groupAttached.group.groupLeader.transform.position + groupAttached.position;
+                ((Component)this).transform.localPosition = value.position;
+                if(groupAttached.group.groupLeader)((Component)this).transform.position = ((Component)groupAttached.group.groupLeader).transform.position + groupAttached.position;
             }
             get {
                 return groupAttached;
             }
         }
-        public Vector2 lastAxis;
+
+        public GroupPositionData possessedPosition;
 
         bool isPlayingAnimation = false;
         string currentAnimationPlaying = "null";
         float animationPlayingSpeed = 1;
         bool animationLooping = false;
         public AnimationSheet movementAnimationSheet;
+        private IEnumerator movementCoroutine;
+        public Vector2 directionLookingAt;
 
         public override void Possess<GameObj_Creature>(ThingDef entity, string faction)
         {
-            onXpGain?.RemoveAllListeners();
-            base.Possess<GameObj_Creature>(entity, faction);
+            lastHealthInfo = new HealthInfo();
+            lastDamagedBy = null;
+            directionLookingAt = Vector2.zero;
+            currentState = CreatureState.Idle;
+            cachedMovementSpeed = 0;
+            lastMovementVector = Vector2.zero;
+            animationPlayingSpeed = 1;
+            animationLooping = false;
+            isPlayingAnimation = false;
+            killCount = 0;
+            
+            if (possessedWeapons != null)
+            {
+                foreach (var weapon in possessedWeapons)
+                {
+                    GameObject.Destroy(weapon.gameObject);
+                }
+            }
+            
+            possessedWeapons = new List<GameObj_Shooter>();
+            
+            base.Possess<GameObj_Creature>(entity, faction);            
+            gameObject.layer = LayerMask.NameToLayer(faction);
             PossessEquipments(entity, faction);
             killCount = 0;
+            
 
-            onHealthChange?.Invoke(new HealthInfo()
+            CallHealthEvent(new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
                 damageTaken = 0,
-                changeMax = true
+                maxHealth = possessedThing.GetStatValueByName("MaxHealth"),
+                infoOf = this
             });
 
-            onActivationChange?.Invoke(true);
+            CallActivationChange(true);
             InitializeAnims();
         }
 
@@ -68,7 +94,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
             catch (Exception ex)
             {
-                Debug.LogWarning("[Error] initializing animation: " + ex.Message);
             }
         }
 
@@ -76,21 +101,22 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public override void Spawned()
         {
             base.Spawned();
-            healthBar = UIManager.uiManager.SpawnObjectAtWorldCanvas(PrefabManager.prefabManager.GetPrefabOf("healthBar"));
-            healthBar.GetComponent<HealthBar>().AttachObj(this);
-            healthBar.GetComponent<IBootable>().Boot();
         }
 
-        public void UpdateCharacterMovement(Vector2 axis) { lastMovementVector = axis; }
-
-        public override void MoveObject(Vector2 axis, float delta)
+        public void UpdateCharacterMovement(Vector2 axis)
         {
-            lastAxis = axis;
-            base.MoveObject(axis, delta);
+            if (axis != Vector2.zero) directionLookingAt = axis;
+            lastMovementVector = axis;
+        }
+
+        public override void MoveObject(Vector2 axis, float delta, bool passMax)
+        {
+            lastMovementVector = axis;
+            base.MoveObject(axis, delta, false);
 
             if (groupAttached.group?.groupLeader != null)
             {
-                axis = groupAttached.group.groupLeader.lastAxis;
+                axis = groupAttached.group.groupLeader.lastMovementVector;
             }
 
             if (Math.Abs(axis.x) + Math.Abs(axis.y) > 0)
@@ -104,11 +130,15 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
         }
 
-        private void FixedUpdate()
+        public override void FixedUpdate()
         {
+            soundEffectCooldown -= Time.fixedDeltaTime;
+            base.FixedUpdate();
             if (currentState == CreatureState.Moving && movementAnimationSheet != null && movementAnimationSheet.info.frameCount > 0 && !isPlayingAnimation)
             {
-                StartCoroutine(PlayAnimation(movementAnimationSheet));
+                if(movementCoroutine != null) StopCurrentAnimation();
+                movementCoroutine = PlayAnimation(movementAnimationSheet);
+                StartCoroutine(movementCoroutine);
             }
             else if (isPlayingAnimation && currentAnimationPlaying.Equals("Movement") && currentState != CreatureState.Moving)
             {
@@ -126,30 +156,26 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
                 var thingDef = AssetManager.assetLibrary.thingDefsDictionary.FirstOrDefault(x => x.Key == equipment.name).Value;
                 var prefab = PrefabManager.prefabManager.GetPrefabOf("equipment");
                 var spawnedObj = Instantiate(prefab).GetComponent<GameObj>();
-                spawnedObj.transform.parent = gameObject.transform;
-                spawnedObj.transform.position = spawnedObj.transform.position + new Vector3(equipment.offset.x, equipment.offset.y, equipment.offset.z);
-                spawnedObj.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction);
+                ((Component)spawnedObj).transform.parent = ((Component)this).transform;
+                ((Component)spawnedObj).transform.localPosition = new Vector3(equipment.offset.x, equipment.offset.y, equipment.offset.z);
                 GameObj_Shooter shooter = (GameObj_Shooter)spawnedObj;
+                shooter.Possess<GameObj_Shooter>(YKUtility.FromXElement<ThingDef>(thingDef), faction, this);
                 shooter.onProjectileHit += OnHitToEnemy;
                 shooter.stats = possessedThing.stats;
+                possessedWeapons.Add(shooter);
 
                 if(equipment.offset.flipOffset == "Yes") {
                     spawnedObj.doesMirrorPosOnFacing = true;
-                    onFacingDirectionChange.AddListener(spawnedObj.FlipLocalPos);
-
+                    onFacingDirectionChange += (spawnedObj.FlipLocalPos);
                 }
             }
         }
+        
 
         public void OnHitToEnemy(HitResult result)
         {
-            onActionHappen?.Invoke("hitGiven", result);
-            if (result.killed)
-            {
-                Debug.Log("[XP] Target killed.. Got XP.");
-                float xpToGrant = result.hitTarget.GetComponent<IDamageable>().GetXP();
-                onXpGain.Invoke(xpToGrant);
-            }
+            onActionHappen.Invoke("hitGiven", result);
+            onHit?.Invoke(result);
         }
 
         public void Heal(float amount, bool bypassMax)
@@ -162,51 +188,66 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
             }
 
 
-            onHealthChange?.Invoke(new HealthInfo()
+            CallHealthEvent(new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
-                damageTaken = -amount
+                maxHealth = possessedThing.GetStatValueByName("MaxHealth"),
+                damageTaken = -amount,
+                infoOf = this
             });
         }
 
-        public bool TryDamage(float amount, out bool endedUpKilling)
+        public float soundEffectCooldown = 1;
+        public GameObj_Creature lastDamagedBy;
+        public override bool TryDamage(float amount, out HealthInfo healthInfo, GameObj_Creature causer)
         {
-            onActionHappen?.Invoke("hitTaken", amount);
+            lastDamagedBy = causer;
+            onActionHappen.Invoke("hitTaken", amount);
             possessedThing.RemoveFromStat("Health", amount);
-
-            var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
-            AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
-
-            if (!IsHealthDepleted()) StartCoroutine(HitColorChange());
-            onHealthChange?.Invoke(new HealthInfo()
+            
+            if (possessedThing.soundConfig.onDamageTakenSounds != null)
+            {
+                if (soundEffectCooldown < 0)
+                {
+                    var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDamageTakenSounds);
+                    AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+                    soundEffectCooldown = 0.5f;
+                }
+            }
+            lastHealthInfo = new HealthInfo()
             {
                 currentHealth = possessedThing.GetStatValueByName("Health"),
-                damageTaken = amount
-            });
-
-            endedUpKilling = TryDestroy();
+                maxHealth = possessedThing.GetStatValueByName("MaxHealth"),
+                damageTaken = amount,
+                gotKilled =  IsHealthDepleted(),
+                infoOf = this
+            };
+            
+            healthInfo = lastHealthInfo;
+            CallPreHealthEvent(lastHealthInfo);
+            lastHealthInfo.gotKilled = IsHealthDepleted();
+            healthInfo = lastHealthInfo;
+            
+            CallHealthEvent(lastHealthInfo);
+            healthInfo = lastHealthInfo;
             return true;
         }
 
-        public IEnumerator HitColorChange()
-        {
-            ownedSpriteRenderer.color = Color.red;
-            yield return new WaitForSeconds(hitColorSpeed);
-            ownedSpriteRenderer.color = Color.black;
-            yield return new WaitForSeconds(hitColorSpeed);
-            ownedSpriteRenderer.color = Color.white;
-        }
 
         public bool TryDestroy()
         {
             if (IsHealthDepleted())
             {
-                var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDeathSounds);
-                AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+                if (possessedThing.soundConfig.onDeathSounds != null)
+                {
+                    var audioClip = GetAudioClipOf(possessedThing.soundConfig.onDeathSounds);
+                    AudioSource.PlayClipAtPoint(audioClip, Vector3.zero);
+                }
 
-                gameObject.SetActive(false);
+                selfObject.SetActive(false);
+                isActive = false;
                 ownedSpriteRenderer.color = Color.white;
-                onActivationChange?.Invoke(false);
+                CallActivationChange(false);
                 return true;
             }
             else
@@ -220,13 +261,16 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public bool IsHealthDepleted() { return possessedThing.GetStatValueByName("Health") <= 0; }
 
         public float GetXP() { return xp; }
+        public string GetTeam()
+        {
+            return faction;
+        }
 
         public IEnumerator PlayAnimation(AnimationSheet animationDef)
         {
             {
-                if (animationDef.info.frameCount == 0 || animationDef == null || isPlayingAnimation) yield return this;
                 isPlayingAnimation = true;
-                currentAnimationPlaying = animationDef.info.sheetName;
+                currentAnimationPlaying = animationDef.info.typeName;
                 bool haventExecutedOnce = true;
                 animationLooping = animationDef.info.doesLoop.Equals("Yes");
                 float timeToWaitForNextFrame = 1 / (animationDef.info.framePerSecond * animationPlayingSpeed);
@@ -252,6 +296,8 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
         public void StopCurrentAnimation()
         {
             isPlayingAnimation = false;
+            StopCoroutine(movementCoroutine);
+            movementCoroutine = null;
         }
 
         public bool IsPlayingAnimation() { return isPlayingAnimation; }
@@ -272,9 +318,6 @@ public GroupMemberReference groupAttached = new GroupMemberReference();
 
         public enum CreatureState { Idle, Moving, OnAction, Dead }
 
-        [System.Serializable] public class XpGained : UnityEvent<float> { }
-
-        [System.Serializable] public class ActionHappened : UnityEvent<string, object> { }
     }
 
 }

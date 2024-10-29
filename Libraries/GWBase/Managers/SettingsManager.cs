@@ -13,28 +13,22 @@ namespace GWBase
     {
 
         public GameObject inputSpeaker;
-        public static PlayerSettings playerSettings;
-        public PlayerController playerController;
+        public PlayerSettings playerSettings;
         public static SettingsManager settingsManager;
         public List<Plugin> loadedUpPlugins = new List<Plugin>();
         public List<IObjBehaviour> loadedUpBehaviours = new List<IObjBehaviour>();
-        public bool loaded;
         public override IEnumerator Kickstart()
         {
             settingsManager = this;
-            Debug.Log($"[SETTINGS] Settings manager initializing..");
-            playerController = new();
             LoadSettings();
-            yield return StartCoroutine(playerController.Start());
-
-            loaded = true;
             yield return this;
         }
 
-        public async void LoadSettings()
+        public void LoadSettings()
         {
             var defFile = XElement.Load(AssetManager.assetLibrary.fullPathToGameDatabase + "UserSettings.xml");
             playerSettings = YKUtility.FromXElement<PlayerSettings>(defFile.Element("PlayerSettings"));
+            playerSettings.shouldPlaySoundEffects = playerSettings.playSoundEffects == "Yes";
             
             foreach (var plugin in defFile.Element("GamePlugins").Elements("plugin"))
             {
@@ -43,7 +37,7 @@ namespace GWBase
             }
         }
 
-        public async void SerializePlugin(Plugin plugin) {
+        public void SerializePlugin(Plugin plugin) {
             foreach (var behaviourDef in plugin.behaviours)
             {
                 SerializeBehaviour(behaviourDef);
@@ -58,10 +52,11 @@ namespace GWBase
             var targetDll = AssetManager.assetLibrary.GetAssembly(foundBehaviour.DllName);
             Type targetType = targetDll.GetType(foundBehaviour.Namespace + "." + foundBehaviour.Name, true);
             IObjBehaviour newBehaviour = (IObjBehaviour)System.Activator.CreateInstance(targetType);
-            await newBehaviour.Start(null, null, behaviourDef.customParameters.ToArray());
+            newBehaviour.Start(null, null, behaviourDef.customParameters.ToArray());
             loadedUpBehaviours.Add(newBehaviour);
         }
 
+        [Serializable]
         [XmlRoot("PlayerSettings")]
         public struct PlayerSettings
         {
@@ -71,8 +66,22 @@ namespace GWBase
 
             [XmlElement("playerCharacter")]
             public string playerCharacter;
+            
+            [XmlElement("spawnEnemies")]
+            public string shouldSpawn;
+            [XmlElement("rareTickTime")]
+            public float rareTickTime;
+            [XmlElement("movementSpeed")]
+            public float movementSpeed;
+            [XmlElement("playSoundEffects")]
+            public string playSoundEffects;
+
+            public bool shouldPlaySoundEffects;
+            [XmlElement("map")]
+            public string mapName;
         }
 
+        [Serializable]
         [XmlRoot("plugin")]
         public struct Plugin {
             [XmlAttribute("Name")]

@@ -6,7 +6,7 @@ using UnityEngine;
 public class EscapeMenu : MonoBehaviour
 {
     public void SetState(bool active) {
-        GameManager.gameManager.SetGameState(!active);
+        GameManager.gameManager.gameState = !active;
         this.gameObject.SetActive(active);
     }
 }
